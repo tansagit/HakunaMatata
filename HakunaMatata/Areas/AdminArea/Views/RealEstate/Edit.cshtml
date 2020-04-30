@@ -1,0 +1,408 @@
+﻿@model HakunaMatata.Models.ViewModels.VM_RealEstateDetails;
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-title">
+                    <h5>
+                        Edit real eastate information <small>
+                            With custom checbox and radion
+                            elements.
+                        </small>
+                    </h5>
+                </div>
+                <div class="ibox-content">
+                    <form asp-action="Edit" id="edit-form">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Id" />
+                        <div class="form-group row">
+                            <label asp-for="Title" class="col-sm-2 col-form-label">Title</label>
+                            <div class="col-sm-10">
+                                <textarea type="text" asp-for="Title" class="form-control" required></textarea>
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group row">
+                            <label asp-for="RealEstateTypeId" class="col-sm-2 col-form-label">Loai hinh</label>
+
+                            <div class="col-sm-10 col-lg-4">
+                                <select asp-for="RealEstateTypeId" class="form-control form-control-lg m-b" asp-items="ViewBag.RealEstateTypeId">
+                                </select>
+                                <span asp-validation-for="RealEstateTypeId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="RoomNumber" class="col-sm-2 col-form-label">So luong phong</label>
+                            <div class="col-sm-5 col-lg-2">
+                                <div class="input-group m-b">
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-sort-numeric-desc"></i>
+                                    </span>
+                                    <input asp-for="RoomNumber" type="number" class="form-control">
+                                </div>
+                                <span asp-validation-for="RoomNumber" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="Acreage" class="col-sm-2 col-form-label">Diện tích</label>
+                            <div class="col-sm-10 col-lg-4">
+                                <div class="input-group m-b">
+                                    <span class="input-group-addon"><i class="fa fa-arrows-alt"></i></span>
+                                    <input asp-for="Acreage" type="text" placeholder="dien tich" class="form-control">
+                                    <div class="input-group-append">
+                                        <span class="input-group-addon">m2</span>
+                                    </div>
+                                </div>
+                                <span asp-validation-for="Acreage" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="Price" class="col-sm-2 col-form-label">Gia tien</label>
+                            <div class="col-sm-10 col-lg-4">
+                                <div class="input-group m-b">
+                                    <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
+                                    <input asp-for="Price" 
+                                           type="text" id="currency-field"
+                                           data-type="currency"
+                                           placeholder="1,000,000" class="form-control">
+                                    <div class="input-group-append">
+                                        <span class="input-group-addon">VND</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label asp-for="ElectronicPrice" class="col-sm-2 col-form-label">Gia dien</label>
+                            <div class="col-sm-10">
+                                <div class="row">
+                                    <div class="col-sm-10 col-lg-4">
+                                        <div class="input-group m-b">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-dollar"></i>
+                                            </span>
+                                            <input asp-for="ElectronicPrice"
+                                                   type="text" id="tien-dien"                                                  
+                                                   data-type="currency" placeholder="3,500/KW"
+                                                   class="form-control">
+                                            <div class="input-group-append">
+                                                <span class="input-group-addon">VND/KW</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2 col-lg-2 pt-1">
+                                        <div class="checkbox checkbox-info">
+                                            <input id="free-tien-dien" class="styled" type="checkbox">
+                                            <label for="free-tien-dien">
+                                                Free
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label asp-for="WaterPrice" class="col-sm-2 col-form-label">Gia nuoc</label>
+                            <div class="col-sm-10">
+                                <div class="row">
+                                    <div class="col-sm-10 col-lg-4">
+                                        <div class="input-group m-b">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-dollar"></i>
+                                            </span>
+                                            <input type="text" 
+                                                   id="tien-nuoc"
+                                                   asp-for="WaterPrice"
+                                                   data-type="currency" 
+                                                   placeholder=""
+                                                   class="form-control">
+
+                                            <div class="input-group-append">
+                                                <span class="input-group-addon">VND/m3</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2 col-lg-2 pt-1">
+                                        <div class="checkbox checkbox-info">
+                                            <input id="free-tien-nuoc" class="styled" type="checkbox">
+                                            <label for="free-tien-nuoc">
+                                                Free
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="WifiPrice" class="col-sm-2 col-form-label">Gia wifi</label>
+                            <div class="col-sm-10">
+                                <div class="row">
+                                    <div class="col-sm-10 col-lg-4">
+                                        <div class="input-group m-b">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-dollar"></i>
+                                            </span>
+                                            <input type="text" 
+                                                   id="tien-wifi"
+                                                   asp-for="WifiPrice"
+                                                   data-type="currency" 
+                                                   placeholder=""
+                                                   class="form-control">
+
+                                            <div class="input-group-append">
+                                                <span class="input-group-addon">VND/tháng</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2 col-lg-2 pt-1">
+                                        <div class="checkbox checkbox-info">
+                                            <input id="free-tien-wifi" class="styled" type="checkbox">
+                                            <label for="free-tien-wifi">
+                                                Free
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label asp-for="Address" class="col-sm-2 col-form-label">Dia chi</label>
+                            <div class="col-sm-10">
+                                <div class="input-group m-b">
+                                    <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
+                                    <input asp-for="Address" type="text" class="form-control" />
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group row" id="expire-day">
+                            <label asp-for="ExprireTime" class="col-sm-2 col-form-label">Ngay het han</label>
+                            <div class="col-sm-10 col-lg-4">
+                                <div class="input-group date">
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+
+                                    <input asp-for="ExprireTime" type="text" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Tien ich</label>
+
+                            <div class="col-sm-5">
+                                <div class="checkbox checkbox-info">
+                                    <input asp-for="HasPrivateWc" id="checkbox1" class="styled" type="checkbox">
+                                    <label for="checkbox1">
+                                        Vệ sinh riêng
+                                    </label>
+                                </div>
+                                <div class="checkbox checkbox-info">
+                                    <input asp-for="HasMezzanine" id="checkbox2" class="styled" type="checkbox">
+                                    <label for="checkbox2">
+                                        Có gác lửng
+                                    </label>
+                                </div>
+                                <div class="checkbox checkbox-info">
+                                    <input asp-for="AllowCook" id="checkbox3" class="styled" type="checkbox">
+                                    <label for="checkbox3">
+                                        Cho phép nấu ăn
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-sm-5">
+                                <div class="checkbox checkbox-info">
+                                    <input asp-for="FreeTime" id="checkbox4" class="styled" type="checkbox">
+                                    <label for="checkbox4">
+                                        Giờ giấc tự do
+                                    </label>
+                                </div>
+                                <div class="checkbox checkbox-info">
+                                    <input asp-for="SecurityCamera" id="checkbox5" class="styled" type="checkbox">
+                                    <label for="checkbox5">
+                                        Camera an ninh
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group row">
+                            <div class="col-lg-12">
+                                <div class="ibox ">
+                                    <div class="ibox-title">
+                                        <h5>Mô tả</h5>
+                                        <div class="ibox-tools">
+                                            <a class="collapse-link">
+                                                <i class="fa fa-chevron-up"></i>
+                                            </a>
+                                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                                <i class="fa fa-wrench"></i>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-user">
+                                                <li>
+                                                    <a href="#" class="dropdown-item">Config option 1</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" class="dropdown-item">Config option 2</a>
+                                                </li>
+                                            </ul>
+                                            <a class="close-link">
+                                                <i class="fa fa-times"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="ibox-content no-padding">
+                                        <textarea type="text" asp-for="Description" class="form-control summernote" required></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <button class="btn btn-white btn-sm" type="submit">Cancel</button>
+                                <button class="btn btn-primary btn-sm" type="submit">Save changes</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+    //disable input when checkbox is checked
+    document.getElementById('free-tien-dien').onchange = function () {
+
+        document.getElementById('tien-dien').disabled = this.checked;
+    };
+    document.getElementById('free-tien-nuoc').onchange = function () {
+        document.getElementById('tien-nuoc').disabled = this.checked;
+    };
+
+    document.getElementById('free-tien-wifi').onchange = function () {
+        document.getElementById('tien-wifi').disabled = this.checked;
+    };
+
+    $("input[data-type='currency']").on({
+        keyup: function () {
+            formatCurrency($(this));
+        },
+        blur: function () {
+            formatCurrency($(this), "blur");
+        }
+    });
+
+
+    function formatNumber(n) {
+        // format number 1000000 to 1,234,567
+        return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    }
+
+
+    function formatCurrency(input, blur) {
+        // appends $ to value, validates decimal side
+        // and puts cursor back in right position.
+
+        // get input value
+        var input_val = input.val();
+
+        // don't validate empty input
+        if (input_val === "") { return; }
+
+        // original length
+        var original_len = input_val.length;
+
+        // initial caret position
+        var caret_pos = input.prop("selectionStart");
+
+        // check for decimal
+        if (input_val.indexOf(".") >= 0) {
+
+            // get position of first decimal
+            // this prevents multiple decimals from
+            // being entered
+            var decimal_pos = input_val.indexOf(".");
+
+            // split number by decimal point
+            var left_side = input_val.substring(0, decimal_pos);
+            var right_side = input_val.substring(decimal_pos);
+
+            // add commas to left side of number
+            left_side = formatNumber(left_side);
+
+            // validate right side
+            right_side = formatNumber(right_side);
+
+            // On blur make sure 2 numbers after decimal
+            if (blur === "blur") {
+                right_side += "00";
+            }
+
+            // Limit decimal to only 2 digits
+            right_side = right_side.substring(0, 2);
+
+            // join number by .
+            input_val = left_side + "." + right_side;
+
+        } else {
+            // no decimal entered
+            // add commas to number
+            // remove all non-digits
+            input_val = formatNumber(input_val);
+            //input_val = "$" + input_val;
+
+            // final formatting
+            if (blur === "blur") {
+                //input_val += ".00";
+            }
+        }
+
+        // send updated string to input
+        input.val(input_val);
+
+        // put caret back in the right position
+        var updated_len = input_val.length;
+        caret_pos = updated_len - original_len + caret_pos;
+        input[0].setSelectionRange(caret_pos, caret_pos);
+
+    }
+
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        $('#expire-day .input-group.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            calendarWeeks: true,
+            autoclose: true,
+            format: "dd/mm/yyyy"
+        });
+    });
+
+</script>
+
+
+<script>
+    $(document).ready(function () {
+
+        $('.summernote').summernote();
+    });
+</script>
