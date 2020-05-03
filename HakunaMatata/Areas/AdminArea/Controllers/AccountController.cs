@@ -1,5 +1,6 @@
 ﻿using HakunaMatata.Helpers;
 using HakunaMatata.Models.ViewModels;
+using HakunaMatata.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -71,7 +72,8 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(
-            scheme: "MyCookieScheme");
+            scheme: "MyCookieScheme"
+            );
 
             return RedirectToAction("Login");
         }

@@ -7,73 +7,76 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-public interface IFileServices
+namespace HakunaMatata.Services
 {
-    Task<Dictionary<string, string>> UploadFiles(List<IFormFile> files);
-    Task<int> AddPicture(int realEstateId, int userId, List<IFormFile> files);
-
-}
-
-public class FileServices : IFileServices
-{
-    private readonly IWebHostEnvironment _enviroment;
-    private readonly HakunaMatataContext _context;
-    public FileServices(IWebHostEnvironment environment, HakunaMatataContext context)
+    public interface IFileServices
     {
-        _enviroment = environment;
-        _context = context;
+        Dictionary<string, string> UploadFiles(List<IFormFile> files);
+        int AddPicture(int realEstateId, List<IFormFile> files);
+
     }
 
-    public async Task<int> AddPicture(int realEstateId, int userId, List<IFormFile> files)
+    public class FileServices : IFileServices
     {
-        var count = 0;
-        var uploadedFiles = await this.UploadFiles(files);
-        foreach (var file in uploadedFiles)
+        private readonly IWebHostEnvironment _enviroment;
+        private readonly HakunaMatataContext _context;
+        public FileServices(IWebHostEnvironment environment, HakunaMatataContext context)
         {
-            var picture = new Picture
-            {
-                PictureName = file.Key,
-                RealEstateId = realEstateId,
-                Url = file.Value,
-                IsActive = true
-            };
-            _context.Picture.Add(picture);
-
-            await _context.SaveChangesAsync();
-            var id = picture.Id;
-            count++;
-        }
-        return count;
-    }
-
-    public async Task<Dictionary<string, string>> UploadFiles(List<IFormFile> files)
-    {
-        string wwwPath = this._enviroment.WebRootPath;
-        string contentPath = this._enviroment.ContentRootPath;
-
-        string path = Path.Combine(wwwPath, "images");
-        if (!Directory.Exists(path))
-        {
-            Directory.CreateDirectory(path);
+            _enviroment = environment;
+            _context = context;
         }
 
-        var uploadedFiles = new Dictionary<string, string>();
-        //var uploadedFiles = new List<string>();
-
-        foreach (var file in files)
+        public int AddPicture(int realEstateId, List<IFormFile> files)
         {
-            string fileName = string.Format("{0}-{1}", Guid.NewGuid(), file.FileName);
-            var savePath = Path.Combine(path, fileName);
-
-            using (var stream = new FileStream(savePath, FileMode.Create))
+            var count = 0;
+            var uploadedFiles = UploadFiles(files);
+            foreach (var file in uploadedFiles)
             {
-                await file.CopyToAsync(stream);
-                uploadedFiles.Add(fileName, savePath);
+                var picture = new Picture
+                {
+                    PictureName = file.Key,
+                    RealEstateId = realEstateId,
+                    Url = file.Value,
+                    IsActive = true
+                };
+                _context.Picture.Add(picture);
+
+                _context.SaveChanges();
+                count++;
             }
+            return count;
         }
-        return uploadedFiles;
+
+        public Dictionary<string, string> UploadFiles(List<IFormFile> files)
+        {
+            string wwwPath = this._enviroment.WebRootPath;
+            string contentPath = this._enviroment.ContentRootPath;
+
+            string path = Path.Combine(wwwPath, "images");
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            //tao dictionary de luu ten file va duong dan file
+            var uploadedFiles = new Dictionary<string, string>();
+
+            foreach (var file in files)
+            {
+                string fileName = string.Format("{0}-{1}", Guid.NewGuid(), file.FileName);
+                var savePath = Path.Combine(path, fileName);
+
+                using (var stream = new FileStream(savePath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                    uploadedFiles.Add(fileName, savePath);
+                }
+            }
+            return uploadedFiles;
+        }
+
+
+
     }
-
-
-
 }
+

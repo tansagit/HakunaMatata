@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using HakunaMatata.Data;
+using HakunaMatata.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,6 +38,11 @@ namespace HakunaMatata
             services.AddScoped<IAccountServices, AccountServices>();
             services.AddScoped<IFileServices, FileServices>();
             services.AddScoped<IRealEstateServices, RealEstateServices>();
+            services.AddScoped<IAboutUsServices, AboutUsServices>();
+            services.AddScoped<IFAQServices, FAQServices>();
+            services.AddScoped<ILevelServices, LevelServices>();
+            services.AddScoped<IPolicyServices, PolicyServices>();
+            services.AddScoped<IRealEstateTypeServices, RealEstateTypeServices>();
 
 
             //authentication cookie
@@ -91,6 +92,9 @@ namespace HakunaMatata
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                //endpoints.MapControllerRoute(
+                //    name: "search",
+                //    pattern: "{controller=Home}/{action=search}/{cityId?}/{typeId?}/{area?}");
 
             });
         }

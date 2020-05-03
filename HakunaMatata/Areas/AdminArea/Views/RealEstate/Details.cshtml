@@ -217,7 +217,13 @@
                                     <h2>
                                         Mo ta
                                     </h2>
-                                    <p>@Model.Description</p>
+                                    @*<div id="htmlText">
+                                            @Html.DisplayFor(model =>model.Description)
+                                        </div>*@
+                                    <textarea id="htmlText" type="text" asp-for="Description" class="form-control" style="min-height:250px" readonly></textarea>
+                                    <div id="div1">
+                                        @Model.Description
+                                    </div>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <h5>Tags:</h5>
@@ -389,6 +395,16 @@
         var marker = new google.maps.Marker({ position: loca, map: map });
     }
 </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        var htmlText = document.getElementById('htmlText');
+        htmlText.value = window.htmlToFormattedText(htmlText.value);
+
+    });
+</script>
+
 
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBY8PE_X6qdTWkZwdBENNpGJTYr1cTjG9I&callback=initMap">

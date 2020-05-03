@@ -3,23 +3,26 @@ using HakunaMatata.Models.DataModels;
 using HakunaMatata.Models.ViewModels;
 using System.Linq;
 
-public interface IAccountServices
+namespace HakunaMatata.Services
 {
-    Agent GetUser(VM_Login login);
-}
-
-public class AccountServices : IAccountServices
-{
-    private readonly HakunaMatataContext _dbContext;
-
-    public AccountServices(HakunaMatataContext dbContext)
+    public interface IAccountServices
     {
-        _dbContext = dbContext;
+        Agent GetUser(VM_Login login);
     }
 
-    public Agent GetUser(VM_Login login)
+    public class AccountServices : IAccountServices
     {
-        var user = _dbContext.Agent.SingleOrDefault(x => x.LoginName == login.LoginName && x.Password == login.Password);
-        return user;
+        private readonly HakunaMatataContext _dbContext;
+
+        public AccountServices(HakunaMatataContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+        public Agent GetUser(VM_Login login)
+        {
+            var user = _dbContext.Agent.SingleOrDefault(x => x.LoginName == login.LoginName && x.Password == login.Password);
+            return user;
+        }
     }
 }
