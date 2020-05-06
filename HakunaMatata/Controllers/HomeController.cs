@@ -39,15 +39,21 @@ namespace HakunaMatata.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Index2(VM_Search search, int? pageNumber)
+        {
+            int pageSize = 10;
+            var results = _services.GetRealEstateList(search);
+            return View(await PaginatedList<VM_Search_Result>.CreateAsync(results, pageNumber ?? 1, pageSize));
+        }
 
         [HttpGet]
         public async Task<IActionResult> Search(VM_Search search)
         {
-            var result = await _services.SearchResults(search);
+            var results = await _services.SearchResults(search);
 
             var viewmodel = new VM_Search_Result_Container();
             viewmodel.SearchObject = search;
-            viewmodel.ResultList = result;
+            viewmodel.ResultList = results;
 
             var types = _services.GetRealEstateTypeList();
             types = types.Concat(new[] { new RealEstateType { Id = 0, RealEstateTypeName = "Tất cả" } });
@@ -80,7 +86,7 @@ namespace HakunaMatata.Controllers
             var result = await _services.SearchResults(container.SearchObject);
 
             container.ResultList = result;
-            
+
             var types = _services.GetRealEstateTypeList();
             types = types.Concat(new[] { new RealEstateType { Id = 0, RealEstateTypeName = "Tất cả" } });
             types = types.OrderBy(t => t.Id);

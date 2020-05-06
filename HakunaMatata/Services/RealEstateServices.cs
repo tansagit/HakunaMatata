@@ -32,6 +32,7 @@ namespace HakunaMatata.Services
         Tuple<int?, int?, int> GetLocation(string address);
 
         Task<List<VM_Search_Result>> SearchResults(VM_Search search);
+        IQueryable<VM_Search_Result> GetRealEstateList(VM_Search search);
 
 
     }
@@ -410,7 +411,7 @@ namespace HakunaMatata.Services
                                         .Where(r => r.RealEstate.IsActive == true)
                                         .AsQueryable().ToListAsync();
 
-                
+
 
                 if (search != null)
                 {
@@ -450,6 +451,141 @@ namespace HakunaMatata.Services
             }
         }
 
+        public IQueryable<VM_Search_Result> GetRealEstateList(VM_Search condition)
+        {
+            try
+            {
+                var allPosts = _context.RealEstate.Where(r => r.IsActive == true)
+                                    .Select(e => new
+                                    {
+                                        e, //real estate
+                                        e.RealEstateDetail,
+                                        e.ReaEstateType,
+                                        e.Map,
+                                        image = e.Picture.Where(p => p.IsActive == true).FirstOrDefault(),
+                                        e.Agent
+                                    });
+
+
+                //filter
+                if (allPosts != null)
+                {
+                    if (condition.Type > 0)
+                        allPosts = allPosts.Where(x => x.ReaEstateType.Id == condition.Type);
+                    if (condition.City > 0)
+                        allPosts = allPosts.Where(x => x.Map.CityId == condition.City);
+                    if (condition.District > 0)
+                        allPosts = allPosts.Where(x => x.Map.DistrictId == condition.District);
+
+                    var priceRange = Helper.GetPriceRange(condition.PriceRange);
+                    var minPrice = priceRange[0];
+                    var maxPrice = priceRange[1];
+                    allPosts = allPosts.Where(x =>
+                        x.RealEstateDetail.Price >= minPrice && x.RealEstateDetail.Price <= maxPrice);
+
+                    var acreageRange = Helper.GetAcreageRange(condition.AcreageRange);
+                    var minAcreage = acreageRange[0];
+                    var maxAcreage = acreageRange[1];
+
+                    allPosts = allPosts.Where(x =>
+                        x.RealEstateDetail.Acreage >= minAcreage && x.RealEstateDetail.Acreage <= maxAcreage);
+
+                    if (!String.IsNullOrEmpty(condition.SearchString))
+                        allPosts = allPosts.Where(
+                            x => x.Map.Address.Contains(condition.SearchString));
+
+                    allPosts = allPosts.OrderByDescending(x => x.e.PostTime);
+                }
+
+                IQueryable<VM_Search_Result> results = (from item in allPosts
+                                                        select new VM_Search_Result
+                                                        {
+                                                            Id = item.e.Id,
+                                                            Street = Helper.GetStreet(item.Map.Address),
+                                                            Price = item.RealEstateDetail.Price,
+                                                            Acreage = item.RealEstateDetail.Acreage,
+                                                            Type = item.ReaEstateType.Id,
+                                                            PostTime = item.e.PostTime.ToString("dd/MM/yyyy"),
+                                                            ImageUrl = GetLinkImage(item.image),
+                                                            AgentName = item.Agent.AgentName
+                                                        });
+
+                if (allPosts.Count() > 0)
+                {
+                    #region commemed
+
+                    //foreach (var item in allPosts)
+                    //{
+                    //    string imageUrl = string.Empty;
+                    //    //neu list picture null hoac rong thi anh dai dien = 404
+                    //    if (item.image == null)
+                    //    {
+                    //        imageUrl = "404";
+                    //    }
+                    //    else
+                    //    {
+                    //        //lay phan tu dau tien trong list picture
+
+                    //        //kiem tra picture name no ton tai ko, 
+                    //        // neu co nghia la moi them vao, ko phải crawl tu web
+                    //        if (!string.IsNullOrEmpty(item.image.PictureName))
+                    //        {
+                    //            //tao url = cach + chuoi ~/images/ + PictureName
+                    //            imageUrl = "local" + item.image.PictureName;
+                    //        }
+                    //        else
+                    //        {
+                    //            imageUrl = item.image.Url;
+                    //        }
+                    //    }
+
+                    //    var resultItem = new VM_Search_Result()
+                    //    {
+                    //        Id = item.e.Id,
+                    //        Street = Helper.GetStreet(item.Map.Address),
+                    //        Price = item.RealEstateDetail.Price,
+                    //        Acreage = item.RealEstateDetail.Acreage,
+                    //        Type = item.ReaEstateType.Id,
+                    //        PostTime = item.e.PostTime.ToString("dd/MM/yyyy"),
+                    //        ImageUrl = imageUrl,
+                    //        AgentName = item.Agent.AgentName
+                    //    };
+                    //    results.Add(resultItem);
+                    //}
+                    #endregion
+                }
+                return results;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        private static string GetLinkImage(Picture image)
+        {
+            string imageUrl = string.Empty;
+            if (image == null)
+            {
+                imageUrl = "404";
+            }
+            else
+            {
+                //lay phan tu dau tien trong list picture
+
+                //kiem tra picture name no ton tai ko, 
+                // neu co nghia la moi them vao, ko phải crawl tu web
+                if (!string.IsNullOrEmpty(image.PictureName))
+                {
+                    //tao url = cach + chuoi ~/images/ + PictureName
+                    imageUrl = "local" + image.PictureName;
+                }
+                else
+                {
+                    imageUrl = image.Url;
+                }
+            }
+            return imageUrl;
+        }
     }
 
 }

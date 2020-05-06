@@ -27,6 +27,7 @@ namespace HakunaMatata.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Content")
+                        .IsRequired()
                         .HasColumnType("ntext");
 
                     b.HasKey("Id");
@@ -49,6 +50,9 @@ namespace HakunaMatata.Migrations
                     b.Property<string>("AgentName")
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
+
+                    b.Property<bool>("ConfirmPhoneNumber")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Email")
                         .HasColumnType("varchar(200)")

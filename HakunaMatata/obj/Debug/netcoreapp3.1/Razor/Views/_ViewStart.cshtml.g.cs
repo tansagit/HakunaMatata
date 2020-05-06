@@ -26,8 +26,15 @@ using HakunaMatata.Models;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 3 "D:\DUT\DATN\HakunaMatata\HakunaMatata\Views\_ViewImports.cshtml"
+using HakunaMatata.Helpers;
+
+#line default
+#line hidden
+#nullable disable
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"7091c65830b0329e613be026ede8a57552863778", @"/Views/_ViewStart.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"68575dfee01a4fb04cc5777c3bda2afdb1c9924c", @"/Views/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"3aa075d29fc84c478127b6451730ac58ff22214e", @"/Views/_ViewImports.cshtml")]
     public class Views__ViewStart : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<dynamic>
     {
         #pragma warning disable 1998

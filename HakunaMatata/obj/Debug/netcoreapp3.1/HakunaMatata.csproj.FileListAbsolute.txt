@@ -147,7 +147,6 @@ D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Areas\AdminA
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Areas\AdminArea\Views\RealEstate\Index.cshtml.g.cs
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Areas\AdminArea\Views\RealEstate\Details.cshtml.g.cs
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Areas\AdminArea\Views\RealEstate\Edit.cshtml.g.cs
-D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\HakunaMatata.csprojAssemblyReference.cache
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Areas\AdminArea\Views\RealEstate\Create.cshtml.g.cs
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Areas\AdminArea\Views\RealEstate\Test.cshtml.g.cs
 D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\xunit.abstractions.dll
@@ -172,3 +171,5 @@ D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\System.Xml.XPath.X
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\HakunaMatata.MvcApplicationPartsAssemblyInfo.cache
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\Home\Search.cshtml.g.cs
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\Home\Filter.cshtml.g.cs
+D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\HakunaMatata.csprojAssemblyReference.cache
+D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\Home\Index2.cshtml.g.cs

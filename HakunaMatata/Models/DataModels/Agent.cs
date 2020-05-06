@@ -24,6 +24,7 @@ namespace HakunaMatata.Models.DataModels
         public DateTime? LastLogin { get; set; }
         public bool IsActive { get; set; }
         public int LevelId { get; set; }
+        public bool ConfirmPhoneNumber { get; set; }
 
         public virtual Level Level { get; set; }
         public virtual ICollection<RealEstate> RealEstate { get; set; }
