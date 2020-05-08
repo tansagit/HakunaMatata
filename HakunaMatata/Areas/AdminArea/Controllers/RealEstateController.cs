@@ -156,6 +156,15 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
             return View(details);
         }
 
+
+        [HttpPost, ActionName("Disable")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DisableConfirm(int id)
+        {
+            var isSuccess = _realEstateServices.DisableRealEstate(id);
+            return Json(new { isSuccess, html = Helper.RenderRazorViewToString(this, "_ViewAllRealEstates", _realEstateServices.GetList()) });
+        }
+
         public IActionResult Test()
         {
             return View();

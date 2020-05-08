@@ -173,3 +173,8 @@ D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\Home\S
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\Home\Filter.cshtml.g.cs
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\HakunaMatata.csprojAssemblyReference.cache
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\Home\Index2.cshtml.g.cs
+D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\RealEstate\Details.cshtml.g.cs
+D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Areas\AdminArea\Views\RealEstate\_viewAllRealEstates.cshtml.g.cs
+D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Areas\AdminArea\Views\Agent\Index.cshtml.g.cs
+D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Areas\AdminArea\Views\Agent\_ViewAllAgents.cshtml.g.cs
+D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Areas\AdminArea\Views\Agent\Details.cshtml.g.cs

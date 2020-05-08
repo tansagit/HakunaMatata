@@ -46,6 +46,12 @@ namespace HakunaMatata.Controllers
             return View(await PaginatedList<VM_Search_Result>.CreateAsync(results, pageNumber ?? 1, pageSize));
         }
 
+        public async Task<IActionResult> Index3(VM_Search search)
+        {
+            var results = _services.GetRealEstateList(search);
+            return View(results.ToList());
+        }
+
         [HttpGet]
         public async Task<IActionResult> Search(VM_Search search)
         {
@@ -111,8 +117,6 @@ namespace HakunaMatata.Controllers
 
             return View(container);
         }
-
-
 
 
         public IActionResult Privacy()

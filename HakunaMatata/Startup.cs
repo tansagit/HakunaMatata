@@ -43,6 +43,7 @@ namespace HakunaMatata
             services.AddScoped<ILevelServices, LevelServices>();
             services.AddScoped<IPolicyServices, PolicyServices>();
             services.AddScoped<IRealEstateTypeServices, RealEstateTypeServices>();
+            services.AddScoped<IAgentServices, AgentServices>();
 
 
             //authentication cookie

@@ -301,6 +301,7 @@ namespace HakunaMatata.Services
             if (realEstate != null && realEstate.IsActive)
             {
                 realEstate.IsActive = false;
+                realEstate.LastUpdate = DateTime.Now;
                 _context.SaveChanges();
                 return true;
             }

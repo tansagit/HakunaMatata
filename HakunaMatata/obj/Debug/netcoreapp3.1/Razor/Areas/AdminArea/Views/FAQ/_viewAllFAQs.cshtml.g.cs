@@ -33,8 +33,15 @@ using System.Security.Claims;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 4 "D:\DUT\DATN\HakunaMatata\HakunaMatata\Areas\AdminArea\Views\_ViewImports.cshtml"
+using System.Web;
+
+#line default
+#line hidden
+#nullable disable
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"64bb73694bf5e18664c4ad6f2ec90d23f5097a6a", @"/Areas/AdminArea/Views/FAQ/_viewAllFAQs.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"901e9c64a0c7189b7de243095670e5570d308858", @"/Areas/AdminArea/Views/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"f7220569f60cae402d10314cc4395f2d9060a651", @"/Areas/AdminArea/Views/_ViewImports.cshtml")]
     public class Areas_AdminArea_Views_FAQ__viewAllFAQs : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<IEnumerable<HakunaMatata.Models.DataModels.Faq>>
     {
         private static readonly global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute __tagHelperAttribute_0 = new global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute("asp-area", "AdminArea", global::Microsoft.AspNetCore.Razor.TagHelpers.HtmlAttributeValueStyle.DoubleQuotes);
@@ -146,7 +153,7 @@ WriteAttributeValue("", 1723, Url.Action("CreateOrEdit","FAQ",new {id=item.Id},C
             WriteAttributeValue(" ", 1805, "FAQ\')", 1806, 6, true);
             EndWriteAttribute();
             WriteLiteral(" class=\"btn btn-info btn-circle text-white\"><i class=\"fa fa-pencil\"></i></a>\r\n\r\n                                        ");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "64bb73694bf5e18664c4ad6f2ec90d23f5097a6a8556", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "64bb73694bf5e18664c4ad6f2ec90d23f5097a6a8735", async() => {
                 WriteLiteral(@"
                                             <button class=""btn btn-warning btn-circle"" type=""submit"">
                                                 <i class=""fa fa-times""></i>

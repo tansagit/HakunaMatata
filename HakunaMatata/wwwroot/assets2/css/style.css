@@ -5485,7 +5485,7 @@ form.home5_advanced_search_form .form-group input.form-control::-ms-input-placeh
 .listing_single_description{
   background-color: rgb(255, 255, 255);
   border: 1px solid rgb(235, 235, 235);
-  border-radius: 8px 8px 0 0;
+  border-radius: 0 0 8px 8px;
   padding: 30px;  
 }
 .listing_single_description.style2{
@@ -5529,6 +5529,7 @@ form.home5_advanced_search_form .form-group input.form-control::-ms-input-placeh
 .additional_details{
   background-color: rgb(255, 255, 255);
   border: 1px solid rgb(235, 235, 235);
+  border-radius: 8px 8px 0 0;
   padding: 30px;
   position: relative;  
 }
@@ -13335,7 +13336,7 @@ a.btn.btn_error{
   background-color: #ff5a5f;
   border: 2px solid #ff5a5f;
   border-radius: 5px;
-  color: #ffffff;
+  color: #ffffff !important;
   -webkit-transition: all 0.3s ease;
   -o-transition: all 0.3s ease;
   transition: all 0.3s ease;}
@@ -13350,7 +13351,7 @@ a.btn.btn_error{
 .btn-thm:focus{
   background-color: #ffffff;
   border-color: #ff5a5f;
-  color: #ff5a5f; }
+  color: #ff5a5f !important; }
 
 .btn-thm.white:hover,
 .btn-thm.white:active,

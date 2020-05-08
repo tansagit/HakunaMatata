@@ -66,6 +66,39 @@ jQueryAjaxDelete = form => {
     //prevent default form submit event
     return false;
 };
+
+jQueryAjaxDisable = form => {
+    if (confirm('Are you sure to disable this record ?')) {
+        try {
+            $.ajax({
+                type: 'POST',
+                url: form.action,
+                data: new FormData(form),
+                contentType: false,
+                processData: false,
+                success: function (res) {
+                    if (res.isSuccess) {
+                        $('#view-all').html(res.html);
+                    }
+                    else {
+                        alert("Already disabled!");
+                    }
+
+                },
+                error: function (err) {
+                    alert("Something wrong! Try again!");
+                    console.log(err);
+                }
+            });
+        } catch (ex) {
+            console.log(ex);
+        }
+    }
+    //prevent default form submit event
+    return false;
+};
+
+
 $(function () {
     $("#spinder").addClass('hide');
 
