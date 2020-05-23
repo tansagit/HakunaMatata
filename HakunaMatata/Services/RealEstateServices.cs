@@ -14,7 +14,22 @@ namespace HakunaMatata.Services
     public interface IRealEstateServices
     {
         List<VM_RealEstate> GetList();
+
+        /// <summary>
+        /// use for paging, search in admin page
+        /// </summary>
+        /// <returns></returns>
+        IQueryable<RealEstateViewModel> GetRealEstates(string searchKey);
+
+        /// <summary>
+        /// use for client, filter
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        IQueryable<Result> Filter(Condition condition);
+
         VM_RealEstateDetails GetById(int? id);
+        Task<VM_RealEstateDetails> GetRealEstateDetails(int? id);
         int AddNewRealEstate(RealEstate realEstate);
         bool AddRealEstateDetails(RealEstateDetail details);
         bool AddMapForRealEstate(Map map);
@@ -27,13 +42,14 @@ namespace HakunaMatata.Services
         IEnumerable<City> GetCityList();
         IEnumerable<District> GetDistrictList();
 
+
+
         bool IsExistRealEstate(int id);
 
         Tuple<int?, int?, int> GetLocation(string address);
 
         Task<List<VM_Search_Result>> SearchResults(VM_Search search);
-        IQueryable<VM_Search_Result> GetRealEstateList(VM_Search search);
-
+        //IQueryable<VM_Search_Result> GetRealEstateList(VM_Search search);
 
     }
 
@@ -74,6 +90,60 @@ namespace HakunaMatata.Services
             return list;
         }
 
+        // use for paging in AdminArea/RealEsate/Index2, order by post time
+        public IQueryable<RealEstateViewModel> GetRealEstates(string searchKey)
+        {
+            var source = _context.RealEstate
+                            .Include(r => r.RealEstateDetail)
+                            .Include(r => r.Agent)
+                            .Include(r => r.Map)
+                            .OrderByDescending(r => r.PostTime)
+                            .AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchKey))
+            {
+                source = source.Where(s => s.Map.Address.Contains(searchKey)
+                                         || s.Agent.AgentName.Contains(searchKey)
+                                         || s.ReaEstateType.RealEstateTypeName.Contains(searchKey))
+                                .OrderByDescending(s => s.PostTime);
+            }
+
+            IQueryable<RealEstateViewModel> results = (from item in source
+                                                       select new RealEstateViewModel
+                                                       {
+                                                           Id = item.Id,
+                                                           //Street = Helper.GetStreet(item.Map.Address),
+                                                           Street = item.Map.Address,
+                                                           PostDate = item.PostTime.ToString("dd/MM/yyyy"),
+                                                           Agent = item.Agent.AgentName,
+                                                           Type = item.ReaEstateType.RealEstateTypeName,
+                                                           Status = Helper.GetStatus(item)
+                                                       });
+
+            return results;
+        }
+
+        public async Task<VM_RealEstateDetails> GetRealEstateDetails(int? id)
+        {
+            var info = await _context.RealEstate.Where(r => r.Id == id)
+                           .Include(r => r.RealEstateDetail)
+                           .Include(r => r.ReaEstateType)
+                           .Include(r => r.Map)
+                           .Include(r => r.Agent)
+                           .SingleOrDefaultAsync();
+            if (info != null)
+            {
+                if (info.Map == null)
+                {
+                    info.Map = new Map();
+                }
+                var result = Helper.MappingFromRealEstate(info);
+                return result;
+            }
+
+            return null;
+        }
+
         public VM_RealEstateDetails GetById(int? id)
         {
             var details = _context.RealEstateDetail
@@ -84,6 +154,7 @@ namespace HakunaMatata.Services
                     .ThenInclude(detail => detail.ReaEstateType)
                 .SingleOrDefault();
 
+
             var map = _context.Map.Where(m => m.RealEstateId == id).SingleOrDefault();
 
             var images = _context.Picture
@@ -93,7 +164,8 @@ namespace HakunaMatata.Services
             var imgUrls = new List<string>();
             foreach (var img in images)
             {
-                imgUrls.Add(img.Url);
+                var tempUrl = GetLinkImage(img);
+                imgUrls.Add(tempUrl);
             }
 
             if (details != null)
@@ -110,8 +182,8 @@ namespace HakunaMatata.Services
                     Address = map.Address ?? string.Empty,
                     Price = details.Price,
                     Acreage = details.Acreage,
-                    PostTime = details.RealEstate.PostTime,
-                    LastUpdate = details.RealEstate.LastUpdate,
+                    PostTime = details.RealEstate.PostTime.ToString("dd/MM/yyyy"),
+                    LastUpdate = details.RealEstate.LastUpdate?.ToString("dd/MM/yyyy"),
                     ExprireTime = details.RealEstate.ExprireTime?.ToString("dd/MM/yyyy"),
                     RoomNumber = details.RoomNumber,
                     Description = details.Description,
@@ -126,7 +198,7 @@ namespace HakunaMatata.Services
                     WifiPrice = details.WifiPrice,
                     Latitude = map.Latitude,
                     Longtitude = map.Longtitude,
-                    RealEstateTypeId = details.RealEstate.RealEstateTypeId,
+                    RealEstateTypeId = details.RealEstate.ReaEstateType.Id,
                     IsActive = details.RealEstate.IsActive,
                     ImageUrls = imgUrls
                 };
@@ -253,9 +325,9 @@ namespace HakunaMatata.Services
             if (rt != null)
             {
                 var rt_detail = _context.RealEstateDetail.FirstOrDefault(d => d.RealEstateId == rt.Id);
-                var map = _context.Map.FirstOrDefault(m => m.RealEstateId == rt.Id);
+                //var map = _context.Map.FirstOrDefault(m => m.RealEstateId == rt.Id);
 
-                if (rt_detail != null && map != null)
+                if (rt_detail != null)
                 {
                     //it's update time
                     rt.LastUpdate = DateTime.Now;
@@ -276,8 +348,7 @@ namespace HakunaMatata.Services
                     rt_detail.ElectronicPrice = Convert.ToInt32(details.ElectronicPrice);
                     rt_detail.WifiPrice = details.WifiPrice;
 
-                    map.Address = details.Address;
-
+                    //map.Address = details.Address;
                     _context.SaveChanges();
                     return true;
                 }
@@ -452,116 +523,116 @@ namespace HakunaMatata.Services
             }
         }
 
-        public IQueryable<VM_Search_Result> GetRealEstateList(VM_Search condition)
-        {
-            try
-            {
-                var allPosts = _context.RealEstate.Where(r => r.IsActive == true)
-                                    .Select(e => new
-                                    {
-                                        e, //real estate
-                                        e.RealEstateDetail,
-                                        e.ReaEstateType,
-                                        e.Map,
-                                        image = e.Picture.Where(p => p.IsActive == true).FirstOrDefault(),
-                                        e.Agent
-                                    });
+        //public IQueryable<VM_Search_Result> GetRealEstateList(VM_Search condition)
+        //{
+        //    try
+        //    {
+        //        var allPosts = _context.RealEstate.Where(r => r.IsActive == true)
+        //                            .Select(e => new
+        //                            {
+        //                                e, //real estate
+        //                                e.RealEstateDetail,
+        //                                e.ReaEstateType,
+        //                                e.Map,
+        //                                image = e.Picture.Where(p => p.IsActive == true).FirstOrDefault(),
+        //                                e.Agent
+        //                            });
 
 
-                //filter
-                if (allPosts != null)
-                {
-                    if (condition.Type > 0)
-                        allPosts = allPosts.Where(x => x.ReaEstateType.Id == condition.Type);
-                    if (condition.City > 0)
-                        allPosts = allPosts.Where(x => x.Map.CityId == condition.City);
-                    if (condition.District > 0)
-                        allPosts = allPosts.Where(x => x.Map.DistrictId == condition.District);
+        //        //filter
+        //        if (allPosts != null)
+        //        {
+        //            if (condition.Type > 0)
+        //                allPosts = allPosts.Where(x => x.ReaEstateType.Id == condition.Type);
+        //            if (condition.City > 0)
+        //                allPosts = allPosts.Where(x => x.Map.CityId == condition.City);
+        //            if (condition.District > 0)
+        //                allPosts = allPosts.Where(x => x.Map.DistrictId == condition.District);
 
-                    var priceRange = Helper.GetPriceRange(condition.PriceRange);
-                    var minPrice = priceRange[0];
-                    var maxPrice = priceRange[1];
-                    allPosts = allPosts.Where(x =>
-                        x.RealEstateDetail.Price >= minPrice && x.RealEstateDetail.Price <= maxPrice);
+        //            var priceRange = Helper.GetPriceRange(condition.PriceRange);
+        //            var minPrice = priceRange[0];
+        //            var maxPrice = priceRange[1];
+        //            allPosts = allPosts.Where(x =>
+        //                x.RealEstateDetail.Price >= minPrice && x.RealEstateDetail.Price <= maxPrice);
 
-                    var acreageRange = Helper.GetAcreageRange(condition.AcreageRange);
-                    var minAcreage = acreageRange[0];
-                    var maxAcreage = acreageRange[1];
+        //            var acreageRange = Helper.GetAcreageRange(condition.AcreageRange);
+        //            var minAcreage = acreageRange[0];
+        //            var maxAcreage = acreageRange[1];
 
-                    allPosts = allPosts.Where(x =>
-                        x.RealEstateDetail.Acreage >= minAcreage && x.RealEstateDetail.Acreage <= maxAcreage);
+        //            allPosts = allPosts.Where(x =>
+        //                x.RealEstateDetail.Acreage >= minAcreage && x.RealEstateDetail.Acreage <= maxAcreage);
 
-                    if (!String.IsNullOrEmpty(condition.SearchString))
-                        allPosts = allPosts.Where(
-                            x => x.Map.Address.Contains(condition.SearchString));
+        //            if (!String.IsNullOrEmpty(condition.SearchString))
+        //                allPosts = allPosts.Where(
+        //                    x => x.Map.Address.Contains(condition.SearchString));
 
-                    allPosts = allPosts.OrderByDescending(x => x.e.PostTime);
-                }
+        //            allPosts = allPosts.OrderByDescending(x => x.e.PostTime);
+        //        }
 
-                IQueryable<VM_Search_Result> results = (from item in allPosts
-                                                        select new VM_Search_Result
-                                                        {
-                                                            Id = item.e.Id,
-                                                            Street = Helper.GetStreet(item.Map.Address),
-                                                            Price = item.RealEstateDetail.Price,
-                                                            Acreage = item.RealEstateDetail.Acreage,
-                                                            Type = item.ReaEstateType.Id,
-                                                            PostTime = item.e.PostTime.ToString("dd/MM/yyyy"),
-                                                            ImageUrl = GetLinkImage(item.image),
-                                                            AgentName = item.Agent.AgentName
-                                                        });
+        //        IQueryable<VM_Search_Result> results = (from item in allPosts
+        //                                                select new VM_Search_Result
+        //                                                {
+        //                                                    Id = item.e.Id,
+        //                                                    Street = Helper.GetStreet(item.Map.Address),
+        //                                                    Price = item.RealEstateDetail.Price,
+        //                                                    Acreage = item.RealEstateDetail.Acreage,
+        //                                                    Type = item.ReaEstateType.Id,
+        //                                                    PostTime = item.e.PostTime.ToString("dd/MM/yyyy"),
+        //                                                    ImageUrl = GetLinkImage(item.image),
+        //                                                    AgentName = item.Agent.AgentName
+        //                                                });
 
-                if (allPosts.Count() > 0)
-                {
-                    #region commemed
+        //        if (allPosts.Count() > 0)
+        //        {
+        //            #region commemed
 
-                    //foreach (var item in allPosts)
-                    //{
-                    //    string imageUrl = string.Empty;
-                    //    //neu list picture null hoac rong thi anh dai dien = 404
-                    //    if (item.image == null)
-                    //    {
-                    //        imageUrl = "404";
-                    //    }
-                    //    else
-                    //    {
-                    //        //lay phan tu dau tien trong list picture
+        //            //foreach (var item in allPosts)
+        //            //{
+        //            //    string imageUrl = string.Empty;
+        //            //    //neu list picture null hoac rong thi anh dai dien = 404
+        //            //    if (item.image == null)
+        //            //    {
+        //            //        imageUrl = "404";
+        //            //    }
+        //            //    else
+        //            //    {
+        //            //        //lay phan tu dau tien trong list picture
 
-                    //        //kiem tra picture name no ton tai ko, 
-                    //        // neu co nghia la moi them vao, ko phải crawl tu web
-                    //        if (!string.IsNullOrEmpty(item.image.PictureName))
-                    //        {
-                    //            //tao url = cach + chuoi ~/images/ + PictureName
-                    //            imageUrl = "local" + item.image.PictureName;
-                    //        }
-                    //        else
-                    //        {
-                    //            imageUrl = item.image.Url;
-                    //        }
-                    //    }
+        //            //        //kiem tra picture name no ton tai ko, 
+        //            //        // neu co nghia la moi them vao, ko phải crawl tu web
+        //            //        if (!string.IsNullOrEmpty(item.image.PictureName))
+        //            //        {
+        //            //            //tao url = cach + chuoi ~/images/ + PictureName
+        //            //            imageUrl = "local" + item.image.PictureName;
+        //            //        }
+        //            //        else
+        //            //        {
+        //            //            imageUrl = item.image.Url;
+        //            //        }
+        //            //    }
 
-                    //    var resultItem = new VM_Search_Result()
-                    //    {
-                    //        Id = item.e.Id,
-                    //        Street = Helper.GetStreet(item.Map.Address),
-                    //        Price = item.RealEstateDetail.Price,
-                    //        Acreage = item.RealEstateDetail.Acreage,
-                    //        Type = item.ReaEstateType.Id,
-                    //        PostTime = item.e.PostTime.ToString("dd/MM/yyyy"),
-                    //        ImageUrl = imageUrl,
-                    //        AgentName = item.Agent.AgentName
-                    //    };
-                    //    results.Add(resultItem);
-                    //}
-                    #endregion
-                }
-                return results;
-            }
-            catch
-            {
-                return null;
-            }
-        }
+        //            //    var resultItem = new VM_Search_Result()
+        //            //    {
+        //            //        Id = item.e.Id,
+        //            //        Street = Helper.GetStreet(item.Map.Address),
+        //            //        Price = item.RealEstateDetail.Price,
+        //            //        Acreage = item.RealEstateDetail.Acreage,
+        //            //        Type = item.ReaEstateType.Id,
+        //            //        PostTime = item.e.PostTime.ToString("dd/MM/yyyy"),
+        //            //        ImageUrl = imageUrl,
+        //            //        AgentName = item.Agent.AgentName
+        //            //    };
+        //            //    results.Add(resultItem);
+        //            //}
+        //            #endregion
+        //        }
+        //        return results;
+        //    }
+        //    catch
+        //    {
+        //        return null;
+        //    }
+        //}
         private static string GetLinkImage(Picture image)
         {
             string imageUrl = string.Empty;
@@ -586,6 +657,74 @@ namespace HakunaMatata.Services
                 }
             }
             return imageUrl;
+        }
+
+        public IQueryable<Result> Filter(Condition condition)
+        {
+            try
+            {
+                var source = _context.RealEstate.Where(r => r.IsActive == true)
+                                .Include(r => r.RealEstateDetail)
+                                .Include(r => r.Agent)
+                                .Include(r => r.Map)
+                                .Include(r => r.Picture)
+                                .OrderByDescending(r => r.PostTime)
+                                .AsQueryable();
+
+                if (source != null)
+                {
+                    //neu dau vao co dieu kien thi moi loc tin
+                    //truong hop go URL truc tiep den .../realestate/index thi condition == null
+                    if (condition != null)
+                    {
+                        if (condition.Type > 0)
+                            source = source.Where(s => s.RealEstateTypeId == condition.Type);
+                        if (condition.City > 0)
+                            source = source.Where(x => x.Map.CityId == condition.City);
+                        if (condition.District > 0)
+                            source = source.Where(x => x.Map.DistrictId == condition.District);
+
+                        var priceRange = Helper.GetPriceRange(condition.PriceRange);
+                        var minPrice = priceRange[0];
+                        var maxPrice = priceRange[1];
+                        source = source.Where(x =>
+                            x.RealEstateDetail.Price >= minPrice && x.RealEstateDetail.Price <= maxPrice);
+
+                        var acreageRange = Helper.GetAcreageRange(condition.AcreageRange);
+                        var minAcreage = acreageRange[0];
+                        var maxAcreage = acreageRange[1];
+                        source = source.Where(x =>
+                           x.RealEstateDetail.Acreage >= minAcreage && x.RealEstateDetail.Acreage <= maxAcreage);
+
+
+                        if (!string.IsNullOrEmpty(condition.SearchString))
+                            source = source.Where(
+                                x => x.Map.Address.Contains(condition.SearchString));
+                    }
+                }
+
+
+                IQueryable<Result> results = (from item in source
+                                              select new Result
+                                              {
+                                                  Id = item.Id,
+                                                  Street = Helper.GetStreet(item.Map.Address),
+                                                  Price = item.RealEstateDetail.Price,
+                                                  Acreage = item.RealEstateDetail.Acreage,
+                                                  Type = item.RealEstateTypeId,
+                                                  PostTime = item.PostTime.ToString("dd/MM/yyyy"),
+                                                  ImageUrl = Helper.GetRealEstateAvatar(item.Picture.FirstOrDefault()),
+                                                  AgentName = item.Agent.AgentName,
+                                                  ContactNumber = item.ContactNumber
+                                              });
+
+                return results;
+
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 

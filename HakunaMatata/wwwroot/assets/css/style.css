@@ -5162,3 +5162,15 @@ ul {
         -webkit-box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.12);
         box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.12);
     }
+
+#loginModal div.checkbox {
+    padding-left: 4px;
+}
+
+    #loginModal div.checkbox label::before {
+        margin-top: 5px;
+    }
+
+    #loginModal div.checkbox label::after {
+        margin-top: 5px;
+    }

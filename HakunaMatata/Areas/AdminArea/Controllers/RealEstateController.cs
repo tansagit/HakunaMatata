@@ -20,6 +20,7 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
     {
         private readonly IRealEstateServices _realEstateServices;
         private readonly IFileServices _fileServices;
+        //public readonly List<IFormFile> UploadedFiles;
 
         public RealEstateController(IRealEstateServices realEstateServices, IFileServices fileServices)
         {
@@ -33,6 +34,27 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
             ViewBag.Message = TempData["Message"];
             return View(vm_realEstates);
         }
+
+        public IActionResult Index2()
+        {
+            return View();
+        }
+        /// <summary>
+        /// index 2 thu dung cach paging theo server side
+        /// </summary>
+        /// <param name="pageIndex">Pagination index</param>
+        /// <returns></returns>
+        public async Task<IActionResult> LoadData(int pageIndex, string searchKey)
+        {
+            var source = _realEstateServices.GetRealEstates(searchKey);
+            var count = await source.CountAsync();
+            // dua vao pageIndex de get ra tu source bao nhieu item
+            // o day mac dinh lay 5 item 1 trang
+            var items = await source.Skip((pageIndex - 1) * 20).Take(20).ToListAsync();
+
+            return Json(new { data = items, totalRow = count });
+        }
+
 
         public IActionResult Details(int? id)
         {
@@ -55,6 +77,7 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
             return View();
         }
 
+
         [HttpPost]
         public IActionResult Create(
             [Bind("Title,Address,Price,Acreage,ExprireTime,RoomNumber,Description,HasPrivateWc,HasMezzanine,AllowCook,FreeTime,SecurityCamera,WaterPrice,ElectronicPrice,WifiPrice,RealEstateTypeId,Latitude,Longtitude,isFreeWater,isFreeElectronic,isFreeWifi,Files")]
@@ -62,12 +85,12 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
         {
             //get files from http request
             //var files = HttpContext.Request.Form.Files.ToList();
-            //details.Files = files;
-            int uploadedFiles = 0;
+
+
+            int uploadedFilesCount = 0;
             var realEstateTypeList = _realEstateServices.GetRealEstateTypeList();
             ViewData["RealEstateTypeId"] = new SelectList(realEstateTypeList, "Id", "RealEstateTypeName", details.RealEstateTypeId);
-            //use IFormFile Collection as parameter will not work here
-            // so use HttpContext instead
+
             if (ModelState.IsValid)
             {
                 var userId = User.Claims.FirstOrDefault(c => c.Type == "UserId").Value ?? string.Empty;
@@ -78,13 +101,13 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
                     //tao real estate thanh cong
                     if (realEstateId != -1)
                     {
-                        if (details.Files.Count > 0)
+                        if (details.Files != null && details.Files.Count > 0)
                         {
-                            uploadedFiles = _fileServices.AddPicture(realEstateId, details.Files);
+                            uploadedFilesCount = _fileServices.AddPicture(realEstateId, details.Files);
                         }
 
                         //use tempdate pass message to index controller
-                        TempData["Message"] = string.Format("Thêm phòng trọ thành công, uploaded {0} hình ảnh", uploadedFiles);
+                        TempData["Message"] = string.Format("Thêm phòng trọ thành công, uploaded {0} hình ảnh", uploadedFilesCount);
                         return RedirectToAction(nameof(Index));
                     }
                     else
@@ -108,13 +131,23 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
 
         }
 
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            var details = _realEstateServices.GetById(id);
+            //var details = _realEstateServices.GetById(id);
+            var details = await _realEstateServices.GetRealEstateDetails(id);
+            if (details == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var pictures = _fileServices.GetPicturesForRealEstate(details.Id);
+                details.Pictures = pictures.ToList();
+            }
 
             var realEstateTypeList = _realEstateServices.GetRealEstateTypeList();
             ViewData["RealEstateTypeId"] = new SelectList(realEstateTypeList, "Id", "RealEstateTypeName", details.RealEstateTypeId);
@@ -123,10 +156,12 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //hien tai chua update list image, longtitude, latitude
         public IActionResult Edit(int id,
-            [Bind("Id,Title,Address,Price,Acreage,ExprireTime,RoomNumber,Description,HasPrivateWc,HasMezzanine,AllowCook,FreeTime,SecurityCamera,WaterPrice,ElectronicPrice,WifiPrice,RealEstateTypeId")] VM_RealEstateDetails details)
+            [Bind("Id,Title,Address,Price,Acreage,ExprireTime,RoomNumber,Description,HasPrivateWc,HasMezzanine,AllowCook,FreeTime,SecurityCamera,WaterPrice,ElectronicPrice,WifiPrice,RealEstateTypeId,Files")] VM_RealEstateDetails details)
         {
+            int uploadedFilesCount = 0;
+            var files = HttpContext.Request.Form.Files.ToList();
+
             if (id != details.Id)
             {
                 return NotFound();
@@ -136,6 +171,10 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
             {
                 try
                 {
+                    if (details.Files != null && details.Files.Count > 0)
+                    {
+                        uploadedFilesCount = _fileServices.AddPicture(details.Id, details.Files);
+                    }
                     var isUpdateSuccess = _realEstateServices.UpdateRealEstate(details);
                     if (isUpdateSuccess) return RedirectToAction(nameof(Index));
                     else return View(details);
@@ -165,21 +204,29 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
             return Json(new { isSuccess, html = Helper.RenderRazorViewToString(this, "_ViewAllRealEstates", _realEstateServices.GetList()) });
         }
 
-        public IActionResult Test()
-        {
-            return View();
-        }
 
         [HttpPost]
-        public IActionResult Test(VM_RealEstateDetails details)
+        [ValidateAntiForgeryToken]
+        public IActionResult DisableRealEsate(int id)
         {
-            var files = HttpContext.Request.Form.Files.ToList();
-            var files2 = details.Files;
-            if (files.Count > 0)
+            var status = _realEstateServices.DisableRealEstate(id);
+            return Json(new { status });
+        }
+
+
+        //hình như ko dùng
+        [HttpPost, ActionName("RemovePicture")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemovePictureConfirm(int id)
+        {
+            int realEstateId = Convert.ToInt32(_fileServices.GetRealEstateId(id));
+            var isSuccess = _fileServices.RemovePictureFromRealEstate(id);
+
+            return Json(new
             {
-                var uploadedFiles = _fileServices.AddPicture(23, files);
-            }
-            return View(files);
+                isSuccess,
+                html = Helper.RenderRazorViewToString(this, "_ViewPictures", _fileServices.GetPicturesForRealEstate(realEstateId))
+            });
         }
 
     }

@@ -25,8 +25,12 @@ namespace HakunaMatata
             services.AddDbContext<HakunaMatataContext>
                 (opts => opts.UseSqlServer(Configuration["ConnectionString:ConnectStr"]));
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
+            // Add framework services.
+            services.AddMvc();
 
             //enable CORS
             services.AddCors(option => option.AddPolicy("MyBlogPolicy", builder =>
@@ -44,6 +48,12 @@ namespace HakunaMatata
             services.AddScoped<IPolicyServices, PolicyServices>();
             services.AddScoped<IRealEstateTypeServices, RealEstateTypeServices>();
             services.AddScoped<IAgentServices, AgentServices>();
+
+            services.AddScoped<IVerification, Verification>();
+            //services.AddScoped<VerifyFilter>();
+
+            //services.AddSingleton<IVerification>(new Verification(
+            //    Configuration.GetSection("Twilio").Get<Configuration.Twilio>()));
 
 
             //authentication cookie

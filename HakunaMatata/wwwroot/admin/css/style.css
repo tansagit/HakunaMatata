@@ -5013,19 +5013,19 @@ body.tour-open .animated {
     padding: 20px 20px;
 }
 
-.dropzone .dz-message {
-    font-size: 16px;
-}
+    .dropzone .dz-message {
+        font-size: 16px;
+    }
 
-.dropzone .dz-remove {
-    text-decoration: none;
-    color: #1ab394;
-}
+    .dropzone .dz-remove {
+        text-decoration: none;
+        color: #1ab394;
+    }
 
-.dropzone .dz-remove:hover {
-    text-decoration: none;
-    color: #1f5e51;
-}
+        .dropzone .dz-remove:hover {
+            text-decoration: none;
+            color: #1f5e51;
+        }
 
 /* Activity stream */
 .stream {
@@ -11582,3 +11582,34 @@ body.md-skin {
 .ibox-title .float-right {
     margin-right: -75px;
 }
+
+/*Custom remove button on image*/
+.artist-collection-photo {
+    float: left;
+    margin: 10px;
+    width: 200px;
+    height: 200px;
+    position: relative;
+}
+
+    .artist-collection-photo img {
+        border-radius: 7px;
+        width: 200px;
+        height: 200px;
+    }
+
+    .artist-collection-photo .close {
+        cursor: pointer;
+        font-size: 30px;
+        position: absolute;
+        background: transparent;
+        border: none;
+        border-radius: 5px;
+        right: 2px;
+        top: -6px;
+        z-index: 9999;
+    }
+
+        .artist-collection-photo .close:hover {
+            transform: scale(1.2);
+        }

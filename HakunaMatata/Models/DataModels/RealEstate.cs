@@ -17,6 +17,11 @@ namespace HakunaMatata.Models.DataModels
         public DateTime? ExprireTime { get; set; }
         public int? RealEstateTypeId { get; set; }
         public int? AgentId { get; set; }
+
+        /// <summary>
+        /// so dien thoai lien he, co the khac Agent.Number vi crawl data
+        /// </summary>
+        public string ContactNumber { get; set; }
         public bool IsActive { get; set; }
 
         public virtual Agent Agent { get; set; }

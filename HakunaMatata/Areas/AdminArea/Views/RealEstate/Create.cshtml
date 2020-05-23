@@ -1,6 +1,7 @@
 ﻿@model HakunaMatata.Models.ViewModels.VM_RealEstateDetails;
 
-<div class="wrapper wrapper-content animated fadeInRight">
+
+<div id="real-estate-create" class="wrapper wrapper-content animated fadeInRight">
 
     <div class="row">
         <div class="col-lg-12">
@@ -244,7 +245,7 @@
 
                                     </div>
                                     <div class="ibox-content no-padding">
-                                        <textarea type="text" asp-for="Description" class="form-control summernote" required></textarea>
+                                        <textarea type="text" asp-for="Description" class="form-control summernote"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -281,23 +282,20 @@
                             <div class="col-lg-12">
                                 <div class="ibox">
                                     <div class="ibox-title">
-                                        <h5>Dropzone.js</h5>
+                                        <h5>Upload images</h5>
                                     </div>
                                     <div class="ibox-content">
-                                        <p>
-                                            <strong>Dropzone.js</strong> is a light weight JavaScript
-                                        </p>
-
-                                        @*<div class="dropzone" id="dropzoneForm">
-                                                <div class="fallback">
-                                                    <input asp-for="Files" type="file" multiple />
+                                        <div class="row">
+                                            <div class="col-lg-3 col-sm-12">
+                                                <div class="custom-file">
+                                                    <input asp-for="Files" class="custom-file-input" type="file" multiple />
+                                                    <label class="custom-file-label" asp-for="Files">Choose file</label>
                                                 </div>
-                                            </div>*@
-
-                                        <div>
-                                            <input asp-for="Files" type="file" multiple />
+                                            </div>
+                                            <div class="col-lg-9 col-sm-12">
+                                                <div class="lightBoxGallery"></div>
+                                            </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -316,28 +314,39 @@
 </div>
 
 <script>
+    $(function () {
+        // Multiple images preview in browser
+        var imagesPreview = function (input, placeToInsertImagePreview) {
 
-    Dropzone.autoDiscover = false;
-    $(document).ready(function () {
-        var myDropzone = new Dropzone("div#dropzoneForm", {
-            url: "/AdminArea/RealEstate/Create",
-            dictDefaultMessage: "<strong>Drop files here or click to upload. </strong>",
-            paramName: () => "Files", // The name that will be used to transfer the file
-            maxFilesize: 5, // MB,
-            parallelUploads: 10,
-            uploadMultiple: true,
-            acceptedFiles: "image/*",
-            addRemoveLinks: true,
-            autoProcessQueue: false
+            if (input.files) {
+                var filesAmount = input.files.length;
+
+                for (i = 0; i < filesAmount; i++) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (event) {
+                        $($.parseHTML('<img>')).attr({
+                            'src': event.target.result,
+                            'class': 'img-fluid',
+                            'style': 'width: 200px; height: 200px; border-radius: 7px',
+                            'alt': 'preview'
+                        }).appendTo(placeToInsertImagePreview);
+
+                    }
+
+                    reader.readAsDataURL(input.files[i]);
+                }
+            }
+
+        };
+
+        $('#Files').on('change', function () {
+            $("div.lightBoxGallery").html("");
+            imagesPreview(this, 'div.lightBoxGallery');
 
         });
-        var submitButton = document.getElementById('submitButton');
-
-        submitButton.addEventListener("click", function () {
-            myDropzone.processQueue(); // Tell Dropzone to process all queued files.
-        });
-
     });
+
 </script>
 
 <script>
@@ -458,8 +467,9 @@
 
 <script>
     $(document).ready(function () {
-
-        $('.summernote').summernote();
+        $('.summernote').summernote({
+            height: 200
+        });
     });
 </script>
 

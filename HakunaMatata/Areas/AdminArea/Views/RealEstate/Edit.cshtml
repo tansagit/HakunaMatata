@@ -1,5 +1,10 @@
 ﻿@model HakunaMatata.Models.ViewModels.VM_RealEstateDetails;
 
+@section scripts{
+    <script src="~/js/mustache.min.js"></script>
+    <script src="~/js/pictureServices.js"></script>
+}
+
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
@@ -13,7 +18,7 @@
                     </h5>
                 </div>
                 <div class="ibox-content">
-                    <form asp-action="Edit" id="edit-form">
+                    <form asp-action="Edit" id="edit-form" enctype="multipart/form-data">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <input type="hidden" asp-for="Id" />
                         <div class="form-group row">
@@ -63,7 +68,7 @@
                             <div class="col-sm-10 col-lg-4">
                                 <div class="input-group m-b">
                                     <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
-                                    <input asp-for="Price" 
+                                    <input asp-for="Price"
                                            type="text" id="currency-field"
                                            data-type="currency"
                                            placeholder="1,000,000" class="form-control">
@@ -84,7 +89,7 @@
                                                 <i class="fa fa-dollar"></i>
                                             </span>
                                             <input asp-for="ElectronicPrice"
-                                                   type="text" id="tien-dien"                                                  
+                                                   type="text" id="tien-dien"
                                                    data-type="currency" placeholder="3,500/KW"
                                                    class="form-control">
                                             <div class="input-group-append">
@@ -113,10 +118,10 @@
                                             <span class="input-group-addon">
                                                 <i class="fa fa-dollar"></i>
                                             </span>
-                                            <input type="text" 
+                                            <input type="text"
                                                    id="tien-nuoc"
                                                    asp-for="WaterPrice"
-                                                   data-type="currency" 
+                                                   data-type="currency"
                                                    placeholder=""
                                                    class="form-control">
 
@@ -145,10 +150,10 @@
                                             <span class="input-group-addon">
                                                 <i class="fa fa-dollar"></i>
                                             </span>
-                                            <input type="text" 
+                                            <input type="text"
                                                    id="tien-wifi"
                                                    asp-for="WifiPrice"
-                                                   data-type="currency" 
+                                                   data-type="currency"
                                                    placeholder=""
                                                    class="form-control">
 
@@ -170,18 +175,17 @@
                         </div>
 
                         <div class="form-group row">
-                            <label asp-for="Address" class="col-sm-2 col-form-label">Dia chi</label>
+                            <label asp-for="Address" class="col-sm-2 col-form-label">Địa chỉ</label>
                             <div class="col-sm-10">
                                 <div class="input-group m-b">
                                     <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
-                                    <input asp-for="Address" type="text" class="form-control" />
+                                    <input asp-for="Address" type="text" class="form-control" readonly />
                                 </div>
-
                             </div>
                         </div>
 
                         <div class="form-group row" id="expire-day">
-                            <label asp-for="ExprireTime" class="col-sm-2 col-form-label">Ngay het han</label>
+                            <label asp-for="ExprireTime" class="col-sm-2 col-form-label">Ngày hết hạn</label>
                             <div class="col-sm-10 col-lg-4">
                                 <div class="input-group date">
                                     <span class="input-group-addon">
@@ -236,6 +240,37 @@
                         </div>
 
                         <div class="hr-line-dashed"></div>
+
+                        <div class="form-group row">
+                            <div class="col-lg-12">
+                                <div class="ibox ">
+                                    <div class="ibox-title">
+                                        <h5>Hình ảnh</h5>
+                                    </div>
+                                    <div class="ibox-content no-padding">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div id="view-pictures">
+                                                    @*@await Html.PartialAsync("_ViewPictures", Model.Pictures)*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3 col-sm-12">
+                                                <div class="custom-file">
+                                                    <input asp-for="Files" class="custom-file-input" type="file" multiple />
+                                                    <label class="custom-file-label" asp-for="Files">Choose more files</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-9 col-sm-12">
+                                                <div class="lightBoxGallery"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
                         <div class="form-group row">
                             <div class="col-lg-12">
                                 <div class="ibox ">
@@ -262,7 +297,7 @@
                                         </div>
                                     </div>
                                     <div class="ibox-content no-padding">
-                                        <textarea type="text" asp-for="Description" class="form-control summernote" required></textarea>
+                                        <textarea style="min-height:300px" type="text" asp-for="Description" class="form-control summernote" required></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -270,8 +305,8 @@
 
                         <div class="form-group row">
                             <div class="col-sm-4 col-sm-offset-2">
-                                <button class="btn btn-white btn-sm" type="submit">Cancel</button>
-                                <button class="btn btn-primary btn-sm" type="submit">Save changes</button>
+                                <a class="btn btn-white btn-sm" asp-action="Index">Cancel</a>
+                                <input class="btn btn-primary btn-sm" type="submit" value="Save changes" />
                             </div>
                         </div>
                     </form>
@@ -401,7 +436,51 @@
 
 <script>
     $(document).ready(function () {
-
-        $('.summernote').summernote();
+        $('.summernote').summernote({
+            height: 200
+        });
     });
+</script>
+
+<script id="picture-template" type="x-tmpl-mustache">
+    <div class="artist-collection-photo">
+        <img width="200" height="200" src="{{PictureUrl}}" class="img-fluid">
+        <button onclick="pictureServices.removePicture({{PictureId}})" id="picture-remove-btn" class="close" type="button">×</button>
+    </div>
+</script>
+
+<script>
+    $(function () {
+        // Multiple images preview in browser
+        var imagesPreview = function (input, placeToInsertImagePreview) {
+
+            if (input.files) {
+                var filesAmount = input.files.length;
+
+                for (i = 0; i < filesAmount; i++) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (event) {
+                        $($.parseHTML('<img>')).attr({
+                            'src': event.target.result,
+                            'class': 'img-fluid',
+                            'style': 'width: 200px; height: 200px; border-radius: 7px',
+                            'alt': 'preview'
+                        }).appendTo(placeToInsertImagePreview);
+
+                    }
+
+                    reader.readAsDataURL(input.files[i]);
+                }
+            }
+
+        };
+
+        $('#Files').on('change', function () {
+            $("div.lightBoxGallery").html("");
+            imagesPreview(this, 'div.lightBoxGallery');
+
+        });
+    });
+
 </script>

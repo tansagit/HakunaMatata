@@ -7,6 +7,10 @@ namespace HakunaMatata.Helpers
 {
     public class Constants
     {
+        // neu ko tim thay gia tri lat/lng thi default la dia chi cua truong
+        public const decimal DEFAULT_LATITUDE = 16.0738013M;
+        public const decimal DEFAULT_LONGTITUDE = 108.1477255M;
+
         public static readonly string GOOGLE_MAP_API_KEY = "AIzaSyBY8PE_X6qdTWkZwdBENNpGJTYr1cTjG9I";
 
         public static readonly string GOOGLE_MAP_MARKER_API =
@@ -14,28 +18,6 @@ namespace HakunaMatata.Helpers
 
         public static readonly string LOCAL_IMG_SERVER = "http://127.0.0.1:8887/";
 
-        public enum PriceRange
-        {
-            All,
-            BelowOne,
-            One_Two,
-            Two_Three,
-            Three_Five,
-            Five_Seven,
-            Seven_Ten,
-            Higher
-        }
 
-        public enum AcreageRange
-        {
-            All,
-            BelowTwenty,
-            Twenty_Thirty,
-            Thirty_Fifty,
-            Fifty_Sixty,
-            Sixty_Seventy,
-            Seventy_Eighty,
-            Higher
-        }
     }
 }

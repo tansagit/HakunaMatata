@@ -1,9 +1,13 @@
-﻿namespace HakunaMatata.Models.ViewModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace HakunaMatata.Models.ViewModels
 {
     public class VM_Login
     {
+        [Required]
         public string LoginName { get; set; }
 
+        [Required]
         public string Password { get; set; }
 
         public bool IsRememberMe { get; set; }

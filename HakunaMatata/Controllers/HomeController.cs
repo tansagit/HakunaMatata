@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using HakunaMatata.Helpers;
+using HakunaMatata.Models;
+using HakunaMatata.Models.DataModels;
+using HakunaMatata.Models.ViewModels;
+using HakunaMatata.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using HakunaMatata.Models;
-using HakunaMatata.Helpers;
-using HakunaMatata.Models.ViewModels;
-using HakunaMatata.Services;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using HakunaMatata.Models.DataModels;
+
 
 namespace HakunaMatata.Controllers
 {
@@ -27,11 +26,11 @@ namespace HakunaMatata.Controllers
         public IActionResult Index()
         {
             var cityList = _services.GetCityList();
-            cityList = cityList.Concat(new[] { new City { Id = 0, CityName = "Tất cả" } });
+            cityList = cityList.Concat(new[] { new City { Id = 0, CityName = "Chọn thành phố" } });
             cityList = cityList.OrderBy(c => c.Id);
 
             var typeList = _services.GetRealEstateTypeList();
-            typeList = typeList.Concat(new[] { new RealEstateType { Id = 0, RealEstateTypeName = "Tất cả" } });
+            typeList = typeList.Concat(new[] { new RealEstateType { Id = 0, RealEstateTypeName = "Loại phòng" } });
             typeList = typeList.OrderBy(t => t.Id);
 
             ViewData["Cities"] = new SelectList(cityList, "Id", "CityName");
@@ -39,18 +38,13 @@ namespace HakunaMatata.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Index2(VM_Search search, int? pageNumber)
-        {
-            int pageSize = 10;
-            var results = _services.GetRealEstateList(search);
-            return View(await PaginatedList<VM_Search_Result>.CreateAsync(results, pageNumber ?? 1, pageSize));
-        }
+        //public async Task<IActionResult> Index2(VM_Search search, int? pageNumber)
+        //{
+        //    int pageSize = 3;
+        //    var results = _services.GetRealEstateList(search);
+        //    return View(await PaginatedList<VM_Search_Result>.CreateAsync(results, pageNumber ?? 1, pageSize));
+        //}
 
-        public async Task<IActionResult> Index3(VM_Search search)
-        {
-            var results = _services.GetRealEstateList(search);
-            return View(results.ToList());
-        }
 
         [HttpGet]
         public async Task<IActionResult> Search(VM_Search search)
@@ -62,16 +56,16 @@ namespace HakunaMatata.Controllers
             viewmodel.ResultList = results;
 
             var types = _services.GetRealEstateTypeList();
-            types = types.Concat(new[] { new RealEstateType { Id = 0, RealEstateTypeName = "Tất cả" } });
+            types = types.Concat(new[] { new RealEstateType { Id = 0, RealEstateTypeName = "Loại phòng" } });
             types = types.OrderBy(t => t.Id);
 
             var cities = _services.GetCityList();
-            cities = cities.Concat(new[] { new City { Id = 0, CityName = "Tất cả" } });
+            cities = cities.Concat(new[] { new City { Id = 0, CityName = "Thành phố" } });
             cities = cities.OrderBy(c => c.Id);
 
 
             var districts = _services.GetDistrictList();
-            districts = districts.Concat(new[] { new District { Id = 0, DistrictName = "Tất cả" } });
+            districts = districts.Concat(new[] { new District { Id = 0, DistrictName = "Quận" } });
             districts = districts.OrderBy(d => d.Id);
 
             var priceRanges = Helper.GetPriceRangeForView();

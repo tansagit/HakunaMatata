@@ -26,6 +26,23 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
             return View(list);
         }
 
+        /// <summary>
+        /// dung cho pagin
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> LoadData(int pageIndex)
+        {
+            var source = _services.GetData();
+            var count = await source.CountAsync();
+
+            // dua vao pageIndex de get ra tu source bao nhieu item
+            // o day mac dinh lay 5 item 1 trang
+            var items = await source.Skip((pageIndex - 1) * 5).Take(5).ToListAsync();
+
+            return Json(new { data = items, totalRow = count });
+        }
+
         [NoDirectAccess]
         public IActionResult CreateOrEdit(int id = 0)
         {

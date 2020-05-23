@@ -2,9 +2,11 @@
 using HakunaMatata.Models.DataModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace HakunaMatata.Services
@@ -13,7 +15,9 @@ namespace HakunaMatata.Services
     {
         Dictionary<string, string> UploadFiles(List<IFormFile> files);
         int AddPicture(int realEstateId, List<IFormFile> files);
-
+        IEnumerable<Picture> GetPicturesForRealEstate(int id);
+        bool RemovePictureFromRealEstate(int pictureId);
+        int? GetRealEstateId(int pictureId);
     }
 
     public class FileServices : IFileServices
@@ -24,6 +28,13 @@ namespace HakunaMatata.Services
         {
             _enviroment = environment;
             _context = context;
+        }
+
+
+        public IEnumerable<Picture> GetPicturesForRealEstate(int id)
+        {
+            return _context.Picture
+                .Where(p => p.RealEstateId == id && p.IsActive == true).ToList();
         }
 
         public int AddPicture(int realEstateId, List<IFormFile> files)
@@ -47,10 +58,22 @@ namespace HakunaMatata.Services
             return count;
         }
 
+        public bool RemovePictureFromRealEstate(int pictureId)
+        {
+            var picture = _context.Picture.Find(pictureId);
+            if (picture != null)
+            {
+                _context.Picture.Remove(picture);
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
         public Dictionary<string, string> UploadFiles(List<IFormFile> files)
         {
             string wwwPath = this._enviroment.WebRootPath;
-            string contentPath = this._enviroment.ContentRootPath;
+            //string contentPath = this._enviroment.ContentRootPath;
 
             string path = Path.Combine(wwwPath, "images");
             if (!Directory.Exists(path))
@@ -63,20 +86,33 @@ namespace HakunaMatata.Services
 
             foreach (var file in files)
             {
-                string fileName = string.Format("{0}-{1}", Guid.NewGuid(), file.FileName);
-                var savePath = Path.Combine(path, fileName);
+                string fileUrl = string.Format("{0}-{1}", Guid.NewGuid(), file.FileName);
+
+                //dung de luu trong database de nhan biet la file local
+                //fileURL : GUID + FileName
+                //fileName: local-picture + fileURL
+                string fileName = string.Format("local-picture-{0}", fileUrl);
+
+                var savePath = Path.Combine(path, fileUrl);
 
                 using (var stream = new FileStream(savePath, FileMode.Create))
                 {
                     file.CopyTo(stream);
-                    uploadedFiles.Add(fileName, savePath);
+                    uploadedFiles.Add(fileName, fileUrl);
                 }
             }
             return uploadedFiles;
         }
 
-
-
+        public int? GetRealEstateId(int pictureId)
+        {
+            var picture = _context.Picture.Find(pictureId);
+            if (picture != null)
+            {
+                return picture.RealEstateId;
+            }
+            return null;
+        }
     }
 }
 

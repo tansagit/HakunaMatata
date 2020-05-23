@@ -11,7 +11,6 @@ namespace HakunaMatata.Models.ViewModels
         public int Id { get; set; }
         public string Title { get; set; }
         
-
         [DisplayFormat(DataFormatString ="dd/MM/yyyy")]
         public DateTime PostTime { get; set; }
 

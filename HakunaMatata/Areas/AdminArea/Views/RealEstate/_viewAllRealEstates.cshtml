@@ -7,7 +7,7 @@
                 <div class="ibox-title">
                     <h1>List of real estates</h1>
                     <div class="text-info">@ViewBag.Message</div>
-                    <a asp-action="Create" class="btn btn-info" type="button">Add new</a>
+                    <a asp-action="Create" class="btn btn-primary" type="button">Add new</a>
                 </div>
                 <div class="ibox-content">
                     <div class="table-responsive">
@@ -27,7 +27,6 @@
                                     <th class="text-center">Type</th>
                                     <th class="text-center">Agent</th>
                                     <th>Price(VND)</th>
-
                                     <th>Expire time</th>
                                     <th class="text-center">Status</th>
                                     <th class="text-center">Action</th>
@@ -82,7 +81,7 @@
                                             <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-circle" type="button">
                                                 <i class="fas fa-pencil-alt"></i>
                                             </a>
-                                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-warning btn-circle" type="button">
+                                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-circle" type="button">
                                                 <i class="fa fa-times"></i>
                                             </a>
 
@@ -94,12 +93,9 @@
                                         </td>
                                     </tr>
                                 }
-
                             </tbody>
-
                         </table>
                     </div>
-
                 </div>
             </div>
         </div>

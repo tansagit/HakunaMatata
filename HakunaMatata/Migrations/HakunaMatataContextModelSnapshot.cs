@@ -300,6 +300,9 @@ namespace HakunaMatata.Migrations
                     b.Property<int?>("AgentId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ContactNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("ExprireTime")
                         .HasColumnType("datetime");
 

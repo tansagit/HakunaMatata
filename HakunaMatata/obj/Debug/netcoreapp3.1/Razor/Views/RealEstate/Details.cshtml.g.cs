@@ -28,13 +28,20 @@ using HakunaMatata.Models;
 #nullable disable
 #nullable restore
 #line 3 "D:\DUT\DATN\HakunaMatata\HakunaMatata\Views\_ViewImports.cshtml"
+using HakunaMatata.Models.ViewModels;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 4 "D:\DUT\DATN\HakunaMatata\HakunaMatata\Views\_ViewImports.cshtml"
 using HakunaMatata.Helpers;
 
 #line default
 #line hidden
 #nullable disable
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"ab9c2ab58df43487e1657d48f12834ea7874972c", @"/Views/RealEstate/Details.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"3aa075d29fc84c478127b6451730ac58ff22214e", @"/Views/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"2d84202d85fc200984e18f40e0460d2098e7867b", @"/Views/_ViewImports.cshtml")]
     public class Views_RealEstate_Details : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<HakunaMatata.Models.ViewModels.VM_RealEstateDetails>
     {
         #pragma warning disable 1998

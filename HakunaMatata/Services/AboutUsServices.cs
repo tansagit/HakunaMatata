@@ -1,15 +1,16 @@
 ﻿using HakunaMatata.Data;
 using HakunaMatata.Models.DataModels;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-
-
+using System.Threading.Tasks;
 
 namespace HakunaMatata.Services
 {
     public interface IAboutUsServices
     {
         IEnumerable<AboutUs> GetListAboutUs();
+        IQueryable<AboutUs> GetData();
         AboutUs GetDetails(int id);
         void Create(AboutUs about);
         void UpdateAboutUs(AboutUs about);
@@ -31,6 +32,11 @@ namespace HakunaMatata.Services
         public IEnumerable<AboutUs> GetListAboutUs()
         {
             return _context.AboutUs.ToList();
+        }
+
+        public IQueryable<AboutUs> GetData()
+        {
+            return _context.AboutUs.AsQueryable();
         }
         public AboutUs GetDetails(int id)
         {
@@ -89,6 +95,8 @@ namespace HakunaMatata.Services
         {
             return _context.AboutUs.Any(a => a.Id == id);
         }
+
+
     }
 
 

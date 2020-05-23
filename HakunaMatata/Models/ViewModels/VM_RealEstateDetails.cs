@@ -17,17 +17,16 @@ namespace HakunaMatata.Models.ViewModels
         public decimal Price { get; set; }
         public int Acreage { get; set; }
 
-        [DisplayFormat(DataFormatString = "dd/MM/yyyy")]
-        public DateTime PostTime { get; set; }
+        public string PostTime { get; set; }
 
-        [DisplayFormat(DataFormatString = "dd/MM/yyyy")]
-        public DateTime? LastUpdate { get; set; }
+        public string LastUpdate { get; set; }
 
         public string ExprireTime { get; set; }
         public int RoomNumber { get; set; }
         public string Description { get; set; }
         public string AgentName { get; set; }
         public List<string> ImageUrls { get; set; }
+        public List<Picture> Pictures { get; set; }
         public bool HasPrivateWc { get; set; }
         public bool HasMezzanine { get; set; }
         public bool AllowCook { get; set; }
@@ -38,7 +37,7 @@ namespace HakunaMatata.Models.ViewModels
         public decimal? WifiPrice { get; set; }
         public decimal? Latitude { get; set; }
         public decimal? Longtitude { get; set; }
-        public int? RealEstateTypeId { get; set; }
+        public int RealEstateTypeId { get; set; }
         public bool IsActive { get; set; }
         public bool isFreeWater { get; set; }
         public bool isFreeElectronic { get; set; }

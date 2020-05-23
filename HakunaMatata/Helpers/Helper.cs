@@ -46,9 +46,31 @@ namespace HakunaMatata.Helpers
             return principal;
         }
 
-        public static string ChangeImageURl(string name)
+        /// <summary>
+        /// Get first picture object of real estate to pick avatar
+        /// Show in client
+        /// </summary>
+        /// <param name="picture">first picture of realestate</param>
+        /// <returns>Picture URL</returns>
+        public static string GetRealEstateAvatar(Picture picture)
         {
-            return "~/images/" + name;
+            if (picture == null)
+            {
+                return "404";
+            }
+            else
+            {
+                //neu ton tai filename => upload local
+                if (!string.IsNullOrEmpty(picture.PictureName))
+                {
+                    //kiem tra them dieu kien cho chac chan
+                    return picture.PictureName.StartsWith("local-picture")
+                        ? string.Format("/images/" + picture.Url) : picture.Url;
+                }
+                //filename = null => picture from crawl
+                return picture.Url;
+            }
+
         }
 
         /// <summary>
@@ -189,9 +211,36 @@ namespace HakunaMatata.Helpers
             return result;
         }
 
+        /// <summary>
+        /// get only street in long address of real estate
+        /// </summary>
+        /// <param name="address">pass realestate.address to get street</param>
+        /// <returns></returns>
         public static string GetStreet(string address)
         {
             return address.Split(",")[0];
+        }
+
+        public static string GetStatus(RealEstate realEstate)
+        {
+            //neu rt chua di disable => kiem tra het han hay chua
+            if (realEstate.IsActive)
+            {
+                //neu expire time null, thi mac dinh het han sau 1 thang ke tu ngay dang bai
+                if (realEstate.ExprireTime == null)
+                {
+                    return realEstate.PostTime.AddDays(30) < DateTime.Now ? "Hết hạn" : "Còn phòng";
+                }
+
+                //truong hop co ngay het han
+                else
+                {
+                    //neu ngay het han < ngay hien tai thi het han
+                    return realEstate.ExprireTime < DateTime.Now ? "Hết hạn" : "Còn phòng";
+                }
+            }
+            else return "Hết phòng";
+
         }
 
         public static List<VM_Search_Result> MapperToVMSearchResult(List<RealEstateDetail> searchResult)
@@ -309,79 +358,37 @@ namespace HakunaMatata.Helpers
             };
             return dictionary;
         }
-        #region ConvertHtmlToPlainText
 
-        public static string ConvertHtmlToPlainText(string html)
+        public static VM_RealEstateDetails MappingFromRealEstate(RealEstate info)
         {
-            HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(html);
-
-            StringWriter sw = new StringWriter();
-            ConvertTo(doc.DocumentNode, sw);
-            sw.Flush();
-            return sw.ToString();
-        }
-
-        private static void ConvertContentTo(HtmlNode node, TextWriter outText)
-        {
-            foreach (HtmlNode subnode in node.ChildNodes)
+            var result = new VM_RealEstateDetails()
             {
-                ConvertTo(subnode, outText);
-            }
+                Id = info.Id,
+                Title = info.RealEstateDetail.Title ?? string.Empty,
+                Address = info.Map.Address ?? string.Empty,
+                Price = info.RealEstateDetail.Price,
+                Acreage = info.RealEstateDetail.Acreage,
+                PostTime = info.PostTime.ToString("dd/MM/yyyy"),
+                LastUpdate = info.LastUpdate?.ToString("dd/MM/yyyy"),
+                ExprireTime = info.ExprireTime?.ToString("dd/MM/yyyy"),
+                RoomNumber = info.RealEstateDetail.RoomNumber,
+                Description = info.RealEstateDetail.Description,
+                AgentName = info.Agent.AgentName,
+                HasPrivateWc = info.RealEstateDetail.HasPrivateWc,
+                HasMezzanine = info.RealEstateDetail.HasMezzanine,
+                AllowCook = info.RealEstateDetail.AllowCook,
+                FreeTime = info.RealEstateDetail.FreeTime,
+                SecurityCamera = info.RealEstateDetail.SecurityCamera,
+                WaterPrice = info.RealEstateDetail.WaterPrice == null ? 0 : info.RealEstateDetail.WaterPrice,
+                ElectronicPrice = info.RealEstateDetail.ElectronicPrice == null ? 0 : info.RealEstateDetail.ElectronicPrice,
+                WifiPrice = info.RealEstateDetail.WifiPrice == null ? 0 : info.RealEstateDetail.WifiPrice,
+                Latitude = info.Map.Latitude == null ? Constants.DEFAULT_LATITUDE : info.Map.Latitude,
+                Longtitude = info.Map.Longtitude == null ? Constants.DEFAULT_LONGTITUDE : info.Map.Longtitude,
+                RealEstateTypeId = info.ReaEstateType.Id,
+                IsActive = info.IsActive
+            };
+            return result;
         }
-        private static void ConvertTo(HtmlNode node, TextWriter outText)
-        {
-            string html;
-            switch (node.NodeType)
-            {
-                case HtmlNodeType.Comment:
-                    // don't output comments
-                    break;
-
-                case HtmlNodeType.Document:
-                    ConvertContentTo(node, outText);
-                    break;
-
-                case HtmlNodeType.Text:
-                    // script and style must not be output
-                    string parentName = node.ParentNode.Name;
-                    if ((parentName == "script") || (parentName == "style"))
-                        break;
-
-                    // get text
-                    html = ((HtmlTextNode)node).Text;
-
-                    // is it in fact a special closing node output as text?
-                    if (HtmlNode.IsOverlappedClosingElement(html))
-                        break;
-
-                    // check the text is meaningful and not a bunch of whitespaces
-                    if (html.Trim().Length > 0)
-                    {
-                        outText.Write(HtmlEntity.DeEntitize(html));
-                    }
-                    break;
-
-                case HtmlNodeType.Element:
-                    switch (node.Name)
-                    {
-                        case "p":
-                            // treat paragraphs as crlf
-                            outText.Write("\r\n");
-                            break;
-                        case "br":
-                            outText.Write("\r\n");
-                            break;
-                    }
-
-                    if (node.HasChildNodes)
-                    {
-                        ConvertContentTo(node, outText);
-                    }
-                    break;
-            }
-        }
-        #endregion
     }
 
 
