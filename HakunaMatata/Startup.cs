@@ -48,6 +48,7 @@ namespace HakunaMatata
             services.AddScoped<IPolicyServices, PolicyServices>();
             services.AddScoped<IRealEstateTypeServices, RealEstateTypeServices>();
             services.AddScoped<IAgentServices, AgentServices>();
+            services.AddScoped<ICommonServices, CommonServices>();
 
             services.AddScoped<IVerification, Verification>();
             //services.AddScoped<VerifyFilter>();

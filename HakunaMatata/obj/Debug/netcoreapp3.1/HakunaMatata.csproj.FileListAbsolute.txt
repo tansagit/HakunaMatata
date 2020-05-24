@@ -170,12 +170,10 @@ D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Areas\AdminA
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Areas\AdminArea\Views\_ViewStart.cshtml.g.cs
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\Account\ConfirmPhone.cshtml.g.cs
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\Account\Register.cshtml.g.cs
-D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\Home\Filter.cshtml.g.cs
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\Home\Index.cshtml.g.cs
-D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\Home\Index2.cshtml.g.cs
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\Home\Privacy.cshtml.g.cs
-D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\Home\Search.cshtml.g.cs
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\RealEstate\Details.cshtml.g.cs
+D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\RealEstate\Index.cshtml.g.cs
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\Shared\Error.cshtml.g.cs
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_Layout.cshtml.g.cs
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_LoginPartial.cshtml.g.cs
@@ -190,5 +188,3 @@ D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\staticwebassets\Ha
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\staticwebassets\HakunaMatata.StaticWebAssets.xml
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\HakunaMatata.dll
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\HakunaMatata.pdb
-D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\RealEstate\Index.cshtml.g.cs
-D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\HakunaMatata.csprojAssemblyReference.cache

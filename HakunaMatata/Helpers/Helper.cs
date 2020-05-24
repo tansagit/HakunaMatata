@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
@@ -359,6 +360,8 @@ namespace HakunaMatata.Helpers
             return dictionary;
         }
 
+
+        //ko dung
         public static VM_RealEstateDetails MappingFromRealEstate(RealEstate info)
         {
             var result = new VM_RealEstateDetails()
@@ -388,6 +391,12 @@ namespace HakunaMatata.Helpers
                 IsActive = info.IsActive
             };
             return result;
+        }
+
+        public static string VNCurrencyFormat(string money)
+        {
+            CultureInfo cul = CultureInfo.GetCultureInfo("vi-VN");
+            return double.Parse(money).ToString("#,###", cul.NumberFormat);
         }
     }
 

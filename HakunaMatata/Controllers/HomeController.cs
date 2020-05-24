@@ -1,14 +1,11 @@
-﻿using HakunaMatata.Helpers;
-using HakunaMatata.Models;
+﻿using HakunaMatata.Models;
 using HakunaMatata.Models.DataModels;
-using HakunaMatata.Models.ViewModels;
 using HakunaMatata.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 
 
 namespace HakunaMatata.Controllers
@@ -46,71 +43,71 @@ namespace HakunaMatata.Controllers
         //}
 
 
-        [HttpGet]
-        public async Task<IActionResult> Search(VM_Search search)
-        {
-            var results = await _services.SearchResults(search);
+        //[HttpGet]
+        //public async Task<IActionResult> Search(VM_Search search)
+        //{
+        //    var results = await _services.SearchResults(search);
 
-            var viewmodel = new VM_Search_Result_Container();
-            viewmodel.SearchObject = search;
-            viewmodel.ResultList = results;
+        //    var viewmodel = new VM_Search_Result_Container();
+        //    viewmodel.SearchObject = search;
+        //    viewmodel.ResultList = results;
 
-            var types = _services.GetRealEstateTypeList();
-            types = types.Concat(new[] { new RealEstateType { Id = 0, RealEstateTypeName = "Loại phòng" } });
-            types = types.OrderBy(t => t.Id);
+        //    var types = _services.GetRealEstateTypeList();
+        //    types = types.Concat(new[] { new RealEstateType { Id = 0, RealEstateTypeName = "Loại phòng" } });
+        //    types = types.OrderBy(t => t.Id);
 
-            var cities = _services.GetCityList();
-            cities = cities.Concat(new[] { new City { Id = 0, CityName = "Thành phố" } });
-            cities = cities.OrderBy(c => c.Id);
-
-
-            var districts = _services.GetDistrictList();
-            districts = districts.Concat(new[] { new District { Id = 0, DistrictName = "Quận" } });
-            districts = districts.OrderBy(d => d.Id);
-
-            var priceRanges = Helper.GetPriceRangeForView();
-            var acreagaRange = Helper.GetAcreageRangeForView();
+        //    var cities = _services.GetCityList();
+        //    cities = cities.Concat(new[] { new City { Id = 0, CityName = "Thành phố" } });
+        //    cities = cities.OrderBy(c => c.Id);
 
 
-            ViewData["Types"] = new SelectList(types, "Id", "RealEstateTypeName", search.Type);
-            ViewData["Cities"] = new SelectList(cities, "Id", "CityName", search.City);
-            ViewData["Districts"] = new SelectList(districts, "Id", "DistrictName", search.District);
-            ViewData["PriceRanges"] = new SelectList(priceRanges, "Value", "Key", search.PriceRange);
-            ViewData["AcreagaRanges"] = new SelectList(acreagaRange, "Value", "Key", search.AcreageRange);
-            return View(viewmodel);
-        }
+        //    var districts = _services.GetDistrictList();
+        //    districts = districts.Concat(new[] { new District { Id = 0, DistrictName = "Quận" } });
+        //    districts = districts.OrderBy(d => d.Id);
 
-        [HttpGet]
-        public async Task<IActionResult> Filter(VM_Search_Result_Container container)
-        {
-            var result = await _services.SearchResults(container.SearchObject);
-
-            container.ResultList = result;
-
-            var types = _services.GetRealEstateTypeList();
-            types = types.Concat(new[] { new RealEstateType { Id = 0, RealEstateTypeName = "Tất cả" } });
-            types = types.OrderBy(t => t.Id);
-
-            var cities = _services.GetCityList();
-            cities = cities.Concat(new[] { new City { Id = 0, CityName = "Tất cả" } });
-            cities = cities.OrderBy(c => c.Id);
+        //    var priceRanges = Helper.GetPriceRangeForView();
+        //    var acreagaRange = Helper.GetAcreageRangeForView();
 
 
-            var districts = _services.GetDistrictList();
-            districts = districts.Concat(new[] { new District { Id = 0, DistrictName = "Tất cả" } });
-            districts = districts.OrderBy(d => d.Id);
+        //    ViewData["Types"] = new SelectList(types, "Id", "RealEstateTypeName", search.Type);
+        //    ViewData["Cities"] = new SelectList(cities, "Id", "CityName", search.City);
+        //    ViewData["Districts"] = new SelectList(districts, "Id", "DistrictName", search.District);
+        //    ViewData["PriceRanges"] = new SelectList(priceRanges, "Value", "Key", search.PriceRange);
+        //    ViewData["AcreagaRanges"] = new SelectList(acreagaRange, "Value", "Key", search.AcreageRange);
+        //    return View(viewmodel);
+        //}
 
-            var priceRanges = Helper.GetPriceRangeForView();
-            var acreagaRange = Helper.GetAcreageRangeForView();
+        //[HttpGet]
+        //public async Task<IActionResult> Filter(VM_Search_Result_Container container)
+        //{
+        //    var result = await _services.SearchResults(container.SearchObject);
 
-            ViewData["Types"] = new SelectList(types, "Id", "RealEstateTypeName", container.SearchObject.Type);
-            ViewData["Cities"] = new SelectList(cities, "Id", "CityName", container.SearchObject.City);
-            ViewData["Districts"] = new SelectList(districts, "Id", "DistrictName", container.SearchObject.District);
-            ViewData["PriceRanges"] = new SelectList(priceRanges, "Value", "Key", container.SearchObject.PriceRange);
-            ViewData["AcreagaRanges"] = new SelectList(acreagaRange, "Value", "Key", container.SearchObject.AcreageRange);
+        //    container.ResultList = result;
 
-            return View(container);
-        }
+        //    var types = _services.GetRealEstateTypeList();
+        //    types = types.Concat(new[] { new RealEstateType { Id = 0, RealEstateTypeName = "Tất cả" } });
+        //    types = types.OrderBy(t => t.Id);
+
+        //    var cities = _services.GetCityList();
+        //    cities = cities.Concat(new[] { new City { Id = 0, CityName = "Tất cả" } });
+        //    cities = cities.OrderBy(c => c.Id);
+
+
+        //    var districts = _services.GetDistrictList();
+        //    districts = districts.Concat(new[] { new District { Id = 0, DistrictName = "Tất cả" } });
+        //    districts = districts.OrderBy(d => d.Id);
+
+        //    var priceRanges = Helper.GetPriceRangeForView();
+        //    var acreagaRange = Helper.GetAcreageRangeForView();
+
+        //    ViewData["Types"] = new SelectList(types, "Id", "RealEstateTypeName", container.SearchObject.Type);
+        //    ViewData["Cities"] = new SelectList(cities, "Id", "CityName", container.SearchObject.City);
+        //    ViewData["Districts"] = new SelectList(districts, "Id", "DistrictName", container.SearchObject.District);
+        //    ViewData["PriceRanges"] = new SelectList(priceRanges, "Value", "Key", container.SearchObject.PriceRange);
+        //    ViewData["AcreagaRanges"] = new SelectList(acreagaRange, "Value", "Key", container.SearchObject.AcreageRange);
+
+        //    return View(container);
+        //}
 
 
         public IActionResult Privacy()

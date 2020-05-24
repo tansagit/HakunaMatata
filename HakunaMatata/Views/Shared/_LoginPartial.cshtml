@@ -1,7 +1,12 @@
 ﻿@model HakunaMatata.Models.ViewModels.VM_Login
 
+@{
+    ViewData["Title"] = "Login";
+    var returlUrl = string.Format("{0}{1}", Context.Request.Path, Context.Request.QueryString);
+}
+
 <form class="contact-form-wrap contact-form-bg"
-      asp-controller="Account" asp-action="Login" method="post" > 
+      asp-controller="Account" asp-action="Login" method="post" asp-route-returnUrl="@returlUrl">
     <h4 class="font-weight-bold">Đăng nhập</h4>
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="text-danger">@ViewBag.ErrorMessage</div>

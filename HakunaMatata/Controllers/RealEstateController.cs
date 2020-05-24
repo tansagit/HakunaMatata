@@ -16,12 +16,12 @@ namespace HakunaMatata.Controllers
     public class RealEstateController : Controller
     {
         private readonly IRealEstateServices _realEstateServices;
-        private readonly IFileServices _fileServices;
+        private readonly ICommonServices _commonServices;
 
-        public RealEstateController(IRealEstateServices realEstateServices, IFileServices fileServices)
+        public RealEstateController(IRealEstateServices realEstateServices, ICommonServices commonServices)
         {
             _realEstateServices = realEstateServices;
-            _fileServices = fileServices;
+            _commonServices = commonServices;
         }
 
         [HttpGet]
@@ -31,10 +31,10 @@ namespace HakunaMatata.Controllers
                                                int? district,
                                                int? priceRange,
                                                int? acreageRange,
-                                               string search)
+                                               string searchString)
         {
 
-            int pageSize = 5;
+            int pageSize = 18;
             var condition = new Condition()
             {
                 Type = type ?? 0,
@@ -42,7 +42,7 @@ namespace HakunaMatata.Controllers
                 District = district ?? 0,
                 PriceRange = priceRange ?? 0,
                 AcreageRange = acreageRange ?? 0,
-                SearchString = search ?? string.Empty
+                SearchString = searchString ?? string.Empty
             };
 
             var source = _realEstateServices.Filter(condition);
@@ -57,7 +57,7 @@ namespace HakunaMatata.Controllers
             cities = cities.OrderBy(c => c.Id);
 
 
-            var districts = _realEstateServices.GetDistrictList();
+            var districts = await _commonServices.GetDistrictsByCity(city);
             districts = districts.Concat(new[] { new District { Id = 0, DistrictName = "Tất cả" } });
             districts = districts.OrderBy(d => d.Id);
 
@@ -85,6 +85,24 @@ namespace HakunaMatata.Controllers
 
             var details = _realEstateServices.GetById(id);
             return View(details);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetDistricts(int? cityId, int? currentDistrictId)
+        {
+            if (cityId == null)
+            {
+                return Json(new { status = false, messsage = "Something wrong!" });
+            }
+            else
+            {
+                var districts = await _commonServices.GetDistrictsByCity(cityId);
+                districts = districts.Concat(new[] { new District { Id = 0, DistrictName = "Tất cả" } });
+                districts = districts.OrderBy(d => d.Id);
+
+                return Json(new { status = true, data = districts, current = currentDistrictId ?? 0, message = string.Format("Get district list by city id {0}", cityId) });
+            }
         }
     }
 }

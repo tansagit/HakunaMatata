@@ -8,10 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>RealDeal - Real Estate HTML Template</title>
+    <title>@ViewData["Title"]</title>
 
     <!-- favicon -->
-    <link rel=icon href=~/assets/img/favicon.png sizes="20x20" type="image/png">
+    <link rel=icon href=~/assets/img/icon.png sizes="20x20" type="image/png">
     <!-- Vendor Stylesheet -->
     <link rel="stylesheet" href="~/assets/css/vendor.css">
     <!-- Main Stylesheet -->
@@ -53,10 +53,11 @@
 
                 <div class="collapse navbar-collapse" id="realdeal_main_menu">
                     <ul class="navbar-nav menu-open">
+                        
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="menu-item-has-children">
-                                <a href="#" >
+                                <a href="#">
                                     Xin chào,
                                     @User.Claims.FirstOrDefault(c => c.Type == "UserName").Value
                                 </a>
@@ -65,7 +66,7 @@
                                     <li><a asp-controller="Account" asp-action="Logout">Đăng xuất</a></li>
                                 </ul>
                             </li>
-                            
+
                         }
                         else
                         {
@@ -198,5 +199,7 @@
     <script src="~/assets/js/vendor.js"></script>
     <!-- main js  -->
     <script src="~/assets/js/main.js"></script>
+
+    @RenderSection("scripts", required: false)
 </body>
 </html>

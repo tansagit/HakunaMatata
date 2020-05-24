@@ -1,4 +1,14 @@
 ﻿@model CustomPagination;
+
+@{
+    ViewData["Title"] = "Danh sach phong tro";
+}
+
+
+@section scripts{
+    <script src="~/js/mustache.min.js"></script>
+    <script src="~/js/realEstate.js"></script>
+}
 <!-- breadcrumb area start -->
 <div class="breadcrumb-area jarallax" style="background-image:url(../assets/img/bg/4.png);">
     <div class="container">
@@ -20,9 +30,6 @@
 <div class="property-area pd-top-20">
     <div class="container">
         <div class="row">
-            <div class="col-lg-12">
-                <h2>Filter</h2>
-            </div>
 
             <div class="col-lg-12 mb-5">
                 <form asp-controller="RealEstate" asp-action="Index" method="get">
@@ -63,7 +70,10 @@
                             </div>
                         </div>
                         <div class="col-xl-2 col-lg-6 col-md-6 d-flex justify-content-end align-items-end">
-                            <button class="btn btn-yellow w-100" type="submit">Lọc tin</button>
+                            <button class="btn btn-yellow w-100" type="submit">
+                                <i class="fas fa-filter"></i>
+                                Lọc tin
+                            </button>
                         </div>
 
                     </div>
@@ -71,19 +81,19 @@
             </div>
 
         </div>
+        @if (Model.Results == null || Model.Results.ToList().Count == 0)
+        {
+            <div class="row mb-5 ml-0">
+                <div class="h4 text-warning">Không tìm thấy kết quả phù hợp</div>
+            </div>
+        }
+        else
+        {
+            <div class="property-filter-area row custom-gutter">
 
-        <!--Property filter Start-->
-        <div class="property-filter-area row custom-gutter">
-            <!-- <div class="gallery-sizer col-1" style="color: red;">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div> -->
-            <!--property item Start-->
-            @if (Model.Results == null || Model.Results.ToList().Count == 0)
-            {
-                <div class="text-info text-center">Không tìm thấy kết quả phù hợp</div>
-            }
-            else
-            {
                 @foreach (var item in Model.Results)
                 {
+
                     <div class="rld-filter-item col-lg-4 col-sm-6">
                         <div class="single-feature">
                             <div class="thumb">
@@ -101,51 +111,84 @@
 
                             </div>
                             <div class="details">
-                                <a href="#" class="feature-logo">
-                                    <img src="~/assets/img/icons/l3.png" alt="icons">
-                                </a>
-                                <p class="author"><i class="fa fa-user"></i> @item.AgentName</p>
-                                <h6 class="title"><a href="#">@item.Street</a></h6>
-                                <h6 class="price">@item.Price VNĐ/tháng</h6>
-                                <ul class="info-list">
-                                    <li><i class="fa fa-times"></i>@item.PostTime</li>
+                                @{
+                                    var formatCurrency = Helper.VNCurrencyFormat(item.Price.ToString());
+                                    var typeName = string.Empty;
+                                    switch (item.Type)
+                                    {
+                                        case 1: typeName = "Phòng trọ"; break;
+                                        case 2: typeName = "Nhà nguyên căn"; break;
+                                        case 3: typeName = "Căn hộ"; break;
+                                        case 4: typeName = "Ở ghép"; break;
+                                        default: typeName = "Phòng trọ"; break;
+                                    }
+                                }
 
-                                    <li><img src="~/assets/img/icons/7.png" alt="img">@item.Acreage m2</li>
+                                <p class="author text-primary"><i class="fab fa-canadian-maple-leaf"></i> @typeName</p>
+                                <h6 class="title"><a href="#"><i class="fas fa-map-marker-alt"></i> @item.Street</a></h6>
+                                <div class="d-flex">
+                                    <div class="h5 price mr-auto">@formatCurrency VNĐ/tháng</div>
+                                    <div class="font-weight-bold">
+                                        <img src="~/assets/img/icons/7.png" alt="img"> @item.Acreage m<sub style="vertical-align:super">2</sub>
+                                    </div>
+                                </div>
+
+
+                                <ul class="info-list d-flex">
+                                    <li class="mr-auto">Đăng bởi: <span class="font-weight-bold">@item.AgentName</span></li>
+                                    <li>@item.PostTime</li>
                                 </ul>
                                 <ul class="contact-list">
-                                    <li><a class="phone" href="#"><i class="fa fa-phone"></i></a></li>
-                                    <li><a class="message" href="#"><img src="~/assets/img/icons/8.png" alt="img"></a></li>
                                     <li><a class="btn btn-yellow" href="#">View Details</a></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 }
-            }
 
-        </div>
-        <div class="row">
-            <div class="col-lg-12 mt20 d-flex justify-content-center">
-                <ul class="pagination">
-                    @{
-                        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-                        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
-                    }
-                    <li class="page-item @prevDisabled">
-                        <a class="page-link "
-                           asp-action="Index"
-                           asp-route-type="@Model.Type"
-                           asp-route-city="@Model.City"
-                           asp-route-district="@Model.District"
-                           asp-route-priceRange="@Model.PriceRange"
-                           asp-route-acreageRange="@Model.AcreageRange"
-                           asp-route-search="@Model.SearchString"
-                           asp-route-page="@(Model.PageIndex - 1)"> <i class="fas fa-arrow-left"></i></a>
-                    </li>
 
-                    @for (var i = 1; i <= Model.TotalPages; i++)
-                    {
-                        <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+            </div>
+            <div class="row">
+                <div class="col-lg-12 mt20 d-flex justify-content-start align-items-baseline">
+                    <ul class="pagination">
+                        @{
+                            var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+                            var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+
+                            var currentItems = Model.CurrentItems;
+                            var totalItems = Model.TotalItems;
+
+                        }
+                        <li class="page-item @prevDisabled">
+                            <a class="page-link "
+                               asp-action="Index"
+                               asp-route-type="@Model.Type"
+                               asp-route-city="@Model.City"
+                               asp-route-district="@Model.District"
+                               asp-route-priceRange="@Model.PriceRange"
+                               asp-route-acreageRange="@Model.AcreageRange"
+                               asp-route-search="@Model.SearchString"
+                               asp-route-page="@(Model.PageIndex - 1)">
+                                <i class="fas fa-arrow-left"></i>
+                                Trang trước
+                            </a>
+                        </li>
+
+                        @*@for (var i = 1; i <= Model.TotalPages; i++)
+                            {
+                                <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                                    <a asp-action="Index"
+                                       asp-route-type="@Model.Type"
+                                       asp-route-city="@Model.City"
+                                       asp-route-district="@Model.District"
+                                       asp-route-priceRange="@Model.PriceRange"
+                                       asp-route-acreageRange="@Model.AcreageRange"
+                                       asp-route-search="@Model.SearchString"
+                                       asp-route-page="@i"
+                                       class="page-link">@i</a>
+                                </li>
+                            }*@
+                        <li class="page-item active">
                             <a asp-action="Index"
                                asp-route-type="@Model.Type"
                                asp-route-city="@Model.City"
@@ -153,26 +196,38 @@
                                asp-route-priceRange="@Model.PriceRange"
                                asp-route-acreageRange="@Model.AcreageRange"
                                asp-route-search="@Model.SearchString"
-                               asp-route-page="@i"
-                               class="page-link">@i</a>
+                               asp-route-page="@Model.PageIndex"
+                               class="page-link">@Model.PageIndex</a>
                         </li>
-                    }
 
-                    <li class="page-item @nextDisabled">
-                        <a class="page-link "
-                           asp-action="Index"
-                           asp-route-type="@Model.Type"
-                           asp-route-city="@Model.City"
-                           asp-route-district="@Model.District"
-                           asp-route-priceRange="@Model.PriceRange"
-                           asp-route-acreageRange="@Model.AcreageRange"
-                           asp-route-search="@Model.SearchString"
-                           asp-route-page="@(Model.PageIndex + 1)"><i class="fas fa-arrow-right"></i></a>
-                    </li>
-                </ul>
+                        <li class="page-item @nextDisabled">
+                            <a class="page-link "
+                               asp-action="Index"
+                               asp-route-type="@Model.Type"
+                               asp-route-city="@Model.City"
+                               asp-route-district="@Model.District"
+                               asp-route-priceRange="@Model.PriceRange"
+                               asp-route-acreageRange="@Model.AcreageRange"
+                               asp-route-search="@Model.SearchString"
+                               asp-route-page="@(Model.PageIndex + 1)">
+                                Trang sau <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="ml-3 font-weight-bold">
+                        @currentItems/@totalItems kết quả.
+                    </div>
 
+                </div>
             </div>
-        </div>
+        }
+        <!--Property filter Start-->
+
     </div>
 </div>
 <!-- property area end -->
+
+
+<script id="district-template" type="x-tmpl-mustache">
+    <option value="{{DistrictId}}">{{DistrictName}}</option>
+</script>

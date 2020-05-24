@@ -33,7 +33,7 @@ namespace HakunaMatata.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(VM_Login account)
+        public async Task<IActionResult> Login(VM_Login account, string returnUrl)
         {
             if (ModelState.IsValid)
             {
@@ -52,9 +52,9 @@ namespace HakunaMatata.Controllers
                         properties: props
                         );
 
-                    if (!string.IsNullOrEmpty(account.ReturnUrl)
-                        && Url.IsLocalUrl(account.ReturnUrl))
-                        return Redirect(account.ReturnUrl);
+                    if (!string.IsNullOrEmpty(returnUrl)
+                        && Url.IsLocalUrl(returnUrl))
+                        return Redirect(returnUrl);
                     else
                         return RedirectToAction("Index", "Home");
                 }

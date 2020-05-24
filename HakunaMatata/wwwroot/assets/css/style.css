@@ -3637,7 +3637,9 @@ ul {
             }
 
         .single-feature .details .author {
-            font-size: 12px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #099ec0 !important;
         }
 
         .single-feature .details .title {
@@ -3647,6 +3649,8 @@ ul {
         }
 
         .single-feature .details .price {
+            color: var(--main-color-one);
+            font-weight: 600;
             display: inline-block;
             margin-right: 10px;
             margin-bottom: 0;
@@ -3730,7 +3734,7 @@ ul {
                     }
 
                 .single-feature .details .contact-list li .btn {
-                    height: 36px;
+                    height: 37px;
                     border-radius: 4px;
                     line-height: 36px;
                     margin-top: -4px;
@@ -5174,3 +5178,19 @@ ul {
     #loginModal div.checkbox label::after {
         margin-top: 5px;
     }
+
+/*pagination*/
+.pagination li.page-item a.page-link {
+    color: var(--main-color-one);
+}
+
+.pagination li.page-item.disabled a.page-link {
+    color: grey;
+}
+
+.pagination li.page-item.active a.page-link {
+    color: white;
+    background: var(--main-color-one);
+    border-color: var(--main-color-one);
+    font-weight: bold;
+}
