@@ -12,24 +12,40 @@
             dataType: 'json',
             data: { realEstateId: id },
             success: function (response) {
+                console.log("Status la: " + response.status);
                 if (response.status) {
-                    var data = response.data;
-                    var html = '';
-                    var template = $('#picture-template').html();
-                    $.each(data, function (i, item) {
-                        //file local
-                        let displayUrl = item.url;
-                        if (displayUrl.indexOf('local') === 0) {
-                            displayUrl = "/images/" + item.pictureName;
-                        }
+                    if (response.count === 0) {
+                        var emptyMessage = '<div class="text-info my-3">Hiện chưa có hình ảnh nào</div>';
+                        $('#view-pictures').html(emptyMessage);
+                    }
+                    else {
+                        var data = response.data;
+                        var html = '';
+                        var template = $('#picture-template').html();
+                        $.each(data, function (i, item) {
+                            // check if file is local
+                            let displayUrl = item.url;
+                            let fileName = item.pictureName;
 
-                        html += Mustache.render(template, {
-                            PictureId: item.id,
-                            PictureUrl: displayUrl
+                            //fileName not null
+                            if (fileName) {
+                                if (fileName.indexOf('local-picture') === 0) {
+                                    displayUrl = "/images/" + item.url;
+                                }
+                            }
+
+                            html += Mustache.render(template, {
+                                PictureId: item.id,
+                                PictureUrl: displayUrl
+                            });
                         });
-                    });
 
-                    $('#view-pictures').html(html);
+                        $('#view-pictures').html(html);
+                    }
+
+                }
+                else {
+                    console.log(response.status);
                 }
             }
         });
@@ -42,15 +58,18 @@
             $.ajax({
                 url: '/AdminArea/Picture/Remove',
                 type: 'POST',
+                headers: {
+                    RequestVerificationToken:
+                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                },
                 dataType: 'json',
                 data: { pictureId: id },
                 success: function (response) {
                     if (response.status) {
                         pictureServices.loadPictures();
-
                         setTimeout(function () {
                             alert("Xóa thành công!!!");
-                        }, 200);
+                        }, 350);
                     }
                     else {
                         alert("Lỗi xảy ra, vui lòng thử lại!!!");

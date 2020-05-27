@@ -71,7 +71,27 @@ namespace HakunaMatata.Helpers
                 //filename = null => picture from crawl
                 return picture.Url;
             }
+        }
 
+        public static List<string> GetImageUrls(IEnumerable<Picture> list)
+        {
+            var result = new List<string>();
+            if (list.Count() > 0)
+            {
+                foreach (var item in list)
+                {
+                    var url = item.Url;
+                    //neu ton tai filename => upload local
+                    if (!string.IsNullOrEmpty(item.PictureName))
+                    {
+                        //kiem tra them dieu kien cho chac chan
+                        if (item.PictureName.StartsWith("local-picture"))
+                            url = string.Format("/images/" + item.Url);
+                    }
+                    result.Add(url);
+                }
+            }
+            return result;
         }
 
         /// <summary>
@@ -295,21 +315,6 @@ namespace HakunaMatata.Helpers
             return result;
         }
 
-        public static List<SelectListItem> GetPriceRangeForView1()
-        {
-            List<SelectListItem> ranges = new List<SelectListItem>();
-            ranges.Add(new SelectListItem() { Text = "Tất cả", Value = "0" });
-            ranges.Add(new SelectListItem() { Text = "Dưới 1 triệu", Value = "1" });
-            ranges.Add(new SelectListItem() { Text = "1 triệu - 2 triệu", Value = "2" });
-            ranges.Add(new SelectListItem() { Text = "2 triệu - 3 triệu", Value = "3" });
-            ranges.Add(new SelectListItem() { Text = "3 triệu - 5 triệu", Value = "4" });
-            ranges.Add(new SelectListItem() { Text = "5 triệu - 7 triệu", Value = "5" });
-            ranges.Add(new SelectListItem() { Text = "7 triệu - 10 triệu", Value = "6" });
-            ranges.Add(new SelectListItem() { Text = "Trên 10 triệu", Value = "7" });
-
-            return ranges;
-        }
-
         public static Dictionary<string, int> GetPriceRangeForView()
         {
             var dictionary = new Dictionary<string, int>
@@ -326,22 +331,6 @@ namespace HakunaMatata.Helpers
             return dictionary;
         }
 
-        public static List<SelectListItem> GetAcreageRangeForView1()
-        {
-            List<SelectListItem> ranges = new List<SelectListItem>();
-            ranges.Add(new SelectListItem() { Text = "Tất cả", Value = "0" });
-            ranges.Add(new SelectListItem() { Text = "Dưới 20m2", Value = "1" });
-            ranges.Add(new SelectListItem() { Text = "20m2 - 30m2", Value = "2" });
-            ranges.Add(new SelectListItem() { Text = "30m2 - 50m2", Value = "3" });
-            ranges.Add(new SelectListItem() { Text = "50m2 - 60m2", Value = "4" });
-            ranges.Add(new SelectListItem() { Text = "60m2 - 70m2", Value = "5" });
-            ranges.Add(new SelectListItem() { Text = "70m2 - 80m2", Value = "6" });
-            ranges.Add(new SelectListItem() { Text = "80m2 - 90m2", Value = "7" });
-            ranges.Add(new SelectListItem() { Text = "90m2 - 100m2", Value = "8" });
-            ranges.Add(new SelectListItem() { Text = "Trên 100m2", Value = "9" });
-
-            return ranges;
-        }
         public static Dictionary<string, int> GetAcreageRangeForView()
         {
             var dictionary = new Dictionary<string, int>
@@ -360,8 +349,6 @@ namespace HakunaMatata.Helpers
             return dictionary;
         }
 
-
-        //ko dung
         public static VM_RealEstateDetails MappingFromRealEstate(RealEstate info)
         {
             var result = new VM_RealEstateDetails()
@@ -371,6 +358,7 @@ namespace HakunaMatata.Helpers
                 Address = info.Map.Address ?? string.Empty,
                 Price = info.RealEstateDetail.Price,
                 Acreage = info.RealEstateDetail.Acreage,
+                ContactNumber = info.ContactNumber,
                 PostTime = info.PostTime.ToString("dd/MM/yyyy"),
                 LastUpdate = info.LastUpdate?.ToString("dd/MM/yyyy"),
                 ExprireTime = info.ExprireTime?.ToString("dd/MM/yyyy"),
@@ -382,13 +370,14 @@ namespace HakunaMatata.Helpers
                 AllowCook = info.RealEstateDetail.AllowCook,
                 FreeTime = info.RealEstateDetail.FreeTime,
                 SecurityCamera = info.RealEstateDetail.SecurityCamera,
-                WaterPrice = info.RealEstateDetail.WaterPrice == null ? 0 : info.RealEstateDetail.WaterPrice,
-                ElectronicPrice = info.RealEstateDetail.ElectronicPrice == null ? 0 : info.RealEstateDetail.ElectronicPrice,
-                WifiPrice = info.RealEstateDetail.WifiPrice == null ? 0 : info.RealEstateDetail.WifiPrice,
-                Latitude = info.Map.Latitude == null ? Constants.DEFAULT_LATITUDE : info.Map.Latitude,
-                Longtitude = info.Map.Longtitude == null ? Constants.DEFAULT_LONGTITUDE : info.Map.Longtitude,
+                WaterPrice = info.RealEstateDetail.WaterPrice ?? 0,
+                ElectronicPrice = info.RealEstateDetail.ElectronicPrice ?? 0,
+                WifiPrice = info.RealEstateDetail.WifiPrice ?? 0,
+                Latitude = info.Map.Latitude ?? Constants.DEFAULT_LATITUDE,
+                Longtitude = info.Map.Longtitude ?? Constants.DEFAULT_LONGTITUDE,
                 RealEstateTypeId = info.ReaEstateType.Id,
-                IsActive = info.IsActive
+                IsActive = info.IsActive,
+                Status = GetStatus(info)
             };
             return result;
         }

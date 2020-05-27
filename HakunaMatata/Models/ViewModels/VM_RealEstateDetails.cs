@@ -1,11 +1,7 @@
 ﻿using HakunaMatata.Models.DataModels;
 using Microsoft.AspNetCore.Http;
-using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace HakunaMatata.Models.ViewModels
 {
@@ -16,7 +12,7 @@ namespace HakunaMatata.Models.ViewModels
         public string Address { get; set; }
         public decimal Price { get; set; }
         public int Acreage { get; set; }
-
+        public string ContactNumber { get; set; }
         public string PostTime { get; set; }
 
         public string LastUpdate { get; set; }
@@ -39,6 +35,7 @@ namespace HakunaMatata.Models.ViewModels
         public decimal? Longtitude { get; set; }
         public int RealEstateTypeId { get; set; }
         public bool IsActive { get; set; }
+        public string Status { get; set; }
         public bool isFreeWater { get; set; }
         public bool isFreeElectronic { get; set; }
         public bool isFreeWifi { get; set; }

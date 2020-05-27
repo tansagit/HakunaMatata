@@ -15,8 +15,8 @@ namespace HakunaMatata.Services
     {
         Dictionary<string, string> UploadFiles(List<IFormFile> files);
         int AddPicture(int realEstateId, List<IFormFile> files);
-        IEnumerable<Picture> GetPicturesForRealEstate(int id);
-        bool RemovePictureFromRealEstate(int pictureId);
+        Task<IEnumerable<Picture>> GetPicturesForRealEstate(int id);
+        Task<bool> RemovePictureFromRealEstate(int pictureId);
         int? GetRealEstateId(int pictureId);
     }
 
@@ -31,10 +31,10 @@ namespace HakunaMatata.Services
         }
 
 
-        public IEnumerable<Picture> GetPicturesForRealEstate(int id)
+        public async Task<IEnumerable<Picture>> GetPicturesForRealEstate(int id)
         {
-            return _context.Picture
-                .Where(p => p.RealEstateId == id && p.IsActive == true).ToList();
+            return await _context.Picture
+                .Where(p => p.RealEstateId == id && p.IsActive == true).ToListAsync();
         }
 
         public int AddPicture(int realEstateId, List<IFormFile> files)
@@ -58,13 +58,13 @@ namespace HakunaMatata.Services
             return count;
         }
 
-        public bool RemovePictureFromRealEstate(int pictureId)
+        public async Task<bool> RemovePictureFromRealEstate(int pictureId)
         {
             var picture = _context.Picture.Find(pictureId);
             if (picture != null)
             {
                 _context.Picture.Remove(picture);
-                _context.SaveChanges();
+                _context.SaveChangesAsync();
                 return true;
             }
             return false;

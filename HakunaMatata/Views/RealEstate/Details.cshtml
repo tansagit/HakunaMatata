@@ -1,618 +1,251 @@
 ﻿@model HakunaMatata.Models.ViewModels.VM_RealEstateDetails;
 
-<div class="row">
-    <div class="col-lg-12">
-        <div class="breadcrumb_content style2 mb0-991">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active text-thm" aria-current="page">Simple Listing – List View</li>
-            </ol>
-            <h2 class="breadcrumb_title">View details</h2>
-        </div>
-    </div>
-</div>
+@section scripts{
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBY8PE_X6qdTWkZwdBENNpGJTYr1cTjG9I&callback=initMap">
+    </script>
+}
 
-<div class="row">
-    <div class="col-lg-7 col-xl-8">
-        <div class="dn db-991 mt30 mb0">
-            <div id="main2">
-                <span id="open2" class="flaticon-filter-results-button filter_open_btn style3">
-                    Show
-                    Filter
-                </span>
-            </div>
-        </div>
-        <div class="single_property_title mt30-767 mb30-767">
-            <h2>
-                @Model.Title
-            </h2>
-            <p>@Model.Address</p>
-        </div>
-    </div>
+@{
+    ViewData["Title"] = "Thông tin chi tiết";
 
-    <div class="col-md-12 col-lg-8 mt50">
+    var realEstateType = string.Empty;
+    switch (Model.RealEstateTypeId)
+    {
+        case 1: realEstateType = "Phòng trọ"; break;
+        case 2: realEstateType = "Nhà nguyên căn"; break;
+        case 3: realEstateType = "Căn hộ"; break;
+        case 4: realEstateType = "Ở ghép"; break;
+        default: realEstateType = "Phòng trọ"; break;
+    }
+
+    var statusCss = Model.Status.Equals("Còn phòng") ? "text-success" : "text-disable";
+    var statusIcon = Model.Status.Equals("Còn phòng") ? "fa fa-check" : "fa fa-times";
+
+    var isExpired = Model.Status.Equals("Còn phòng") ? "d-none" : "d-block";
+
+}
+
+<!-- breadcrumb area start -->
+<div class="breadcrumb-area jarallax" style="background-image:url(/assets/img/bg/4.png);">
+    <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <div class="additional_details">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <h4 class="mb15">Property Details</h4>
-                        </div>
-                        <div class="col-md-6 col-lg-6 col-xl-4">
-                            <ul class="list-inline-item">
-                                <li>
-                                    <p>Status :</p></a>
-                                </li>
-                                <li>
-                                    <p>Price :</p></a>
-                                </li>
-                                <li>
-                                    <p>Property Size :</p></a>
-                                </li>
-                                <li>
-                                    <p>Post Time :</p></a>
-                                </li>
-                            </ul>
-                            <ul class="list-inline-item">
-                                @{
-                                    string status = DateTime.Now > DateTime.Parse(Model.ExprireTime)
-                                        ? "Avaiable" : "Expired";
-                                    string price = string.Format("{0:C}", Model.Price);
-                                }
-                                <li>
-                                    <p><span>@status</span></p></a>
-                                </li>
-                                <li>
-                                    <p><span>@price</span></p></a>
-                                </li>
-                                <li>
-                                    <p><span>@Model.Acreage m2</span></p></a>
-                                </li>
-                                <li>
-                                    <p><span>@Model.PostTime</span></p></a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6 col-lg-6 col-xl-4">
-                            <ul class="list-inline-item">
-                                <li>
-                                    <p>Bedrooms :</p></a>
-                                </li>
-                                <li>
-                                    <p>Bathrooms :</p></a>
-                                </li>
-                                <li>
-                                    <p>Garage :</p></a>
-                                </li>
-                                <li>
-                                    <p>Garage Size :</p></a>
-                                </li>
-                            </ul>
-                            <ul class="list-inline-item">
-                                <li>
-                                    <p><span>8</span></p></a>
-                                </li>
-                                <li>
-                                    <p><span>4</span></p></a>
-                                </li>
-                                <li>
-                                    <p><span>2</span></p></a>
-                                </li>
-                                <li>
-                                    <p><span>200 SqFt</span></p></a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6 col-lg-6 col-xl-4">
-                            <ul class="list-inline-item">
-                                <li>
-                                    <p>Property Type :</p></a>
-                                </li>
-                                <li>
-                                    <p>Property Status :</p></a>
-                                </li>
-                            </ul>
-                            <ul class="list-inline-item">
-                                <li>
-                                    <p><span>@Model.RealEstateTypeId</span></p></a>
-                                </li>
-                                <li>
-                                    <p><span>For Rent</span></p></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-12 ">
-                <div class="listing_single_description">
-                    <div class="lsd_list">
-                        <ul class="mb0">
-                            <li class="list-inline-item"><a href="#">Apartment</a></li>
-                            <li class="list-inline-item"><a href="#">Beds: 4</a></li>
-                            <li class="list-inline-item"><a href="#">Baths: 2</a></li>
-                            <li class="list-inline-item"><a href="#">Sq Ft: 5280</a></li>
-                        </ul>
-                    </div>
-                    <h4 class="mb30">Description</h4>
-                    @*<textarea id="htmlText" type="text" asp-for="Description" class="form-control" style="min-height:250px" readonly></textarea>*@
-
-                    <div id="textDesription">@Html.Raw(Model.Description)</div>
-                </div>
-            </div>
-
-            <div class="col-lg-12 mt30">
-                @if (Model.ImageUrls.Count > 0)
-                {
-                    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                        <div class="carousel-inner" style="height: 500px;">
-                            <ol class="carousel-indicators">
-                                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                                @for (var i = 1; i < Model.ImageUrls.Count; i++)
-                                {
-                                    <li data-target="#carouselExampleIndicators" data-slide-to="@i"></li>
-                                }
-                            </ol>
-
-                            <div class="carousel-inner" style="height: 500px;">
-                                <div class="carousel-item active" style="height: 100%;">
-                                    <img class="d-block  mx-auto h-100" src="@Model.ImageUrls.First()" alt="">
-                                </div>
-                                @for (var i = 1; i < Model.ImageUrls.Count; i++)
-                                {
-                                    <div class="carousel-item" style="height: 100%;">
-                                        <img class="d-block mx-auto h-100" src="@Model.ImageUrls[i]" alt="">
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button"
-                           data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button"
-                           data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                    </div>
-                }
-                else
-                {
-                    <div>Hiện chưa có hình ảnh nào</div>
-                }
-
-            </div>
-
-            <div class="col-lg-12">
-                <div class="application_statics mt30">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <h4 class="mb10">Features</h4>
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-lg-4">
-                            <ul class="order_list list-inline-item">
-                                <li>
-                                    <a href="#"><span class="flaticon-tick"></span>Air Conditioning</a>
-                                </li>
-                                <li><a href="#"><span class="flaticon-tick"></span>Barbeque</a></li>
-                                <li><a href="#"><span class="flaticon-tick"></span>Dryer</a></li>
-                                <li><a href="#"><span class="flaticon-tick"></span>Gym</a></li>
-                                <li><a href="#"><span class="flaticon-tick"></span>Laundry</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-lg-4">
-                            <ul class="order_list list-inline-item">
-                                <li><a href="#"><span class="flaticon-tick"></span>Lawn</a></li>
-                                <li><a href="#"><span class="flaticon-tick"></span>Microwave</a></li>
-                                <li>
-                                    <a href="#"><span class="flaticon-tick"></span>Outdoor Shower</a>
-                                </li>
-                                <li><a href="#"><span class="flaticon-tick"></span>Refrigerator</a></li>
-                                <li><a href="#"><span class="flaticon-tick"></span>Sauna</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-lg-4">
-                            <ul class="order_list list-inline-item">
-                                <li>
-                                    <a href="#"><span class="flaticon-tick"></span>Swimming Pool</a>
-                                </li>
-                                <li><a href="#"><span class="flaticon-tick"></span>TV Cable</a></li>
-                                <li><a href="#"><span class="flaticon-tick"></span>Washer</a></li>
-                                <li><a href="#"><span class="flaticon-tick"></span>WiFi</a></li>
-                                <li>
-                                    <a href="#"><span class="flaticon-tick"></span>Window Coverings</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!--map-->
-            <div class="col-lg-12">
-                <div class="application_statics mt30">
-                    <h4 class="mb30">
-                        Location
-                        <small class="float-right">
-                            @Model.Address
-                        </small>
-                    </h4>
-                    <div class="property_video p0">
-                        <input type="hidden" id="lat" value="@Model.Latitude" />
-                        <input type="hidden" id="longt" value="@Model.Longtitude" />
-                        <div class="thumb">
-                            <div class="h400" id="map"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-12">
-                <h4 class="mt30 mb30">Similar Properties</h4>
-            </div>
-            <div class="col-lg-6">
-                <div class="feat_property">
-                    <div class="thumb">
-                        <img class="img-whp" src="images/property/fp1.jpg" alt="fp1.jpg">
-                        <div class="thmb_cntnt">
-                            <ul class="tag mb0">
-                                <li class="list-inline-item"><a href="#">For Rent</a></li>
-                                <li class="list-inline-item"><a href="#">Featured</a></li>
-                            </ul>
-                            <ul class="icon mb0">
-                                <li class="list-inline-item">
-                                    <a href="#">
-                                        <span class="flaticon-transfer-1"></span>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a href="#">
-                                        <span class="flaticon-heart"></span>
-                                    </a>
-                                </li>
-                            </ul>
-                            <a class="fp_price" href="#">$13,000<small>/mo</small></a>
-                        </div>
-                    </div>
-                    <div class="details">
-                        <div class="tc_content">
-                            <p class="text-thm">Apartment</p>
-                            <h4>Renovated Apartment</h4>
-                            <p>
-                                <span class="flaticon-placeholder"></span> 1421 San Pedro St, Los
-                                Angeles, CA 90015
-                            </p>
-                            <ul class="prop_details mb0">
-                                <li class="list-inline-item"><a href="#">Beds: 4</a></li>
-                                <li class="list-inline-item"><a href="#">Baths: 2</a></li>
-                                <li class="list-inline-item"><a href="#">Sq Ft: 5280</a></li>
-                            </ul>
-                        </div>
-                        <div class="fp_footer">
-                            <ul class="fp_meta float-left mb0">
-                                <li class="list-inline-item">
-                                    <a href="#">
-                                        <img src="images/property/pposter1.png" alt="pposter1.png">
-                                    </a>
-                                </li>
-                                <li class="list-inline-item"><a href="#">Ali Tufan</a></li>
-                            </ul>
-                            <div class="fp_pdate float-right">4 years ago</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="feat_property">
-                    <div class="thumb">
-                        <img class="img-whp" src="images/property/fp2.jpg" alt="fp2.jpg">
-                        <div class="thmb_cntnt">
-                            <ul class="tag mb0">
-                                <li class="list-inline-item"><a href="#">For Rent</a></li>
-                            </ul>
-                            <ul class="icon mb0">
-                                <li class="list-inline-item">
-                                    <a href="#">
-                                        <span class="flaticon-transfer-1"></span>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a href="#">
-                                        <span class="flaticon-heart"></span>
-                                    </a>
-                                </li>
-                            </ul>
-                            <a class="fp_price" href="#">$13,000<small>/mo</small></a>
-                        </div>
-                    </div>
-                    <div class="details">
-                        <div class="tc_content">
-                            <p class="text-thm">Apartment</p>
-                            <h4>Renovated Apartment</h4>
-                            <p>
-                                <span class="flaticon-placeholder"></span> 1421 San Pedro St, Los
-                                Angeles, CA 90015
-                            </p>
-                            <ul class="prop_details mb0">
-                                <li class="list-inline-item"><a href="#">Beds: 4</a></li>
-                                <li class="list-inline-item"><a href="#">Baths: 2</a></li>
-                                <li class="list-inline-item"><a href="#">Sq Ft: 5280</a></li>
-                            </ul>
-                        </div>
-                        <div class="fp_footer">
-                            <ul class="fp_meta float-left mb0">
-                                <li class="list-inline-item">
-                                    <a href="#">
-                                        <img src="images/property/pposter1.png" alt="pposter1.png">
-                                    </a>
-                                </li>
-                                <li class="list-inline-item"><a href="#">Ali Tufan</a></li>
-                            </ul>
-                            <div class="fp_pdate float-right">4 years ago</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="feat_property">
-                    <div class="thumb">
-                        <img class="img-whp" src="images/property/fp3.jpg" alt="fp3.jpg">
-                        <div class="thmb_cntnt">
-                            <ul class="tag mb0">
-                                <li class="list-inline-item"><a href="#">For Sale</a></li>
-                            </ul>
-                            <ul class="icon mb0">
-                                <li class="list-inline-item">
-                                    <a href="#">
-                                        <span class="flaticon-transfer-1"></span>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a href="#">
-                                        <span class="flaticon-heart"></span>
-                                    </a>
-                                </li>
-                            </ul>
-                            <a class="fp_price" href="#">$13,000<small>/mo</small></a>
-                        </div>
-                    </div>
-                    <div class="details">
-                        <div class="tc_content">
-                            <p class="text-thm">Apartment</p>
-                            <h4>Renovated Apartment</h4>
-                            <p>
-                                <span class="flaticon-placeholder"></span> 1421 San Pedro St, Los
-                                Angeles, CA 90015
-                            </p>
-                            <ul class="prop_details mb0">
-                                <li class="list-inline-item"><a href="#">Beds: 4</a></li>
-                                <li class="list-inline-item"><a href="#">Baths: 2</a></li>
-                                <li class="list-inline-item"><a href="#">Sq Ft: 5280</a></li>
-                            </ul>
-                        </div>
-                        <div class="fp_footer">
-                            <ul class="fp_meta float-left mb0">
-                                <li class="list-inline-item">
-                                    <a href="#">
-                                        <img src="images/property/pposter1.png" alt="pposter1.png">
-                                    </a>
-                                </li>
-                                <li class="list-inline-item"><a href="#">Ali Tufan</a></li>
-                            </ul>
-                            <div class="fp_pdate float-right">4 years ago</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="feat_property">
-                    <div class="thumb">
-                        <img class="img-whp" src="images/property/fp1.jpg" alt="fp1.jpg">
-                        <div class="thmb_cntnt">
-                            <ul class="tag mb0">
-                                <li class="list-inline-item"><a href="#">For Rent</a></li>
-                                <li class="list-inline-item"><a href="#">Featured</a></li>
-                            </ul>
-                            <ul class="icon mb0">
-                                <li class="list-inline-item">
-                                    <a href="#">
-                                        <span class="flaticon-transfer-1"></span>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a href="#">
-                                        <span class="flaticon-heart"></span>
-                                    </a>
-                                </li>
-                            </ul>
-                            <a class="fp_price" href="#">$13,000<small>/mo</small></a>
-                        </div>
-                    </div>
-                    <div class="details">
-                        <div class="tc_content">
-                            <p class="text-thm">Apartment</p>
-                            <h4>Renovated Apartment</h4>
-                            <p>
-                                <span class="flaticon-placeholder"></span> 1421 San Pedro St, Los
-                                Angeles, CA 90015
-                            </p>
-                            <ul class="prop_details mb0">
-                                <li class="list-inline-item"><a href="#">Beds: 4</a></li>
-                                <li class="list-inline-item"><a href="#">Baths: 2</a></li>
-                                <li class="list-inline-item"><a href="#">Sq Ft: 5280</a></li>
-                            </ul>
-                        </div>
-                        <div class="fp_footer">
-                            <ul class="fp_meta float-left mb0">
-                                <li class="list-inline-item">
-                                    <a href="#">
-                                        <img src="images/property/pposter1.png" alt="pposter1.png">
-                                    </a>
-                                </li>
-                                <li class="list-inline-item"><a href="#">Ali Tufan</a></li>
-                            </ul>
-                            <div class="fp_pdate float-right">4 years ago</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-4 col-xl-4 mt50">
-        <div class="terms_condition_widget">
-            <h4 class="title">Featured Properties</h4>
-            <div class="sidebar_feature_property_slider">
-                <div class="item">
-                    <div class="feat_property home7 agent">
-                        <div class="thumb">
-                            <img class="img-whp" src="images/property/fp1.jpg" alt="fp1.jpg">
-                            <div class="thmb_cntnt">
-                                <ul class="tag mb0">
-                                    <li class="list-inline-item"><a href="#">For Rent</a></li>
-                                    <li class="list-inline-item"><a href="#">Featured</a></li>
-                                </ul>
-                                <a class="fp_price" href="#">$13,000<small>/mo</small></a>
-                                <h4 class="posr color-white">Renovated Apartment</h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="feat_property home7 agent">
-                        <div class="thumb">
-                            <img class="img-whp" src="images/property/fp2.jpg" alt="fp2.jpg">
-                            <div class="thmb_cntnt">
-                                <ul class="tag mb0">
-                                    <li class="list-inline-item"><a href="#">For Rent</a></li>
-                                    <li class="list-inline-item"><a href="#">Featured</a></li>
-                                </ul>
-                                <a class="fp_price" href="#">$13,000<small>/mo</small></a>
-                                <h4 class="posr color-white">Renovated Apartment</h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="feat_property home7 agent">
-                        <div class="thumb">
-                            <img class="img-whp" src="images/property/fp3.jpg" alt="fp3.jpg">
-                            <div class="thmb_cntnt">
-                                <ul class="tag mb0">
-                                    <li class="list-inline-item"><a href="#">For Rent</a></li>
-                                    <li class="list-inline-item"><a href="#">Featured</a></li>
-                                </ul>
-                                <a class="fp_price" href="#">$13,000<small>/mo</small></a>
-                                <h4 class="posr color-white">Renovated Apartment</h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="feat_property home7 agent">
-                        <div class="thumb">
-                            <img class="img-whp" src="images/property/fp4.jpg" alt="fp4.jpg">
-                            <div class="thmb_cntnt">
-                                <ul class="tag mb0">
-                                    <li class="list-inline-item"><a href="#">For Rent</a></li>
-                                    <li class="list-inline-item"><a href="#">Featured</a></li>
-                                </ul>
-                                <a class="fp_price" href="#">$13,000<small>/mo</small></a>
-                                <h4 class="posr color-white">Renovated Apartment</h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="feat_property home7 agent">
-                        <div class="thumb">
-                            <img class="img-whp" src="images/property/fp5.jpg" alt="fp5.jpg">
-                            <div class="thmb_cntnt">
-                                <ul class="tag mb0">
-                                    <li class="list-inline-item"><a href="#">For Rent</a></li>
-                                    <li class="list-inline-item"><a href="#">Featured</a></li>
-                                </ul>
-                                <a class="fp_price" href="#">$13,000<small>/mo</small></a>
-                                <h4 class="posr color-white">Renovated Apartment</h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="terms_condition_widget">
-            <h4 class="title">Categories Property</h4>
-            <div class="widget_list">
-                <ul class="list_details">
-                    <li>
-                        <a href="#">
-                            <i class="fa fa-caret-right mr10"></i>Apartment <span class="float-right">6 properties</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <i class="fa fa-caret-right mr10"></i>Condo <span class="float-right">12 properties</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <i class="fa fa-caret-right mr10"></i>Family House <span class="float-right">8 properties</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <i class="fa fa-caret-right mr10"></i>Modern Villa <span class="float-right">26 properties</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <i class="fa fa-caret-right mr10"></i>Town House <span class="float-right">89 properties</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="sidebar_feature_listing">
-            <h4 class="title">Recently Viewed</h4>
-            <div class="media">
-                <img class="align-self-start mr-3" src="images/blog/fls1.jpg" alt="fls1.jpg">
-                <div class="media-body">
-                    <h5 class="mt-0 post_title">Nice Room With View</h5>
-                    <a href="#">$13,000/<small>/mo</small></a>
-                    <ul class="mb0">
-                        <li class="list-inline-item">Beds: 4</li>
-                        <li class="list-inline-item">Baths: 2</li>
-                        <li class="list-inline-item">Sq Ft: 5280</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="media">
-                <img class="align-self-start mr-3" src="images/blog/fls2.jpg" alt="fls2.jpg">
-                <div class="media-body">
-                    <h5 class="mt-0 post_title">Villa called Archangel</h5>
-                    <a href="#">$13,000<small>/mo</small></a>
-                    <ul class="mb0">
-                        <li class="list-inline-item">Beds: 4</li>
-                        <li class="list-inline-item">Baths: 2</li>
-                        <li class="list-inline-item">Sq Ft: 5280</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="media">
-                <img class="align-self-start mr-3" src="images/blog/fls3.jpg" alt="fls3.jpg">
-                <div class="media-body">
-                    <h5 class="mt-0 post_title">Sunset Studio</h5>
-                    <a href="#">$13,000<small>/mo</small></a>
-                    <ul class="mb0">
-                        <li class="list-inline-item">Beds: 4</li>
-                        <li class="list-inline-item">Baths: 2</li>
-                        <li class="list-inline-item">Sq Ft: 5280</li>
+                <div class="breadcrumb-inner">
+                    <h1 class="page-title">Thông tin chi tiết</h1>
+                    <ul class="page-list">
+                        <li><a href="index-2.html">Home</a></li>
+                        <li>Property</li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<!-- breadcrumb area End -->
+<!-- property-details-area start -->
+<div class="property-details-area">
+
+    <div class="container">
+        <div class="row pd-top-40">
+            <div class="col-lg-9">
+                <div class="property-info mb-5">
+                    <div class="h4 text-danger">
+                        @Model.Title
+                    </div>
+                    <div class="h6 font-italic">@realEstateType</div>
+                </div>
+                <div class="property-news-single-card border-bottom-yellow mb-4 pb-2">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-6">
+                            <div class="single-property-info">
+                                <div class="h5">Tình trạng</div>
+                                <p class="@statusCss font-weight-bold"><i class="@statusIcon"></i>@Model.Status</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <div class="single-property-info">
+                                <div class="h5">Số phòng</div>
+                                <p><i class="fa fa-home"></i>@Model.RoomNumber phòng</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-6">
+                            <div class="single-property-info">
+                                <div class="h5">Giá phòng</div>
+                                <p class="text-danger">
+                                    <i class="fa fa-usd"></i>
+                                    @Helper.VNCurrencyFormat(Model.Price.ToString())/tháng
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <div class="single-property-info">
+                                <div class="h5">Diện tích</div>
+                                <p class="text-danger">
+                                    <img src="~/assets/img/icons/7.png" alt="img">
+                                    @Model.Acreage m<sub style="vertical-align:super">2</sub>
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-3 col-sm-6">
+                            <div class="single-property-info">
+                                <div class="h5">Ngày đăng</div>
+                                <p><i class="fa fa-calendar"></i>@Model.PostTime</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <div class="single-property-info">
+                                <div class="h5">Ngày hết hạn</div>
+                                <p><i class="fa fa-calendar-times-o"></i>@Model.ExprireTime</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <div class="single-property-info">
+                                <div class="h5">SĐT liên hệ</div>
+                                <p><i class="fa fa-phone"></i>@Model.ContactNumber</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <div class="single-property-info">
+                                <div class="h5">Người đăng</div>
+                                <p><i class="fa fa-user"></i>@Model.AgentName</p>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-12">
+                            <div class="single-property-info">
+                                <div class="h5">Địa chỉ</div>
+                                <p>
+                                    <img src="~/assets/img/icons/1.png" alt="img">
+                                    @Model.Address
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="@isExpired" id="da-het-han"></div>
+
+                <div class="property-news-single-card border-bottom-yellow">
+                    <div class="content-title h4">Mô tả chi tiết</div>
+                    <div class="mb-3">
+                        @Html.Raw(Model.Description)
+                    </div>
+
+                </div>
+                <div class="property-news-single-card border-bottom-yellow pb-4">
+                    <div class="content-title mb-3 h4">Tiện ích có sẵn</div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <ul class="rld-list-style mb-3">
+                                @if (Model.SecurityCamera)
+                                {
+                                    <li><i class="fa fa-check"></i> Camera an ninh</li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="col-sm-4">
+                            <ul class="rld-list-style mb-3">
+                                @if (Model.HasPrivateWc)
+                                {
+                                    <li><i class="fa fa-check"></i> Vệ sinh riêng</li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="col-sm-4">
+                            <ul class="rld-list-style mb-3">
+                                @if (Model.HasMezzanine)
+                                {
+                                    <li><i class="fa fa-check"></i> Có gác lửng</li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="col-sm-4">
+                            <ul class="rld-list-style mb-3">
+                                @if (Model.AllowCook)
+                                {
+                                    <li><i class="fa fa-check"></i> Cho phép nấu ăn</li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="col-sm-4">
+                            <ul class="rld-list-style mb-3">
+                                @if (Model.FreeTime)
+                                {
+                                    <li><i class="fa fa-check"></i> Giờ giấc tự do</li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="col-sm-4">
+                            <ul class="rld-list-style mb-3">
+                                @if (Model.WifiPrice == 0)
+                                {
+                                    <li><i class="fa fa-check"></i> Free wifi</li>
+                                }
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="property-news-single-card style-two border-bottom-yellow">
+                    <div class="content-title mb-3 h4">Bản đồ</div>
+                    <p class="font-italic">(Vị trí trên bản đồ chỉ mang tính chất tương đối, chưa phải vị trí chính xác)</p>
+                    <input type="hidden" id="lat" value="@Model.Latitude" />
+                    <input type="hidden" id="longt" value="@Model.Longtitude" />
+                    <div id="map" style="height: 500px; border-radius:8px"></div>
+                </div>
+
+
+            </div>
+            <div class="col-lg-3">
+                <div class="widget mt-3 pl-3">
+                    <div class="text-danger h6 pt-3">Xem theo loại phòng</div>
+                    <ul class="ml-2">
+                        <li><a href="#">Phong tro Hai Chau</a> </li>
+                        <li><a href="#">Phong tro Hai Chau</a> </li>
+                        <li><a href="#">Phong tro Hai Chau</a> </li>
+                        <li><a href="#">Phong tro Hai Chau</a> </li>
+                        <li><a href="#">Phong tro Hai Chau</a> </li>
+                        <li><a href="#">Phong tro Hai Chau</a> </li>
+
+                    </ul>
+                </div>
+                <div class="widget mt-3 pl-3">
+                    <div class="text-danger h6 pt-3">Xem theo quận huyện</div>
+                    <ul class="ml-2">
+                        <li><a href="#">Phong tro Hai Chau</a> </li>
+                        <li><a href="#">Phong tro Hai Chau</a> </li>
+                        <li><a href="#">Phong tro Hai Chau</a> </li>
+                        <li><a href="#">Phong tro Hai Chau</a> </li>
+                        <li><a href="#">Phong tro Hai Chau</a> </li>
+                        <li><a href="#">Phong tro Hai Chau</a> </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- property details area end -->
+<!-- Recommended area start -->
+<div class="recommended-area pd-top-90 pd-bottom-70">
+    <div class="container">
+        <div class="section-title">
+            <div class="title h3">Khu vực lân cận</div>
+            <a class="btn-view-all" href="#">Xem tất cả</a>
+        </div>
+        <div class="row">
+
+        </div>
+    </div>
+</div>
+<!-- Recommended area end -->
 
 <script>
     // Initialize and add the map
@@ -627,17 +260,4 @@
         // The marker, positioned at Uluru
         var marker = new google.maps.Marker({ position: loca, map: map });
     }
-</script>
-
-@*<script>
-    //tam thoi ko can thiet
-    document.addEventListener("DOMContentLoaded", function () {
-
-        var htmlText = document.getElementById('htmlText');
-        htmlText.value = window.htmlToFormattedText(htmlText.value);
-
-    });
-</script>*@
-<script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBY8PE_X6qdTWkZwdBENNpGJTYr1cTjG9I&callback=initMap">
 </script>

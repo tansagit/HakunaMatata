@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using HakunaMatata.Services;
+﻿using HakunaMatata.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace HakunaMatata.Areas.AdminArea.Controllers
 {
     [Area("AdminArea")]
+    [Authorize]
     public class PictureController : Controller
     {
         private readonly IFileServices _services;
@@ -24,14 +23,15 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult LoadData(int realEstateId)
+        public async Task<IActionResult> LoadData(int realEstateId)
         {
-            var pictures = _services.GetPicturesForRealEstate(realEstateId);
+            var pictures = await _services.GetPicturesForRealEstate(realEstateId);
 
             if (pictures != null)
             {
                 return Json(new
                 {
+                    count = pictures.Count(),
                     data = pictures,
                     status = true
                 });
@@ -40,9 +40,10 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
         }
 
         [HttpPost]
-        public IActionResult Remove(int pictureId)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Remove(int pictureId)
         {
-            var status = _services.RemovePictureFromRealEstate(pictureId);
+            var status = await _services.RemovePictureFromRealEstate(pictureId);
             return Json(new { status });
         }
 

@@ -55,15 +55,24 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
             return Json(new { data = items, totalRow = count });
         }
 
-
-        public IActionResult Details(int? id)
+        [HttpGet]
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var details = _realEstateServices.GetById(id);
+            var details = await _realEstateServices.GetRealEstateDetails(id);
+            if (details == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var pictures = await _fileServices.GetPicturesForRealEstate(details.Id);
+                details.ImageUrls = Helper.GetImageUrls(pictures);
+            }
             ViewData["GOOGLE_MAP_API"] = Constants.GOOGLE_MAP_MARKER_API;
             return View(details);
         }
@@ -143,11 +152,11 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
             {
                 return NotFound();
             }
-            else
-            {
-                var pictures = _fileServices.GetPicturesForRealEstate(details.Id);
-                details.Pictures = pictures.ToList();
-            }
+            //else
+            //{
+            //    var pictures = await _fileServices.GetPicturesForRealEstate(details.Id);
+            //    details.Pictures = pictures.ToList();
+            //}
 
             var realEstateTypeList = _realEstateServices.GetRealEstateTypeList();
             ViewData["RealEstateTypeId"] = new SelectList(realEstateTypeList, "Id", "RealEstateTypeName", details.RealEstateTypeId);
@@ -196,13 +205,13 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
         }
 
 
-        [HttpPost, ActionName("Disable")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DisableConfirm(int id)
-        {
-            var isSuccess = _realEstateServices.DisableRealEstate(id);
-            return Json(new { isSuccess, html = Helper.RenderRazorViewToString(this, "_ViewAllRealEstates", _realEstateServices.GetList()) });
-        }
+        //[HttpPost, ActionName("Disable")]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult DisableConfirm(int id)
+        //{
+        //    var isSuccess = _realEstateServices.DisableRealEstate(id);
+        //    return Json(new { isSuccess, html = Helper.RenderRazorViewToString(this, "_ViewAllRealEstates", _realEstateServices.GetList()) });
+        //}
 
 
         [HttpPost]
@@ -215,19 +224,19 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
 
 
         //hình như ko dùng
-        [HttpPost, ActionName("RemovePicture")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RemovePictureConfirm(int id)
-        {
-            int realEstateId = Convert.ToInt32(_fileServices.GetRealEstateId(id));
-            var isSuccess = _fileServices.RemovePictureFromRealEstate(id);
+        //[HttpPost, ActionName("RemovePicture")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> RemovePictureConfirm(int id)
+        //{
+        //    int realEstateId = Convert.ToInt32(_fileServices.GetRealEstateId(id));
+        //    var isSuccess = await _fileServices.RemovePictureFromRealEstate(id);
 
-            return Json(new
-            {
-                isSuccess,
-                html = Helper.RenderRazorViewToString(this, "_ViewPictures", _fileServices.GetPicturesForRealEstate(realEstateId))
-            });
-        }
+        //    return Json(new
+        //    {
+        //        isSuccess,
+        //        html = Helper.RenderRazorViewToString(this, "_ViewPictures", _fileServices.GetPicturesForRealEstate(realEstateId))
+        //    });
+        //}
 
     }
 }

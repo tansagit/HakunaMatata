@@ -371,6 +371,10 @@ code {
     padding-top: 20px;
 }
 
+.pd-top-40 {
+    padding-top: 40px;
+}
+
 .pd-top-60 {
     padding-top: 60px;
 }
@@ -3092,19 +3096,38 @@ ul {
     font-weight: 500;
 }
 
-.single-property-info p i {
-    margin-right: 10px;
-    color: var(--main-color-one);
+.single-property-info p {
+    font-weight: bold;
 }
 
-.single-property-info p img {
-    margin-right: 11px;
-}
+    .single-property-info p i {
+        margin-right: 10px;
+        color: var(--main-color-one);
+    }
+
+    .single-property-info p.text-success i {
+        margin-right: 10px;
+        color: #28a745;
+    }
+
+    .single-property-info p.text-disable i {
+        margin-right: 10px;
+        color: black;
+    }
+
+    .single-property-info p img {
+        margin-right: 11px;
+    }
 
 .property-news-single-card {
-    padding-bottom: 50px;
-    margin-bottom: 95px;
+    padding-bottom: 0px;
+    margin-bottom: 30px;
 }
+
+    .property-news-single-card div.content-title {
+        font-weight: 500;
+        color: black;
+    }
 
     .property-news-single-card h4 {
         font-weight: 700;
@@ -5193,4 +5216,24 @@ ul {
     background: var(--main-color-one);
     border-color: var(--main-color-one);
     font-weight: bold;
+}
+
+.property-info div.h4 {
+    font-weight: 700;
+    color: black;
+}
+
+.property-info div.h5 {
+    color: black;
+}
+
+div#da-het-han {
+    position: absolute;
+    top: 85px;
+    left: 50%;
+    margin-left: -125px;
+    width: 200px;
+    height: 200px;
+    background: url(/assets/img/tin_het_han.png) center no-repeat;
+    background-size: contain;
 }

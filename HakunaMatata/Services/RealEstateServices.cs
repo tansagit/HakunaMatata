@@ -137,7 +137,7 @@ namespace HakunaMatata.Services
                 {
                     info.Map = new Map();
                 }
-                var result = Helper.MappingFromRealEstate(info);
+                VM_RealEstateDetails result = Helper.MappingFromRealEstate(info);
                 return result;
             }
 

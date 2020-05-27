@@ -16,11 +16,15 @@ namespace HakunaMatata.Controllers
     public class RealEstateController : Controller
     {
         private readonly IRealEstateServices _realEstateServices;
+        private readonly IFileServices _fileServices;
         private readonly ICommonServices _commonServices;
 
-        public RealEstateController(IRealEstateServices realEstateServices, ICommonServices commonServices)
+        public RealEstateController(IRealEstateServices realEstateServices,
+                                    IFileServices fileServices,
+                                    ICommonServices commonServices)
         {
             _realEstateServices = realEstateServices;
+            _fileServices = fileServices;
             _commonServices = commonServices;
         }
 
@@ -83,7 +87,17 @@ namespace HakunaMatata.Controllers
                 return NotFound();
             }
 
-            var details = _realEstateServices.GetById(id);
+            var details = await _realEstateServices.GetRealEstateDetails(id);
+            if (details == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var pictures = await _fileServices.GetPicturesForRealEstate(details.Id);
+                details.ImageUrls = Helper.GetImageUrls(pictures);
+            }
+            ViewData["GOOGLE_MAP_API"] = Constants.GOOGLE_MAP_MARKER_API;
             return View(details);
         }
 
