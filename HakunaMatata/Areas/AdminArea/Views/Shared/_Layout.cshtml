@@ -44,7 +44,9 @@
                 <ul class="nav metismenu" id="side-menu">
                     <li class="nav-header">
                         <div class="dropdown profile-element">
-                            <img alt="image" class="rounded-circle d-block mx-auto" src="~/admin/img/profile_small.jpg" />
+                            <div class="mx-auto" style="width: 50px">
+                                <img alt="image" class="img-fluid rounded-circle d-block mx-auto" src="~/admin/img/ami.jpg" />
+                            </div>
                             <a data-toggle="dropdown" class="dropdown-toggle text-center" href="/#">
                                 @if (User.Identity.IsAuthenticated)
                                 {
@@ -74,48 +76,65 @@
 
                     </li>
                     <li>
+                        <a asp-area="AdminArea" asp-controller="RealEstateType" asp-action="Index">
+                            <i class="fas fa-bahai"></i> <span class="nav-label">Real Estate Type</span>
+                        </a>
+                    </li>
+                    <li>
                         <a asp-area="AdminArea" asp-controller="Agent" asp-action="Index"><i class="fas fa-users"></i> <span class="nav-label">Agents</span></a>
                     </li>
                     <li>
-                        <a href=""><i class="fa fa-diamond"></i> <span class="nav-label">Categories</span><span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li><a href="">Categories</a></li>
-                            <li><a href="">SubCategories</a></li>
-                        </ul>
+                        <a asp-area="AdminArea" asp-controller="AboutUs" asp-action="Index"><i class="fas fa-bahai"></i> <span class="nav-label">About Us</span></a>
                     </li>
                     <li>
-                        <a href="/#"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">Tours</span><span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li><a href="">Destinations</a></li>
-                            <li><a href="">All Tours</a></li>
-                        </ul>
+                        <a asp-area="AdminArea" asp-controller="FAQ" asp-action="Index">
+                            <i class="fas fa-bahai"></i> <span class="nav-label">FAQs</span>
+                        </a>
                     </li>
                     <li>
-                        <a href="/#"><i class="fa fa-envelope"></i> <span class="nav-label">BookTours </span><span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li><a href="">Pending</a></li>
-                            <li><a href="">Process</a></li>
-                            <li><a href="">Finish</a></li>
-                        </ul>
+                        <a asp-area="AdminArea" asp-controller="Level" asp-action="Index">
+                            <i class="fas fa-bahai"></i> <span class="nav-label">Level</span>
+                        </a>
                     </li>
                     <li>
-                        <a href=""><i class="fa fa-pie-chart"></i> <span class="nav-label">Review Tours</span>  </a>
+                        <a asp-area="AdminArea" asp-controller="Policy" asp-action="Index">
+                            <i class="fas fa-bahai"></i> <span class="nav-label">Policy</span>
+                        </a>
                     </li>
-                    <li>
-                        <a href=""><i class="fa fa-flask"></i> <span class="nav-label">News</span></a>
-                    </li>
-                    <li>
-                        <a href=""><i class="fa fa-diamond"></i> <span class="nav-label">Customers</span></a>
-                    </li>
-                    <li>
-                        <a href="/#"><i class="fa fa-edit"></i> <span class="nav-label">Company Infomation</span><span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li><a href="">Policies</a></li>
-                            <li><a href="">FAQs</a></li>
-                            <li><a href="">Contacts</a></li>
-                            <li><a href="">About</a></li>
-                        </ul>
-                    </li>
+
+                    @*<li>
+                            <a href="/#"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">Tours</span><span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level collapse">
+                                <li><a href="">Destinations</a></li>
+                                <li><a href="">All Tours</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="/#"><i class="fa fa-envelope"></i> <span class="nav-label">BookTours </span><span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level collapse">
+                                <li><a href="">Pending</a></li>
+                                <li><a href="">Process</a></li>
+                                <li><a href="">Finish</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href=""><i class="fa fa-pie-chart"></i> <span class="nav-label">Review Tours</span>  </a>
+                        </li>
+                        <li>
+                            <a href=""><i class="fa fa-flask"></i> <span class="nav-label">News</span></a>
+                        </li>
+                        <li>
+                            <a href=""><i class="fa fa-diamond"></i> <span class="nav-label">Customers</span></a>
+                        </li>
+                        <li>
+                            <a href="/#"><i class="fa fa-edit"></i> <span class="nav-label">Company Infomation</span><span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level collapse">
+                                <li><a href="">Policies</a></li>
+                                <li><a href="">FAQs</a></li>
+                                <li><a href="">Contacts</a></li>
+                                <li><a href="">About</a></li>
+                            </ul>
+                        </li>*@
                 </ul>
             </div>
         </nav>
