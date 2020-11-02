@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using HakunaMatata.Helpers;
+﻿using HakunaMatata.Helpers;
 using HakunaMatata.Models.DataModels;
 using HakunaMatata.Models.ViewModels;
 using HakunaMatata.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace HakunaMatata.Controllers
 {
@@ -37,7 +35,6 @@ namespace HakunaMatata.Controllers
                                                int? acreageRange,
                                                string searchString)
         {
-
             int pageSize = 18;
             var condition = new Condition()
             {
@@ -50,7 +47,6 @@ namespace HakunaMatata.Controllers
             };
 
             var source = _realEstateServices.Filter(condition);
-
 
             var types = _realEstateServices.GetRealEstateTypeList();
             types = types.Concat(new[] { new RealEstateType { Id = 0, RealEstateTypeName = "Tất cả" } });
@@ -76,8 +72,6 @@ namespace HakunaMatata.Controllers
 
             return View(await CustomPagination.CreateAsync(source, condition, page ?? 1, pageSize));
         }
-
-
 
         [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)

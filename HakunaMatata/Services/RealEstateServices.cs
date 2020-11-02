@@ -1,12 +1,12 @@
-﻿using HakunaMatata.Data;
+﻿using System;
+using System.Linq;
+using HakunaMatata.Data;
 using HakunaMatata.Helpers;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using HakunaMatata.Models.DataModels;
 using HakunaMatata.Models.ViewModels;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 
 namespace HakunaMatata.Services
@@ -42,8 +42,6 @@ namespace HakunaMatata.Services
         IEnumerable<City> GetCityList();
         IEnumerable<District> GetDistrictList();
 
-
-
         bool IsExistRealEstate(int id);
 
         Tuple<int?, int?, int> GetLocation(string address);
@@ -60,7 +58,6 @@ namespace HakunaMatata.Services
         {
             _context = context;
         }
-
 
         public List<VM_RealEstate> GetList()
         {
@@ -140,7 +137,7 @@ namespace HakunaMatata.Services
                 VM_RealEstateDetails result = Helper.MappingFromRealEstate(info);
                 return result;
             }
-
+           
             return null;
         }
 
@@ -154,11 +151,10 @@ namespace HakunaMatata.Services
                     .ThenInclude(detail => detail.ReaEstateType)
                 .SingleOrDefault();
 
-
             var map = _context.Map.Where(m => m.RealEstateId == id).SingleOrDefault();
 
             var images = _context.Picture
-                .Where(pic => pic.RealEstateId == id && pic.IsActive == true)
+                .Where(pic => pic.RealEstateId == id && pic.IsActive)
                 .ToList();
 
             var imgUrls = new List<string>();
@@ -256,7 +252,12 @@ namespace HakunaMatata.Services
         }
 
 
-
+        /// <summary>
+        /// function nay lam cai me gi vay nhi
+        /// </summary>
+        /// <param name="details"></param>
+        /// <param name="agentId"></param>
+        /// <returns></returns> 
         public int AddCompleteRealEstate(VM_RealEstateDetails details, int agentId)
         {
             var realEstate = new RealEstate()
@@ -318,9 +319,9 @@ namespace HakunaMatata.Services
 
             return realEstateId;
         }
-
         public bool UpdateRealEstate(VM_RealEstateDetails details)
         {
+
             var rt = _context.RealEstate.Find(details.Id);
             if (rt != null)
             {
@@ -480,7 +481,7 @@ namespace HakunaMatata.Services
                                             .ThenInclude(r => r.Picture)
                                         .Include(r => r.RealEstate)
                                             .ThenInclude(r => r.Agent)
-                                        .Where(r => r.RealEstate.IsActive == true)
+                                        .Where(r => r.RealEstate.IsActive)
                                         .AsQueryable().ToListAsync();
 
 
@@ -522,117 +523,7 @@ namespace HakunaMatata.Services
                 return null;
             }
         }
-
-        //public IQueryable<VM_Search_Result> GetRealEstateList(VM_Search condition)
-        //{
-        //    try
-        //    {
-        //        var allPosts = _context.RealEstate.Where(r => r.IsActive == true)
-        //                            .Select(e => new
-        //                            {
-        //                                e, //real estate
-        //                                e.RealEstateDetail,
-        //                                e.ReaEstateType,
-        //                                e.Map,
-        //                                image = e.Picture.Where(p => p.IsActive == true).FirstOrDefault(),
-        //                                e.Agent
-        //                            });
-
-
-        //        //filter
-        //        if (allPosts != null)
-        //        {
-        //            if (condition.Type > 0)
-        //                allPosts = allPosts.Where(x => x.ReaEstateType.Id == condition.Type);
-        //            if (condition.City > 0)
-        //                allPosts = allPosts.Where(x => x.Map.CityId == condition.City);
-        //            if (condition.District > 0)
-        //                allPosts = allPosts.Where(x => x.Map.DistrictId == condition.District);
-
-        //            var priceRange = Helper.GetPriceRange(condition.PriceRange);
-        //            var minPrice = priceRange[0];
-        //            var maxPrice = priceRange[1];
-        //            allPosts = allPosts.Where(x =>
-        //                x.RealEstateDetail.Price >= minPrice && x.RealEstateDetail.Price <= maxPrice);
-
-        //            var acreageRange = Helper.GetAcreageRange(condition.AcreageRange);
-        //            var minAcreage = acreageRange[0];
-        //            var maxAcreage = acreageRange[1];
-
-        //            allPosts = allPosts.Where(x =>
-        //                x.RealEstateDetail.Acreage >= minAcreage && x.RealEstateDetail.Acreage <= maxAcreage);
-
-        //            if (!String.IsNullOrEmpty(condition.SearchString))
-        //                allPosts = allPosts.Where(
-        //                    x => x.Map.Address.Contains(condition.SearchString));
-
-        //            allPosts = allPosts.OrderByDescending(x => x.e.PostTime);
-        //        }
-
-        //        IQueryable<VM_Search_Result> results = (from item in allPosts
-        //                                                select new VM_Search_Result
-        //                                                {
-        //                                                    Id = item.e.Id,
-        //                                                    Street = Helper.GetStreet(item.Map.Address),
-        //                                                    Price = item.RealEstateDetail.Price,
-        //                                                    Acreage = item.RealEstateDetail.Acreage,
-        //                                                    Type = item.ReaEstateType.Id,
-        //                                                    PostTime = item.e.PostTime.ToString("dd/MM/yyyy"),
-        //                                                    ImageUrl = GetLinkImage(item.image),
-        //                                                    AgentName = item.Agent.AgentName
-        //                                                });
-
-        //        if (allPosts.Count() > 0)
-        //        {
-        //            #region commemed
-
-        //            //foreach (var item in allPosts)
-        //            //{
-        //            //    string imageUrl = string.Empty;
-        //            //    //neu list picture null hoac rong thi anh dai dien = 404
-        //            //    if (item.image == null)
-        //            //    {
-        //            //        imageUrl = "404";
-        //            //    }
-        //            //    else
-        //            //    {
-        //            //        //lay phan tu dau tien trong list picture
-
-        //            //        //kiem tra picture name no ton tai ko, 
-        //            //        // neu co nghia la moi them vao, ko phải crawl tu web
-        //            //        if (!string.IsNullOrEmpty(item.image.PictureName))
-        //            //        {
-        //            //            //tao url = cach + chuoi ~/images/ + PictureName
-        //            //            imageUrl = "local" + item.image.PictureName;
-        //            //        }
-        //            //        else
-        //            //        {
-        //            //            imageUrl = item.image.Url;
-        //            //        }
-        //            //    }
-
-        //            //    var resultItem = new VM_Search_Result()
-        //            //    {
-        //            //        Id = item.e.Id,
-        //            //        Street = Helper.GetStreet(item.Map.Address),
-        //            //        Price = item.RealEstateDetail.Price,
-        //            //        Acreage = item.RealEstateDetail.Acreage,
-        //            //        Type = item.ReaEstateType.Id,
-        //            //        PostTime = item.e.PostTime.ToString("dd/MM/yyyy"),
-        //            //        ImageUrl = imageUrl,
-        //            //        AgentName = item.Agent.AgentName
-        //            //    };
-        //            //    results.Add(resultItem);
-        //            //}
-        //            #endregion
-        //        }
-        //        return results;
-        //    }
-        //    catch
-        //    {
-        //        return null;
-        //    }
-        //}
+        
         private static string GetLinkImage(Picture image)
         {
             string imageUrl = string.Empty;
@@ -663,7 +554,7 @@ namespace HakunaMatata.Services
         {
             try
             {
-                var source = _context.RealEstate.Where(r => r.IsActive == true)
+                var source = _context.RealEstate.Where(r => r.IsActive)
                                 .Include(r => r.RealEstateDetail)
                                 .Include(r => r.Agent)
                                 .Include(r => r.Map)
