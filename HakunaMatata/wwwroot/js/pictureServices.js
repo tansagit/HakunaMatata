@@ -42,14 +42,12 @@
 
                         $('#view-pictures').html(html);
                     }
-
                 }
                 else {
                     console.log(response.status);
                 }
             }
         });
-
     },
 
     removePicture: function (id) {
@@ -75,12 +73,9 @@
                         alert("Lỗi xảy ra, vui lòng thử lại!!!");
                     }
                 }
-
             });
         }
-
     }
-
 };
 
 pictureServices.init();

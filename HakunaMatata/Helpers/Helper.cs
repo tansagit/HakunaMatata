@@ -1,7 +1,5 @@
 ﻿using HakunaMatata.Models.DataModels;
 using HakunaMatata.Models.ViewModels;
-using HtmlAgilityPack;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -15,31 +13,28 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
-using static HakunaMatata.Helpers.Constants;
 
 namespace HakunaMatata.Helpers
 {
-    public class Helper
+    public static class Helper
     {
         public static ClaimsPrincipal GenerateIdentity(Agent user)
         {
-            string role;
-            switch (user.LevelId)
+            var role = user.LevelId switch
             {
-                case 1: role = "Admin"; break;
-                case 2: role = "Manager"; break;
-                case 3: role = "Customer"; break;
-                default: role = "Customer"; break;
-            }
+                1 => "Admin",
+                2 => "Manager",
+                3 => "Customer",
+                _ => "Customer",
+            };
 
             var claims = new List<Claim>()
             {
                 new Claim("UserId", user.Id.ToString()),
                 new Claim("UserName",user.AgentName),
-                new Claim(ClaimTypes.Email , user.Email),
                 new Claim("Phone",user.PhoneNumber),
-                new Claim(ClaimTypes.Role , role)
+                new Claim(ClaimTypes.Role , role),
+                new Claim("LevelId", user.LevelId.ToString())
             };
 
             var identity = new ClaimsIdentity(claims, "User Identity");
@@ -76,17 +71,15 @@ namespace HakunaMatata.Helpers
         public static List<string> GetImageUrls(IEnumerable<Picture> list)
         {
             var result = new List<string>();
-            if (list.Count() > 0)
+            if (list.Any())
             {
                 foreach (var item in list)
                 {
                     var url = item.Url;
                     //neu ton tai filename => upload local
-                    if (!string.IsNullOrEmpty(item.PictureName))
+                    if (!string.IsNullOrEmpty(item.PictureName) && item.PictureName.StartsWith("local-picture"))
                     {
-                        //kiem tra them dieu kien cho chac chan
-                        if (item.PictureName.StartsWith("local-picture"))
-                            url = string.Format("/images/" + item.Url);
+                        url = string.Format("/images/" + item.Url);
                     }
                     result.Add(url);
                 }
@@ -124,9 +117,9 @@ namespace HakunaMatata.Helpers
 
         public static decimal[] GetPriceRange(int priceRange)
         {
-
             decimal min;
             decimal max;
+
             if (priceRange == 1) //duoi 1tr
             {
                 min = 0;
@@ -282,7 +275,7 @@ namespace HakunaMatata.Helpers
                     else
                     {
                         //lay phan tu dau tien trong list picture
-                        var img = item.RealEstate.Picture.ToList().First();
+                        var img = item.RealEstate.Picture.FirstOrDefault();
 
                         //kiem tra picture name no ton tai ko, 
                         // neu co nghia la moi them vao, ko phải crawl tu web
@@ -388,9 +381,6 @@ namespace HakunaMatata.Helpers
             return double.Parse(money).ToString("#,###", cul.NumberFormat);
         }
     }
-
-
-
 }
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
@@ -401,7 +391,6 @@ public class NoDirectAccessAttribute : ActionFilterAttribute
         if (filterContext.HttpContext.Request.GetTypedHeaders().Referer == null ||
             filterContext.HttpContext.Request.GetTypedHeaders().Host.Host.ToString() != filterContext.HttpContext.Request.GetTypedHeaders().Referer.Host.ToString())
         {
-            //filterContext.HttpContext.Response.Redirect("/");
             filterContext.Result = new RedirectToRouteResult(new
                    RouteValueDictionary(new { area = "AdminArea", controller = "Home", action = "Index" }));
         }

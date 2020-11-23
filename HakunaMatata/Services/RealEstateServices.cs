@@ -47,8 +47,6 @@ namespace HakunaMatata.Services
         Tuple<int?, int?, int> GetLocation(string address);
 
         Task<List<VM_Search_Result>> SearchResults(VM_Search search);
-        //IQueryable<VM_Search_Result> GetRealEstateList(VM_Search search);
-
     }
 
     public class RealEstateServices : IRealEstateServices
@@ -87,7 +85,11 @@ namespace HakunaMatata.Services
             return list;
         }
 
-        // use for paging in AdminArea/RealEsate/Index2, order by post time
+        /// <summary>
+        /// Paging in AdminArea/RealEsate/Index2, order by post time
+        /// </summary>
+        /// <param name="searchKey"></param>
+        /// <returns></returns>
         public IQueryable<RealEstateViewModel> GetRealEstates(string searchKey)
         {
             var source = _context.RealEstate
@@ -109,7 +111,6 @@ namespace HakunaMatata.Services
                                                        select new RealEstateViewModel
                                                        {
                                                            Id = item.Id,
-                                                           //Street = Helper.GetStreet(item.Map.Address),
                                                            Street = item.Map.Address,
                                                            PostDate = item.PostTime.ToString("dd/MM/yyyy"),
                                                            Agent = item.Agent.AgentName,
@@ -326,7 +327,6 @@ namespace HakunaMatata.Services
             if (rt != null)
             {
                 var rt_detail = _context.RealEstateDetail.FirstOrDefault(d => d.RealEstateId == rt.Id);
-                //var map = _context.Map.FirstOrDefault(m => m.RealEstateId == rt.Id);
 
                 if (rt_detail != null)
                 {
@@ -349,7 +349,6 @@ namespace HakunaMatata.Services
                     rt_detail.ElectronicPrice = Convert.ToInt32(details.ElectronicPrice);
                     rt_detail.WifiPrice = details.WifiPrice;
 
-                    //map.Address = details.Address;
                     _context.SaveChanges();
                     return true;
                 }
@@ -502,7 +501,6 @@ namespace HakunaMatata.Services
                         x => x.Price >= minPrice && x.Price <= maxPrice).ToList();
 
                     var acreageRange = Helper.GetAcreageRange(search.AcreageRange);
-                    var minAcreage = acreageRange[0];
                     var maxAcreage = acreageRange[1];
 
                     searchResult = searchResult.Where(
@@ -526,7 +524,7 @@ namespace HakunaMatata.Services
         
         private static string GetLinkImage(Picture image)
         {
-            string imageUrl = string.Empty;
+            string imageUrl;
             if (image == null)
             {
                 imageUrl = "404";

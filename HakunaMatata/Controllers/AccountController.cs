@@ -42,8 +42,10 @@ namespace HakunaMatata.Controllers
                 {
                     var userPrincipal = Helper.GenerateIdentity(member);
 
-                    var props = new AuthenticationProperties();
-                    props.IsPersistent = account.IsRememberMe;
+                    var props = new AuthenticationProperties
+                    {
+                        IsPersistent = account.IsRememberMe
+                    };
 
                     //sign in
                     await HttpContext.SignInAsync(
@@ -71,7 +73,6 @@ namespace HakunaMatata.Controllers
             var model = new VM_Register { ReturnUrl = returnUrl };
             return View(model);
         }
-
 
         [HttpPost]
         [AllowAnonymous]

@@ -8,6 +8,7 @@ namespace HakunaMatata.Models.ViewModels
         public string LoginName { get; set; }
 
         [Required]
+        [MinLength(6)]
         public string Password { get; set; }
 
         public bool IsRememberMe { get; set; }

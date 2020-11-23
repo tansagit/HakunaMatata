@@ -10,6 +10,7 @@ namespace HakunaMatata.Services
     {
         Agent GetUser(VM_Login login);
         Task<bool> RegisterUser(VM_Register user);
+        bool CheckExist(string phoneNumber);
     }
 
     public class AccountServices : IAccountServices
@@ -19,6 +20,11 @@ namespace HakunaMatata.Services
         public AccountServices(HakunaMatataContext dbContext)
         {
             _dbContext = dbContext;
+        }
+
+        public bool CheckExist(string phoneNumber)
+        {
+            return _dbContext.Agent.Any(x => x.PhoneNumber.Equals(phoneNumber));
         }
 
         public Agent GetUser(VM_Login login)
@@ -31,23 +37,27 @@ namespace HakunaMatata.Services
         {
             try
             {
-                var user = new Agent()
+                if (registerUser != null)
                 {
-                    LoginName = registerUser.PhoneNumber,
-                    Password = registerUser.Password,
-                    AgentName = registerUser.AgentName,
-                    LevelId = 3,
-                    IsActive = true,
-                    PhoneNumber = registerUser.PhoneNumber,
-                    ConfirmPhoneNumber = false
-                };
-                _dbContext.Agent.Add(user);
-                await _dbContext.SaveChangesAsync();
-                return true;
+                    var user = new Agent()
+                    {
+                        LoginName = registerUser.PhoneNumber,
+                        Password = registerUser.Password,
+                        AgentName = registerUser.AgentName,
+                        LevelId = 3,
+                        IsActive = true,
+                        PhoneNumber = registerUser.PhoneNumber,
+                        ConfirmPhoneNumber = false
+                    };
+                    _dbContext.Agent.Add(user);
+                    await _dbContext.SaveChangesAsync();
+                    return true;
+                }
+                return false;
             }
             catch
             {
-                return false;
+                throw;
             }
         }
     }

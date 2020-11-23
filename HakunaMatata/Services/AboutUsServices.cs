@@ -1,9 +1,7 @@
 ﻿using HakunaMatata.Data;
 using HakunaMatata.Models.DataModels;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace HakunaMatata.Services
 {
