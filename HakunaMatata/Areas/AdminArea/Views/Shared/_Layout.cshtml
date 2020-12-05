@@ -1,4 +1,5 @@
 ﻿@{
+    int userId = 0;
     string userName = string.Empty;
     string userRole = string.Empty;
     int userRoleId = 3;
@@ -42,6 +43,7 @@
         @{
             if (User.Identity.IsAuthenticated)
             {
+                userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == "UserId").Value);
                 userName = User.Claims.FirstOrDefault(c => c.Type == "UserName").Value;
                 userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
                 userRoleId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == "LevelId").Value);
@@ -70,7 +72,7 @@
                                 <li><a class="dropdown-item" href="/contacts.html">Contacts</a></li>
                                 <li><a class="dropdown-item" href="/mailbox.html">Mailbox</a></li>
                                 <li class="dropdown-divider"></li>
-                                <li><a class="dropdown-item"asp-area="AdminArea" asp-controller="Account" asp-action="Logout">Đăng xuất</a></li>
+                                <li><a class="dropdown-item" asp-area="AdminArea" asp-controller="Account" asp-action="Logout">Đăng xuất</a></li>
                             </ul>
                         </div>
                         <div class="logo-element">
@@ -81,18 +83,18 @@
                     @if (userRoleId < 3)
                     {
                         <li class="">
-                            <a asp-area="AdminArea" asp-controller="RealEstate" asp-action="Index2"><i class="fa fa-th-large"></i> <span class="nav-label">Real Estates</span> </a>
+                            <a asp-area="AdminArea" asp-controller="RealEstate" asp-action="Index"><i class="fa fa-th-large"></i> <span class="nav-label">Danh sách bài đăng</span> </a>
                         </li>
                         <li>
                             <a asp-area="AdminArea" asp-controller="RealEstateType" asp-action="Index">
-                                <i class="fas fa-bahai"></i> <span class="nav-label">Real Estate Type</span>
+                                <i class="fas fa-bahai"></i> <span class="nav-label">Quản lý loại hình BĐS</span>
                             </a>
                         </li>
                         <li>
-                            <a asp-area="AdminArea" asp-controller="Agent" asp-action="Index"><i class="fas fa-users"></i> <span class="nav-label">Agents</span></a>
+                            <a asp-area="AdminArea" asp-controller="Agent" asp-action="Index"><i class="fas fa-users"></i> <span class="nav-label">Quản lý thành viên</span></a>
                         </li>
                         <li>
-                            <a asp-area="AdminArea" asp-controller="AboutUs" asp-action="Index"><i class="fas fa-bahai"></i> <span class="nav-label">About Us</span></a>
+                            <a asp-area="AdminArea" asp-controller="AboutUs" asp-action="Index"><i class="fas fa-bahai"></i> <span class="nav-label">Thông tin thêm</span></a>
                         </li>
                         <li>
                             <a asp-area="AdminArea" asp-controller="FAQ" asp-action="Index">
@@ -101,25 +103,25 @@
                         </li>
                         <li>
                             <a asp-area="AdminArea" asp-controller="Level" asp-action="Index">
-                                <i class="fas fa-bahai"></i> <span class="nav-label">Level</span>
+                                <i class="fas fa-bahai"></i> <span class="nav-label">Quản lý phân quyền</span>
                             </a>
                         </li>
                         <li>
                             <a asp-area="AdminArea" asp-controller="Policy" asp-action="Index">
-                                <i class="fas fa-bahai"></i> <span class="nav-label">Policy</span>
+                                <i class="fas fa-bahai"></i> <span class="nav-label">Chính sách</span>
                             </a>
                         </li>
                     }
                     else //client
                     {
                         <li class="">
-                            <a asp-area="AdminArea" asp-controller="RealEstate" asp-action="Index"><i class="fas fa-list"></i> <span class="nav-label">Quản lý bài đăng</span> </a>
+                            <a asp-area="AdminArea" asp-controller="RealEstate" asp-action="ClientRealEstateList"><i class="fas fa-list"></i> <span class="nav-label">Quản lý bài đăng</span> </a>
                         </li>
                         <li class="">
                             <a asp-area="AdminArea" asp-controller="RealEstate" asp-action="Create"><i class="fas fa-feather-alt"></i> <span class="nav-label">Đăng tin</span> </a>
                         </li>
                         <li class="">
-                            <a asp-area="AdminArea" asp-controller="RealEstate" asp-action="Index"><i class="fas fa-user-edit"></i> <span class="nav-label">Thông tin cá nhân</span> </a>
+                            <a asp-area="AdminArea" asp-controller="Agent" asp-action="Details" asp-route-id="@userId"><i class="fas fa-user-edit"></i> <span class="nav-label">Thông tin cá nhân</span> </a>
                         </li>
                         <li class="">
                             <a asp-area="AdminArea" asp-controller="Account" asp-action="Logout"><i class="fas fa-user-edit"></i> <span class="nav-label">Đăng xuất</span> </a>
@@ -133,18 +135,13 @@
             <div class="row border-bottom">
                 <nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0">
                     <div class="navbar-header">
-                        <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
-                        <form role="search" class="navbar-form-custom" action="">
-                            <div class="form-group">
-                                <input type="text" placeholder="Search for something..." class="form-control" name="top-search" id="top-search">
-                            </div>
-                        </form>
+                        <a class="navbar-minimalize minimalize-styl-2 btn btn-yellow " href="#"><i class="fa fa-bars"></i> </a>
                     </div>
                     <ul class="nav navbar-top-links navbar-right">
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li>
-                                <span class="m-r-sm text-muted welcome-message">Welcome, @userName</span>
+                                <span class="m-r-sm text-muted welcome-message">Xin chào, @userName</span>
                             </li>
                             <li>
                                 <a asp-area="AdminArea" asp-controller="Account" asp-action="Logout">
@@ -156,12 +153,11 @@
                         {
                             <li>
                                 <span class="m-r-sm text-muted welcome-message">
-                                    Welcome
+                                    Xin chào
                                 </span>
                             </li>
                         }
                     </ul>
-
                 </nav>
             </div>
 
@@ -214,7 +210,7 @@
     <script src="~/js/all.js"></script>
 
     <script src="~/js/formatHtml.js"></script>
-
+    <script src="~/admin/js/services/hakunamata.js"></script>
     @RenderSection("scripts", required: false)
 </body>
 

@@ -48,34 +48,13 @@
                     </button>
                 </div>
                 <div class="logo">
-                    <a href="index-2.html"><img src="~/assets/img/logo.png" alt="logo"></a>
+                    <a href="#"><img src="~/assets/img/icon.png" style="width: 50px;" alt="logo"></a>
                 </div>
 
                 <div class="collapse navbar-collapse" id="realdeal_main_menu">
-                    <ul class="navbar-nav menu-open">
-                        
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <li class="menu-item-has-children">
-                                <a href="#">
-                                    Xin chào,
-                                    @User.Claims.FirstOrDefault(c => c.Type == "UserName").Value
-                                </a>
-                                <ul class="sub-menu">
-                                    <li><a href="#">Hồ sơ của bạn</a></li>
-                                    <li><a asp-controller="Account" asp-action="Logout">Đăng xuất</a></li>
-                                </ul>
-                            </li>
-
-                        }
-                        else
-                        {
-                            <li><a href="#" data-toggle="modal" data-target="#loginModal">Đăng nhập</a></li>
-                        }
-                    </ul>
                 </div>
                 <div class="nav-right-part nav-right-part-desktop">
-                    <a class="btn btn-yellow" asp-controller="Home" asp-area="AdminArea" asp-action="Index"  target="_blank">
+                    <a class="btn btn-yellow" asp-controller="RealEstate" asp-area="AdminArea" asp-action="Create"  target="_blank">
                         ĐĂNG TIN<span class="right">
                             <i class="la la-plus"></i>
                         </span>

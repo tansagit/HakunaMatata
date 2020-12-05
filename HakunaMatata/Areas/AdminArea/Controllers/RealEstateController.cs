@@ -2,7 +2,6 @@
 using HakunaMatata.Models.ViewModels;
 using HakunaMatata.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +17,6 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
     {
         private readonly IRealEstateServices _realEstateServices;
         private readonly IFileServices _fileServices;
-        //public readonly List<IFormFile> UploadedFiles;
 
         public RealEstateController(IRealEstateServices realEstateServices, IFileServices fileServices)
         {
@@ -26,19 +24,16 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
             _fileServices = fileServices;
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult Index()
         {
-            var vm_realEstates = _realEstateServices.GetList();
             ViewBag.Message = TempData["Message"];
-            return View(vm_realEstates);
-        }
-
-        public IActionResult Index2()
-        {
             return View();
         }
+
         /// <summary>
-        /// index 2 thu dung cach paging theo server side
+        /// paging in server side
         /// </summary>
         /// <param name="pageIndex">Pagination index</param>
         /// <returns></returns>
@@ -46,11 +41,48 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
         {
             var source = _realEstateServices.GetRealEstates(searchKey);
             var count = await source.CountAsync();
-            // dua vao pageIndex de get ra tu source bao nhieu item
-            // o day mac dinh lay 5 item 1 trang
             var items = await source.Skip((pageIndex - 1) * 20).Take(20).ToListAsync();
 
             return Json(new { data = items, totalRow = count });
+        }
+
+        /// <summary>
+        /// Client's all post
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("danh-sach-ca-nhan")]
+        public IActionResult ClientRealEstateList()
+        {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == "UserId").Value ?? string.Empty;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return NotFound();
+            }
+
+            var userPosts = _realEstateServices.GetUserAllPosts(Convert.ToInt32(userId));
+
+            if (userPosts == null) return NotFound();
+
+            ViewBag.Message = TempData["Message"];
+            ViewBag.MessageType = TempData["MesageType"];
+            return View(userPosts);
+        }
+
+
+        /// <summary>
+        /// Client's waiting for confirm post
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Authorize(Roles = "Admin,Manager")]
+        [Route("danh-sach-cho")]
+        public IActionResult CustomerConfirmList()
+        {
+            var confirmList = _realEstateServices.GetCustomerConFirmList();
+            if (confirmList == null || !confirmList.Any()) return RedirectToAction("Index");
+            return View(confirmList);
         }
 
         [HttpGet]
@@ -75,6 +107,8 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
             return View(details);
         }
 
+        [HttpGet]
+        [Route("bai-dang-moi")]
         public IActionResult Create()
         {
             var realEstateTypeList = _realEstateServices.GetRealEstateTypeList();
@@ -84,8 +118,9 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
 
 
         [HttpPost]
+        [Route("bai-dang-moi")]
         public IActionResult Create(
-            [Bind("Title,Address,Price,Acreage,ExprireTime,RoomNumber,Description,HasPrivateWc,HasMezzanine,AllowCook,FreeTime,SecurityCamera,WaterPrice,ElectronicPrice,WifiPrice,RealEstateTypeId,Latitude,Longtitude,isFreeWater,isFreeElectronic,isFreeWifi,Files")]
+            [Bind("Title,Address,Price,Acreage,BeginTime,BackupBeginTime,ExprireTime,BackupExpireTime,RoomNumber,Description,HasPrivateWc,HasMezzanine,AllowCook,FreeTime,SecurityCamera,WaterPrice,ElectronicPrice,WifiPrice,RealEstateTypeId,Latitude,Longtitude,IsFreeWater,IsFreeElectronic,IsFreeWifi,Files")]
             VM_RealEstateDetails details)
         {
             int uploadedFilesCount = 0;
@@ -109,12 +144,12 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
 
                         //use tempdate pass message to index controller
                         TempData["Message"] = string.Format("Thêm phòng trọ thành công, uploaded {0} hình ảnh", uploadedFilesCount);
-                        return RedirectToAction(nameof(Index));
+                        TempData["MesageType"] = 1;
+                        return RedirectToAction(nameof(ClientRealEstateList));
                     }
                     else
                     {
                         ViewBag.ErrorMessage = "Có lỗi xảy ra, vui lòng thử lại";
-
                         return View(details);
                     }
                 }
@@ -155,7 +190,6 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
                                   [Bind("Id,Title,Address,Price,Acreage,ExprireTime,RoomNumber,Description,HasPrivateWc,HasMezzanine,AllowCook,FreeTime,SecurityCamera,WaterPrice,ElectronicPrice,WifiPrice,RealEstateTypeId,Files")] VM_RealEstateDetails details)
         {
             int uploadedFilesCount = 0;
-            var files = HttpContext.Request.Form.Files.ToList();
 
             if (id != details.Id)
             {
@@ -191,13 +225,53 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
             return View(details);
         }
 
-        [HttpPost]
+        [HttpPost, ActionName("Confirm")]
         [ValidateAntiForgeryToken]
-        public IActionResult DisableRealEsate(int id)
+        public IActionResult ConfirmRealEstateConfirm(int id, int confirmType, bool isRedirect)
         {
-            var status = _realEstateServices.DisableRealEstate(id);
-            return Json(new { status });
+            var isSuccess = _realEstateServices.ConfirmRealEsate(id, confirmType);
+
+            if (isRedirect)
+            {
+                return Json(new { isSuccess });
+            }
+            else
+            {
+                return Json(new { isSuccess, html = Helper.RenderRazorViewToString(this, "_viewConfirmList", _realEstateServices.GetCustomerConFirmList()) });
+            }
         }
 
+        [HttpPost, ActionName("Booked")]
+        [ValidateAntiForgeryToken]
+        public IActionResult BookedRealEsate(int id, int userId, bool isRedirect)
+        {
+            var isSuccess = _realEstateServices.BookedRealEstate(id);
+
+            if (isRedirect)
+            {
+                return Json(new { isSuccess });
+            }
+            else
+            {
+                return Json(new { isSuccess, html = Helper.RenderRazorViewToString(this, "_viewUserAllPosts", _realEstateServices.GetUserAllPosts(userId)) });
+            }
+        }
+
+        [HttpPost, ActionName("Disable")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DisableRealEsate(int id, int userId, bool isRedirect)
+        {
+            var isSuccess = _realEstateServices.DisableRealEstate(id);
+
+            if (isRedirect)
+            {
+                return Json(new { isSuccess });
+            }
+            else
+            {
+                return Json(new { isSuccess, html = Helper.RenderRazorViewToString(this, "_viewUserAllPosts", _realEstateServices.GetUserAllPosts(userId)) });
+            }
+
+        }
     }
 }

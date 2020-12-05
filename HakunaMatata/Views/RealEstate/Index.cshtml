@@ -15,10 +15,10 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="breadcrumb-inner">
-                    <h1 class="page-title">Property</h1>
+                    <h1 class="page-title">Danh sách bài đăng</h1>
                     <ul class="page-list">
-                        <li><a href="index-2.html">Home</a></li>
-                        <li>Property</li>
+                        <li><a href="index-2.html">Trang chủ</a></li>
+                        <li>Tìm kiếm</li>
                     </ul>
                 </div>
             </div>
@@ -30,7 +30,6 @@
 <div class="property-area pd-top-20">
     <div class="container">
         <div class="row">
-
             <div class="col-lg-12 mb-5">
                 <form asp-controller="RealEstate" asp-action="Index" method="get">
                     <div class="text-center row">
@@ -71,7 +70,7 @@
                         </div>
                         <div class="col-xl-2 col-lg-6 col-md-6 d-flex justify-content-end align-items-end">
                             <button class="btn btn-yellow w-100" type="submit">
-                                <i class="fas fa-filter"></i>
+                                <i class="fa fa-filter"></i>
                                 Lọc tin
                             </button>
                         </div>
@@ -90,23 +89,20 @@
         else
         {
             <div class="property-filter-area row custom-gutter">
-
                 @foreach (var item in Model.Results)
                 {
-
                     <div class="rld-filter-item col-lg-4 col-sm-6">
                         <div class="single-feature">
                             <div class="thumb">
                                 @if (item.ImageUrl == "404")
                                 {
-                                    <img src="~/assets/img/notfound.jpg" class="w-100 h-100"
-                                         alt="img">
+                                    <img src="~/assets/img/notfound.jpg" style="width:100%;height:100%; object-fit:cover;" alt="img">
                                 }
 
                                 else
                                 {
-                                    <img src="@item.ImageUrl" class="w-100 h-100"
-                                         alt="img">
+                                    @*<img src="@item.ImageUrl" class="w-100 h-100" alt="img">*@
+                                    <img src="@item.ImageUrl" style="width:100%;height:100%; object-fit:cover;" alt="img">
                                 }
 
                             </div>
@@ -116,16 +112,16 @@
                                     var typeName = string.Empty;
                                     switch (item.Type)
                                     {
-                                        case 1: typeName = "Phòng trọ"; break;
-                                        case 2: typeName = "Nhà nguyên căn"; break;
-                                        case 3: typeName = "Căn hộ"; break;
-                                        case 4: typeName = "Ở ghép"; break;
-                                        default: typeName = "Phòng trọ"; break;
+                                        case 1: typeName = "PHÒNG TRỌ"; break;
+                                        case 2: typeName = "NHÀ NGUYÊN CĂN"; break;
+                                        case 3: typeName = "CĂN HỘ"; break;
+                                        case 4: typeName = "Ở GHÉP"; break;
+                                        default: typeName = "PHÒNG TRỌ"; break;
                                     }
                                 }
 
                                 <p class="author text-primary"><i class="fab fa-canadian-maple-leaf"></i> @typeName</p>
-                                <h6 class="title"><a href="#"><i class="fas fa-map-marker-alt"></i> @item.Street</a></h6>
+                                <h6 class="title"><a asp-action="Details" asp-route-id="@item.Id"><i class="fas fa-map-marker-alt"></i> @item.Street</a></h6>
                                 <div class="d-flex">
                                     <div class="h5 price mr-auto">@formatCurrency VNĐ/tháng</div>
                                     <div class="font-weight-bold">
@@ -133,21 +129,19 @@
                                     </div>
                                 </div>
 
-
                                 <ul class="info-list d-flex">
                                     <li class="mr-auto">Đăng bởi: <span class="font-weight-bold">@item.AgentName</span></li>
                                     <li>@item.PostTime</li>
                                 </ul>
                                 <ul class="contact-list">
-                                    <li><a class="btn btn-yellow" asp-action="Details" asp-route-id="@item.Id">View Details</a></li>
+                                    <li><a class="btn btn-yellow" asp-action="Details" asp-route-id="@item.Id">Chi tiết</a></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 }
-
-
             </div>
+
             <div class="row">
                 <div class="col-lg-12 mt20 d-flex justify-content-start align-items-baseline">
                     <ul class="pagination">
@@ -169,7 +163,7 @@
                                asp-route-acreageRange="@Model.AcreageRange"
                                asp-route-search="@Model.SearchString"
                                asp-route-page="@(Model.PageIndex - 1)">
-                                <i class="fas fa-arrow-left"></i>
+                                <i class="fa fa-arrow-left"></i>
                                 Trang trước
                             </a>
                         </li>
@@ -210,7 +204,7 @@
                                asp-route-acreageRange="@Model.AcreageRange"
                                asp-route-search="@Model.SearchString"
                                asp-route-page="@(Model.PageIndex + 1)">
-                                Trang sau <i class="fas fa-arrow-right"></i>
+                                Trang sau <i class="fa fa-arrow-right"></i>
                             </a>
                         </li>
                     </ul>

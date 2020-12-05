@@ -4,7 +4,6 @@ using HakunaMatata.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using static HakunaMatata.Helpers.Helper;
 
 namespace HakunaMatata.Areas.AdminArea.Controllers
 {

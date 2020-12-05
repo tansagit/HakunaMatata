@@ -59,7 +59,14 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
                             && Url.IsLocalUrl(account.ReturnUrl))
                             return Redirect(account.ReturnUrl);
                         else
-                            return RedirectToAction("Index", "Home");
+                        {
+                            //client
+                            if (member.LevelId == 3)
+                            {
+                                return RedirectToAction("ClientRealEstateList", "RealEstate");
+                            }
+                            return RedirectToAction("CustomerConfirmList", "RealEstate");
+                        }
                     }
                     else
                     {

@@ -237,9 +237,12 @@ namespace HakunaMatata.Helpers
 
         public static string GetStatus(RealEstate realEstate)
         {
+            if (!realEstate.IsConfirm) return "Đang chờ xác nhận";
+
             //neu rt chua di disable => kiem tra het han hay chua
             if (realEstate.IsActive)
             {
+                if (!realEstate.IsAvaiable) return "Hết phòng";
                 //neu expire time null, thi mac dinh het han sau 1 thang ke tu ngay dang bai
                 if (realEstate.ExprireTime == null)
                 {
@@ -253,7 +256,7 @@ namespace HakunaMatata.Helpers
                     return realEstate.ExprireTime < DateTime.Now ? "Hết hạn" : "Còn phòng";
                 }
             }
-            else return "Hết phòng";
+            else return "Đã khóa";
 
         }
 
@@ -354,9 +357,11 @@ namespace HakunaMatata.Helpers
                 ContactNumber = info.ContactNumber,
                 PostTime = info.PostTime.ToString("dd/MM/yyyy"),
                 LastUpdate = info.LastUpdate?.ToString("dd/MM/yyyy"),
+                BeginTime = info.BeginTime.ToString("dd/MM/yyyy"),
                 ExprireTime = info.ExprireTime?.ToString("dd/MM/yyyy"),
                 RoomNumber = info.RealEstateDetail.RoomNumber,
                 Description = info.RealEstateDetail.Description,
+                AgentId = info.Agent.Id,
                 AgentName = info.Agent.AgentName,
                 HasPrivateWc = info.RealEstateDetail.HasPrivateWc,
                 HasMezzanine = info.RealEstateDetail.HasMezzanine,
@@ -370,6 +375,7 @@ namespace HakunaMatata.Helpers
                 Longtitude = info.Map.Longtitude ?? Constants.DEFAULT_LONGTITUDE,
                 RealEstateTypeId = info.ReaEstateType.Id,
                 IsActive = info.IsActive,
+                IsConfirm = info.IsConfirm,
                 Status = GetStatus(info)
             };
             return result;

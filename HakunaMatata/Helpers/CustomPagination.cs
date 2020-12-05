@@ -9,7 +9,6 @@ namespace HakunaMatata.Helpers
 {
     public class CustomPagination
     {
-
         public int CurrentItems { get; set; } = 0;
         public int TotalItems { get; private set; }
         public int PageIndex { get; private set; }
@@ -22,10 +21,7 @@ namespace HakunaMatata.Helpers
         public int District { get; set; } = 0;
         public int PriceRange { get; set; } = 0;
         public int AcreageRange { get; set; } = 0;
-
-        //public Condition Condition { get; set; } = new Condition();
-        public List<Result> Results { get; private set; } = new List<Result>();
-        //public Filter Filter { get; private set; } = new Filter();
+        public List<Result> Results { get; private set; }
 
         public CustomPagination(List<Result> items,
                                 int count,

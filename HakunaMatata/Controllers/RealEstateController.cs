@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 
 namespace HakunaMatata.Controllers
 {
-
     public class RealEstateController : Controller
     {
         private readonly IRealEstateServices _realEstateServices;
@@ -28,6 +27,7 @@ namespace HakunaMatata.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Index(int? page,
                                                int? type,
                                                int? city,
@@ -89,8 +89,13 @@ namespace HakunaMatata.Controllers
             }
             else
             {
+                //get pictures
                 var pictures = await _fileServices.GetPicturesForRealEstate(details.Id);
                 details.ImageUrls = Helper.GetImageUrls(pictures);
+
+                //get recommend list
+                var recommendList = _realEstateServices.GetRecommendList(id);
+                details.RecommmendList = recommendList;
             }
             ViewData["GOOGLE_MAP_API"] = Constants.GOOGLE_MAP_MARKER_API;
             return View(details);

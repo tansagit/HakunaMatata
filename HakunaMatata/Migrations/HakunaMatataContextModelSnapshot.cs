@@ -300,6 +300,12 @@ namespace HakunaMatata.Migrations
                     b.Property<int?>("AgentId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("BeginTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ConfirmStatus")
+                        .HasColumnType("int");
+
                     b.Property<string>("ContactNumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -307,6 +313,9 @@ namespace HakunaMatata.Migrations
                         .HasColumnType("datetime");
 
                     b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsAvaiable")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsConfirm")

@@ -3664,18 +3664,20 @@ ul {
             }
 
         .single-feature .details .author {
+            padding-left: 4px;
             font-size: 14px;
             font-weight: bold;
-            color: #099ec0 !important;
+            color: black !important;
         }
 
         .single-feature .details .title {
-            padding-left: 1px;
+            color: #099ec0;
             font-weight: 600;
             margin-bottom: 15px;
         }
 
         .single-feature .details .price {
+            padding-left: 3px;
             color: var(--main-color-one);
             font-weight: 600;
             display: inline-block;
@@ -3696,6 +3698,7 @@ ul {
         }
 
             .single-feature .details .info-list li {
+                padding-left: 4px;
                 display: inline-block;
                 list-style: none;
                 margin-right: 12px;
@@ -3721,7 +3724,7 @@ ul {
             left: 0;
             right: 0;
             bottom: -50px;
-            padding: 10px 20px 14px 20px;
+            padding: 10px 20px 17px 20px;
             -webkit-transition: all 0.5s ease;
             -moz-transition: all 0.5s ease;
             -o-transition: all 0.5s ease;
@@ -5240,4 +5243,13 @@ div#da-het-han {
     height: 200px;
     background: url(/assets/img/tin_het_han.png) center no-repeat;
     background-size: contain;
+}
+
+.recommend-street{
+    font-size: 13px !important;
+}
+
+.recommend-title{
+    font-size: 14px;
+    line-height: 1;
 }

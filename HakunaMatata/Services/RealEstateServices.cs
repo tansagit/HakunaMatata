@@ -22,13 +22,25 @@ namespace HakunaMatata.Services
         IQueryable<RealEstateViewModel> GetRealEstates(string searchKey);
 
         /// <summary>
+        /// User's all post
+        /// </summary>
+        /// <returns></returns>
+        List<RealEstateViewModel> GetUserAllPosts(int? userId);
+
+        /// <summary>
+        /// Get all waiting confirm post
+        /// </summary>
+        /// <returns></returns>
+        List<RealEstateViewModel> GetCustomerConFirmList();
+
+        /// <summary>
         /// use for client, filter
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         IQueryable<Result> Filter(Condition condition);
 
-        VM_RealEstateDetails GetById(int? id);
+        //VM_RealEstateDetails GetById(int? id);
         Task<VM_RealEstateDetails> GetRealEstateDetails(int? id);
         int AddNewRealEstate(RealEstate realEstate);
         bool AddRealEstateDetails(RealEstateDetail details);
@@ -37,16 +49,28 @@ namespace HakunaMatata.Services
         bool UpdateRealEstate(VM_RealEstateDetails details);
         void DeleteRealEstate(int id);
         bool DisableRealEstate(int id);
+        bool BookedRealEstate(int id);
+        /// <summary>
+        /// activate post when create success
+        /// </summary>
+        /// <param name="id"></param>
         void ActiveRealEstate(int id);
+
+        /// <summary>
+        /// Admin confirm about customer's post
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="confirmType">1:confirmed, 2: denied</param>
+        /// <returns></returns>
+        bool ConfirmRealEsate(int id, int confirmType);
         IEnumerable<RealEstateType> GetRealEstateTypeList();
         IEnumerable<City> GetCityList();
         IEnumerable<District> GetDistrictList();
-
         bool IsExistRealEstate(int id);
 
         Tuple<int?, int?, int> GetLocation(string address);
+        List<Result> GetRecommendList(int? id);
 
-        Task<List<VM_Search_Result>> SearchResults(VM_Search search);
     }
 
     public class RealEstateServices : IRealEstateServices
@@ -121,6 +145,76 @@ namespace HakunaMatata.Services
             return results;
         }
 
+        /// <summary>
+        /// Get all user's posts
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public List<RealEstateViewModel> GetUserAllPosts(int? userId)
+        {
+            var results = new List<RealEstateViewModel>();
+            var source =  _context.RealEstate
+                           .Include(r => r.RealEstateDetail)
+                           .Include(r => r.ReaEstateType)
+                           .Include(r => r.Agent)
+                           .Include(r => r.Map)
+                           .Where(r => r.AgentId == userId)
+                           .OrderByDescending(r => r.PostTime)
+                           .ThenByDescending(r => r.IsActive)
+                           .ToList();
+
+            foreach (var item in source)
+            {
+                var viewModelItem = new RealEstateViewModel
+                {
+                    Id = item.Id,
+                    AgentId = item.Agent.Id,
+                    Street = item.Map.Address,
+                    Price = Helper.VNCurrencyFormat(item.RealEstateDetail.Price.ToString()),
+                    PostDate = item.PostTime.ToString("dd/MM/yyyy"),
+                    BeginTime = item.BeginTime.ToString("dd/MM/yyyy"),
+                    ExpireTime = item.ExprireTime == null ? string.Empty : item.ExprireTime.Value.ToString("dd/MM/yyyy"),
+                    Type = item.ReaEstateType.RealEstateTypeName,
+                    Status = Helper.GetStatus(item)
+                };
+                results.Add(viewModelItem);
+            }
+
+            return results;
+        }
+
+        public List<RealEstateViewModel> GetCustomerConFirmList()
+        {
+            var results = new List<RealEstateViewModel>();
+            var source = _context.RealEstate
+                           .Include(r => r.RealEstateDetail)
+                           .Include(r => r.ReaEstateType)
+                           .Include(r => r.Agent)
+                           .Include(r => r.Map)
+                           .Where(r => !r.IsConfirm)
+                           .OrderByDescending(r => r.PostTime)
+                           .ToList();
+
+            foreach (var item in source)
+            {
+                var viewModelItem = new RealEstateViewModel
+                {
+                    Id = item.Id,
+                    Street = item.Map.Address,
+                    Price = Helper.VNCurrencyFormat(item.RealEstateDetail.Price.ToString()),
+                    Agent = item.Agent.AgentName,
+                    PostDate = item.PostTime.ToString("dd/MM/yyyy"),
+                    BeginTime = item.BeginTime.ToString("dd/MM/yyyy"),
+                    ExpireTime = item.ExprireTime == null ? string.Empty : item.ExprireTime.Value.ToString("dd/MM/yyyy"),
+                    Type = item.ReaEstateType.RealEstateTypeName,
+                    Status = Helper.GetStatus(item)
+                };
+                results.Add(viewModelItem);
+            }
+
+            return results;
+        }
+
         public async Task<VM_RealEstateDetails> GetRealEstateDetails(int? id)
         {
             var info = await _context.RealEstate.Where(r => r.Id == id)
@@ -138,72 +232,74 @@ namespace HakunaMatata.Services
                 VM_RealEstateDetails result = Helper.MappingFromRealEstate(info);
                 return result;
             }
-           
+
             return null;
         }
 
-        public VM_RealEstateDetails GetById(int? id)
-        {
-            var details = _context.RealEstateDetail
-                .Where(x => x.RealEstateId == id)
-                .Include(detail => detail.RealEstate)
-                    .ThenInclude(detail => detail.Agent)
-                .Include(detail => detail.RealEstate)
-                    .ThenInclude(detail => detail.ReaEstateType)
-                .SingleOrDefault();
+        #region comment out
+        //public VM_RealEstateDetails GetById(int? id)
+        //{
+        //    var details = _context.RealEstateDetail
+        //        .Where(x => x.RealEstateId == id)
+        //        .Include(detail => detail.RealEstate)
+        //            .ThenInclude(detail => detail.Agent)
+        //        .Include(detail => detail.RealEstate)
+        //            .ThenInclude(detail => detail.ReaEstateType)
+        //        .SingleOrDefault();
 
-            var map = _context.Map.Where(m => m.RealEstateId == id).SingleOrDefault();
+        //    var map = _context.Map.Where(m => m.RealEstateId == id).SingleOrDefault();
 
-            var images = _context.Picture
-                .Where(pic => pic.RealEstateId == id && pic.IsActive)
-                .ToList();
+        //    var images = _context.Picture
+        //        .Where(pic => pic.RealEstateId == id && pic.IsActive)
+        //        .ToList();
 
-            var imgUrls = new List<string>();
-            foreach (var img in images)
-            {
-                var tempUrl = GetLinkImage(img);
-                imgUrls.Add(tempUrl);
-            }
+        //    var imgUrls = new List<string>();
+        //    foreach (var img in images)
+        //    {
+        //        var tempUrl = GetLinkImage(img);
+        //        imgUrls.Add(tempUrl);
+        //    }
 
-            if (details != null)
-            {
-                if (map == null)
-                {
-                    map = new Map();
-                }
+        //    if (details != null)
+        //    {
+        //        if (map == null)
+        //        {
+        //            map = new Map();
+        //        }
 
-                var vm_rt_details = new VM_RealEstateDetails()
-                {
-                    Id = details.RealEstate.Id,
-                    Title = details.Title,
-                    Address = map.Address ?? string.Empty,
-                    Price = details.Price,
-                    Acreage = details.Acreage,
-                    PostTime = details.RealEstate.PostTime.ToString("dd/MM/yyyy"),
-                    LastUpdate = details.RealEstate.LastUpdate?.ToString("dd/MM/yyyy"),
-                    ExprireTime = details.RealEstate.ExprireTime?.ToString("dd/MM/yyyy"),
-                    RoomNumber = details.RoomNumber,
-                    Description = details.Description,
-                    AgentName = details.RealEstate.Agent.AgentName,
-                    HasPrivateWc = details.HasPrivateWc,
-                    HasMezzanine = details.HasMezzanine,
-                    AllowCook = details.AllowCook,
-                    FreeTime = details.FreeTime,
-                    SecurityCamera = details.SecurityCamera,
-                    WaterPrice = details.WaterPrice == null ? 0 : details.WaterPrice,
-                    ElectronicPrice = details.ElectronicPrice == null ? 0 : details.ElectronicPrice,
-                    WifiPrice = details.WifiPrice,
-                    Latitude = map.Latitude,
-                    Longtitude = map.Longtitude,
-                    RealEstateTypeId = details.RealEstate.ReaEstateType.Id,
-                    IsActive = details.RealEstate.IsActive,
-                    ImageUrls = imgUrls
-                };
-                return vm_rt_details;
-            }
+        //        var vm_rt_details = new VM_RealEstateDetails()
+        //        {
+        //            Id = details.RealEstate.Id,
+        //            Title = details.Title,
+        //            Address = map.Address ?? string.Empty,
+        //            Price = details.Price,
+        //            Acreage = details.Acreage,
+        //            PostTime = details.RealEstate.PostTime.ToString("dd/MM/yyyy"),
+        //            LastUpdate = details.RealEstate.LastUpdate?.ToString("dd/MM/yyyy"),
+        //            ExprireTime = details.RealEstate.ExprireTime?.ToString("dd/MM/yyyy"),
+        //            RoomNumber = details.RoomNumber,
+        //            Description = details.Description,
+        //            AgentName = details.RealEstate.Agent.AgentName,
+        //            HasPrivateWc = details.HasPrivateWc,
+        //            HasMezzanine = details.HasMezzanine,
+        //            AllowCook = details.AllowCook,
+        //            FreeTime = details.FreeTime,
+        //            SecurityCamera = details.SecurityCamera,
+        //            WaterPrice = details.WaterPrice == null ? 0 : details.WaterPrice,
+        //            ElectronicPrice = details.ElectronicPrice == null ? 0 : details.ElectronicPrice,
+        //            WifiPrice = details.WifiPrice,
+        //            Latitude = map.Latitude,
+        //            Longtitude = map.Longtitude,
+        //            RealEstateTypeId = details.RealEstate.ReaEstateType.Id,
+        //            IsActive = details.RealEstate.IsActive,
+        //            ImageUrls = imgUrls
+        //        };
+        //        return vm_rt_details;
+        //    }
 
-            return new VM_RealEstateDetails();
-        }
+        //    return new VM_RealEstateDetails();
+        //}
+        #endregion
 
         public int AddNewRealEstate(RealEstate realEstate)
         {
@@ -265,10 +361,13 @@ namespace HakunaMatata.Services
             {
                 PostTime = DateTime.Now,
                 LastUpdate = DateTime.Now,
+                BeginTime = Convert.ToDateTime(details.BeginTime),
                 ExprireTime = Convert.ToDateTime(details.ExprireTime),
                 RealEstateTypeId = details.RealEstateTypeId,
                 AgentId = agentId,
-                IsActive = false
+                IsActive = false,
+                IsConfirm = agentId == 1,
+                ConfirmStatus = agentId == 1 ? 1 : 0
             };
             var realEstateId = AddNewRealEstate(realEstate);
 
@@ -289,9 +388,9 @@ namespace HakunaMatata.Services
                     AllowCook = details.AllowCook,
                     FreeTime = details.FreeTime,
                     SecurityCamera = details.SecurityCamera,
-                    WaterPrice = details.isFreeWater ? 0 : Convert.ToInt32(details.WaterPrice),
-                    ElectronicPrice = details.isFreeElectronic ? 0 : Convert.ToInt32(details.ElectronicPrice),
-                    WifiPrice = details.isFreeWifi ? 0 : details.WifiPrice
+                    WaterPrice = details.IsFreeWater ? 0 : Convert.ToInt32(details.WaterPrice),
+                    ElectronicPrice = details.IsFreeElectronic ? 0 : Convert.ToInt32(details.ElectronicPrice),
+                    WifiPrice = details.IsFreeWifi ? 0 : details.WifiPrice
                 };
 
                 var isSuccessAddDetails = AddRealEstateDetails(rtDetails);
@@ -372,6 +471,18 @@ namespace HakunaMatata.Services
             if (realEstate != null && realEstate.IsActive)
             {
                 realEstate.IsActive = false;
+                realEstate.LastUpdate = DateTime.Now;
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+        public bool BookedRealEstate(int id)
+        {
+            var realEstate = _context.RealEstate.Find(id);
+            if (realEstate != null && realEstate.IsAvaiable)
+            {
+                realEstate.IsAvaiable = false;
                 realEstate.LastUpdate = DateTime.Now;
                 _context.SaveChanges();
                 return true;
@@ -461,67 +572,9 @@ namespace HakunaMatata.Services
             return result;
         }
 
-
-
-
         /*
          ------------Client services-------------------------------
          */
-        public async Task<List<VM_Search_Result>> SearchResults(VM_Search search)
-        {
-            try
-            {
-                var finalResult = new List<VM_Search_Result>();
-
-                var searchResult = await _context.RealEstateDetail
-                                       .Include(r => r.RealEstate)
-                                            .ThenInclude(r => r.Map)
-                                        .Include(r => r.RealEstate)
-                                            .ThenInclude(r => r.Picture)
-                                        .Include(r => r.RealEstate)
-                                            .ThenInclude(r => r.Agent)
-                                        .Where(r => r.RealEstate.IsActive)
-                                        .AsQueryable().ToListAsync();
-
-
-
-                if (search != null)
-                {
-                    if (search.Type > 0)
-                        searchResult = searchResult.Where(x => x.RealEstate.RealEstateTypeId == search.Type).ToList();
-                    if (search.City > 0)
-                        searchResult = searchResult.Where(x => x.RealEstate.Map.CityId == search.City).ToList();
-                    if (search.District > 0)
-                        searchResult = searchResult.Where(x => x.RealEstate.Map.DistrictId == search.District).ToList();
-
-                    var priceRange = Helper.GetPriceRange(search.PriceRange);
-                    var minPrice = priceRange[0];
-                    var maxPrice = priceRange[1];
-                    searchResult = searchResult.Where(
-                        x => x.Price >= minPrice && x.Price <= maxPrice).ToList();
-
-                    var acreageRange = Helper.GetAcreageRange(search.AcreageRange);
-                    var maxAcreage = acreageRange[1];
-
-                    searchResult = searchResult.Where(
-                        x => x.Acreage >= minPrice && x.Acreage <= maxAcreage).ToList();
-
-                    if (!String.IsNullOrEmpty(search.SearchString))
-                        searchResult = searchResult.Where(
-                            x => x.RealEstate.Map.Address.Contains(search.SearchString)).ToList();
-
-                    searchResult = searchResult.OrderByDescending(x => x.RealEstate.PostTime).ToList();
-
-                    finalResult = Helper.MapperToVMSearchResult(searchResult);
-                }
-                return finalResult;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-        
         private static string GetLinkImage(Picture image)
         {
             string imageUrl;
@@ -532,7 +585,6 @@ namespace HakunaMatata.Services
             else
             {
                 //lay phan tu dau tien trong list picture
-
                 //kiem tra picture name no ton tai ko, 
                 // neu co nghia la moi them vao, ko phải crawl tu web
                 if (!string.IsNullOrEmpty(image.PictureName))
@@ -552,7 +604,7 @@ namespace HakunaMatata.Services
         {
             try
             {
-                var source = _context.RealEstate.Where(r => r.IsActive)
+                var source = _context.RealEstate.Where(r => r.IsActive && r.ConfirmStatus == 1)
                                 .Include(r => r.RealEstateDetail)
                                 .Include(r => r.Agent)
                                 .Include(r => r.Map)
@@ -613,6 +665,77 @@ namespace HakunaMatata.Services
             catch
             {
                 return null;
+            }
+        }
+
+        public bool ConfirmRealEsate(int id, int confirmType)
+        {
+            try
+            {
+                if (id <= 0 || confirmType <= 0) return false;
+
+                var post = _context.RealEstate.Find(id);
+                if (post == null) return false;
+
+                post.IsConfirm = true;
+                post.ConfirmStatus = confirmType;
+                _context.SaveChanges();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+        }
+
+        /// <summary>
+        /// Get recommend real estate list by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public List<Result> GetRecommendList(int? id)
+        {
+            var realEstate = _context.RealEstate.Where(r => r.Id == id)
+                                .Include(r => r.RealEstateDetail)
+                                .Include(r => r.Map)
+                                .Include(r => r.Agent)
+                                .Include(r => r.Map).SingleOrDefault();
+
+            if (realEstate == null)
+            {
+                return null;
+            }
+            else
+            {
+                var source = _context.RealEstate.Include(r => r.RealEstateDetail)
+                                                .Include(r => r.Map)
+                                                .Include(r => r.Picture)
+                                                .Include(r => r.Agent)
+                                                .Include(r => r.ReaEstateType)
+                                                .Where(r => r.Id != realEstate.Id
+                                                && r.RealEstateTypeId == realEstate.RealEstateTypeId
+                                                && r.IsActive && r.ConfirmStatus == 1 && r.ExprireTime > DateTime.Now
+                                                && (r.Map.WardId == realEstate.Map.WardId
+                                                || r.Map.DistrictId == realEstate.Map.DistrictId))
+                                                .OrderByDescending(r => r.PostTime)
+                                                .Take(4);
+
+                var result = (from item in source
+                              select new Result
+                              {
+                                  Id = item.Id,
+                                  Street = Helper.GetStreet(item.Map.Address),
+                                  Price = item.RealEstateDetail.Price,
+                                  Acreage = item.RealEstateDetail.Acreage,
+                                  Type = item.RealEstateTypeId,
+                                  PostTime = item.PostTime.ToString("dd/MM/yyyy"),
+                                  ImageUrl = Helper.GetRealEstateAvatar(item.Picture.FirstOrDefault()),
+                                  AgentName = item.Agent.AgentName,
+                                  ContactNumber = item.ContactNumber
+                              }).ToList();
+                return result;
             }
         }
     }

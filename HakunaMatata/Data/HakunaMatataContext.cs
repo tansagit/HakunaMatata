@@ -163,6 +163,7 @@ namespace HakunaMatata.Data
                 entity.HasOne(d => d.RealEstate)
                     .WithOne(p => p.Map)
                     .HasForeignKey<Map>(d => d.RealEstateId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK__MAP__RealEstateI__49C3F6B7");
 
                 entity.HasOne(d => d.Ward)
@@ -188,6 +189,7 @@ namespace HakunaMatata.Data
                 entity.HasOne(d => d.RealEstate)
                     .WithMany(p => p.Picture)
                     .HasForeignKey(d => d.RealEstateId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK__PICTURE__RealEst__4CA06362");
             });
 
@@ -222,11 +224,13 @@ namespace HakunaMatata.Data
                 entity.HasOne(d => d.Agent)
                     .WithMany(p => p.RealEstate)
                     .HasForeignKey(d => d.AgentId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK__REAL_ESTA__Agent__3F466844");
 
                 entity.HasOne(d => d.ReaEstateType)
                     .WithMany(p => p.RealEstate)
                     .HasForeignKey(d => d.RealEstateTypeId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK__REAL_ESTA__ReaEs__3E52440B");
             });
 
@@ -250,6 +254,7 @@ namespace HakunaMatata.Data
 
                 entity.HasOne(d => d.RealEstate)
                     .WithOne(p => p.RealEstateDetail)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasForeignKey<RealEstateDetail>(d => d.RealEstateId)
                     .HasConstraintName("FK__REAL_ESTA__RealE__5629CD9C");
             });

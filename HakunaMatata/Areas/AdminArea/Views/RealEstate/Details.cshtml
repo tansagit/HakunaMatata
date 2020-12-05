@@ -1,5 +1,9 @@
 ﻿@model HakunaMatata.Models.ViewModels.VM_RealEstateDetails;
 
+@{
+    var userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == "UserId").Value);
+    var userLevelId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == "LevelId").Value);
+}
 <div class="wrapper wrapper-content animated fadeInUp">
     <div class="row">
         <div class="col-lg-9">
@@ -8,7 +12,10 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="m-b-md">
-                                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-info float-right">Chỉnh sửa</a>
+                                @if (userId == Model.AgentId || userLevelId == 1)
+                                {
+                                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-yellow font-weight-bold float-right">Chỉnh sửa</a>
+                                }
                                 <h2>@Model.Title</h2>
                             </div>
                         </div>
@@ -18,17 +25,10 @@
                         <div class="col-lg-6">
                             <dl class="row mb-0">
                                 <div class="col-sm-4 text-sm-right">
-                                    <dt>Status:</dt>
+                                    <dt>Trạng thái:</dt>
                                 </div>
                                 <div class="col-sm-8 text-sm-left">
-                                    @if (Model.IsActive)
-                                    {
-                                        <dd class="mb-1"><span class="label label-success">Active</span></dd>
-                                    }
-                                    else
-                                    {
-                                        <dd class="mb-1"><span class="label">Disabled</span></dd>
-                                    }
+                                    <dd class="mb-1"><span class="label label-success">@Model.Status</span></dd>
                                 </div>
                             </dl>
                             <dl class="row mb-0">
@@ -57,7 +57,7 @@
 
                             <dl class="row mb-0">
                                 <div class="col-sm-4 text-sm-right">
-                                    <dt>Price:</dt>
+                                    <dt>Giá: </dt>
                                 </div>
                                 <div class="col-sm-8 text-sm-left">
                                     <dd class="mb-1"> @Model.Price VND</dd>
@@ -65,7 +65,7 @@
                             </dl>
                             <dl class="row mb-0">
                                 <div class="col-sm-4 text-sm-right">
-                                    <dt>Dien tich:</dt>
+                                    <dt>Diện tích: </dt>
                                 </div>
                                 <div class="col-sm-8 text-sm-left">
                                     <dd class="mb-1">@Model.Acreage m2</dd>
@@ -151,7 +151,6 @@
                                         <dd class="mb-1">
                                             @Model.WifiPrice VNĐ/tháng
                                         </dd>
-
                                     }
                                 </div>
                             </dl>
@@ -186,7 +185,7 @@
                             </dl>
                             <dl class="row mt-2 mb-0">
                                 <div class="col-sm-4 text-sm-right">
-                                    <dt>Added by:</dt>
+                                    <dt>Đăng bởi: </dt>
                                 </div>
                                 <div class="col-sm-8 text-sm-left">
                                     <dd class="mb-1"><a href="#" class="text-navy">@Model.AgentName</a> </dd>
@@ -199,7 +198,7 @@
                         <div class="col-lg-12">
                             <dl class="row mb-0">
                                 <div class="col-sm-2 text-sm-right">
-                                    <dt>Address:</dt>
+                                    <dt>Địa chỉ:</dt>
                                 </div>
                                 <div class="col-sm-10 text-sm-left">
                                     <dd class="mb-1">
@@ -213,34 +212,9 @@
                         <div class="col-lg-12">
                             <div class="ibox">
                                 <div class="ibox-content">
-
-                                    <h2>
-                                        Mô tả
-                                    </h2>
-
+                                    <h2>Mô tả</h2>
                                     <div id="div1">
                                         @Html.Raw(Model.Description)
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <h5>Tags:</h5>
-                                            <button class="btn btn-white btn-xs"
-                                                    type="button">
-                                                Model
-                                            </button>
-                                            <button class="btn btn-white btn-xs"
-                                                    type="button">
-                                                Publishing
-                                            </button>
-                                            <button class="btn btn-white btn-xs"
-                                                    type="button">
-                                                Modern
-                                            </button>
-                                            <button class="btn btn-white btn-xs"
-                                                    type="button">
-                                                Premium
-                                            </button>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -253,7 +227,6 @@
             <div class="ibox">
                 <div class="ibox-title">
                     <h2>Tiện ích có sẵn</h2>
-
                 </div>
                 <div class="ibox-content">
                     <div class="mb-2">
@@ -296,10 +269,9 @@
                 </div>
             </div>
         </div>
-    </div>
-    @if (Model.ImageUrls.Count > 0)
-    {
-        <div class="row">
+        @if (Model.ImageUrls.Count > 0)
+        {
+            @*<div class="row">*@
             <div class="col-lg-12">
                 <div class="ibox ">
                     <div class="ibox-title">
@@ -307,7 +279,7 @@
                     </div>
                     <div class="ibox-content ">
                         <div id="picturesCarousel" class="carousel slide" data-ride="carousel">
-                           
+
                             <ol class="carousel-indicators">
                                 <li data-target="#picturesCarousel" data-slide-to="0" class="active"></li>
                                 @for (var i = 1; i < Model.ImageUrls.Count; i++)
@@ -343,12 +315,12 @@
                 </div>
             </div>
 
-        </div>
-    }
+            @*</div>*@
+        }
 
-    else
-    {
-        <div class="row">
+        else
+        {
+            @*<div class="row">*@
             <div class="col-lg-12">
                 <div class="ibox">
                     <div class="ibox-title">
@@ -359,11 +331,10 @@
                     </div>
                 </div>
             </div>
-        </div>
-    }
+            @*</div>*@
+        }
 
-
-    <div class="row">
+        @*<div class="row">*@
         <div class="col-lg-12">
             <div class="ibox-content">
                 <h2>Bản đồ</h2>
@@ -374,27 +345,55 @@
                 <div id="map" style="height: 500px;"></div>
             </div>
         </div>
+        @*</div>*@
+
+        @if (!Model.IsConfirm && userLevelId < 3)
+        {
+            <div class="row pt-3">
+                <div class="col-sm-4 col-sm-offset-2">
+                    <form asp-area="AdminArea" asp-controller="RealEstate"
+                          asp-action="Confirm" asp-route-id="@Model.Id"
+                          asp-route-confirmtype="1"
+                          asp-route-isRedirect="true"
+                          onsubmit="return ConfirmRealEstate(this,1,true);" class="d-inline">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-check"></i> Xác nhận
+                        </button>
+                    </form>
+                </div>
+                <div class="col-sm-4 col-sm-offset-2 ml-3">
+                    <form asp-area="AdminArea" asp-controller="RealEstate"
+                          asp-action="Confirm" asp-route-id="@Model.Id"
+                          asp-route-confirmtype="2"
+                          asp-route-isRedirect="true"
+                          onsubmit="return ConfirmRealEstate(this,2,true);" class="d-inline">
+                        <button class="btn btn-danger" type="submit">
+                            <i class="fas fa-times"></i> Từ chối
+                        </button>
+                    </form>
+                </div>
+            </div>
+        }
     </div>
-</div>
 
 
-<script>
-    // Initialize and add the map
-    function initMap() {
-        // The location of Uluru
-        var latitude = document.getElementById('lat').value;
-        var longtitude = document.getElementById('longt').value;
-        var loca = { lat: Number(latitude), lng: Number(longtitude) };
-        // The map, centered at Uluru
-        var map = new google.maps.Map(
-            document.getElementById('map'), { zoom: 15, center: loca });
-        // The marker, positioned at Uluru
-        var marker = new google.maps.Marker({ position: loca, map: map });
-    }
-</script>
+    <script>
+        // Initialize and add the map
+        function initMap() {
+            // The location of Uluru
+            var latitude = document.getElementById('lat').value;
+            var longtitude = document.getElementById('longt').value;
+            var loca = { lat: Number(latitude), lng: Number(longtitude) };
+            // The map, centered at Uluru
+            var map = new google.maps.Map(
+                document.getElementById('map'), { zoom: 15, center: loca });
+            // The marker, positioned at Uluru
+            var marker = new google.maps.Marker({ position: loca, map: map });
+        }
+    </script>
 
 
 
-<script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBY8PE_X6qdTWkZwdBENNpGJTYr1cTjG9I&callback=initMap">
-</script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBY8PE_X6qdTWkZwdBENNpGJTYr1cTjG9I&callback=initMap">
+    </script>

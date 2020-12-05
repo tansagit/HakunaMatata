@@ -3261,7 +3261,8 @@ div.dt-button-info {
 }
 
 .pace .pace-progress {
-    background: #1ab394;
+    /*background: #1ab394;*/
+    background: #FDA94F;
     position: fixed;
     z-index: 2040;
     top: 0;
@@ -11613,3 +11614,47 @@ body.md-skin {
         .artist-collection-photo .close:hover {
             transform: scale(1.2);
         }
+
+.no-post-td {
+    background-color: white;
+    border: none !important;
+    padding-top: 10px !important;
+}
+
+.my-custom-table {
+    /*overflow-x:scroll;
+    display: block;*/
+    /*height: 595px;*/
+    white-space: nowrap;
+}
+
+    .my-custom-table thead th {
+        position: sticky;
+        top: 0;
+    }
+
+    .my-custom-table tbody tr td a.text-left {
+        color: gray;
+    }
+
+       
+
+
+.btn-blue {
+    color: #fff;
+    background: #089eef;
+    border-color: #089eef;
+}
+
+.btn-yellow {
+    color: #fff;
+    background: #FDA94F;
+    border-color: #FDA94F;
+    font-weight: bold;
+}
+
+    .btn-yellow:hover {
+        background: #f1891b;
+        border-color: #f1891b;
+        color: #fff;
+    }

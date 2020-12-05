@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using HakunaMatata.Helpers;
+﻿using HakunaMatata.Helpers;
 using HakunaMatata.Models.DataModels;
 using HakunaMatata.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 
 namespace HakunaMatata.Areas.AdminArea.Controllers

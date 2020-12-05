@@ -1,25 +1,56 @@
-﻿@model IEnumerable<HakunaMatata.Models.ViewModels.VM_RealEstate>
+﻿@section scripts{
+    <script src="~/js/mustache.min.js"></script>
+    <script src="~/js/pagination.min.js"></script>
+    <script src="~/admin/js/services/realEstateServices.js"></script>
+}
 
-<div class="row wrapper border-bottom white-bg page-heading">
-    <div class="col-lg-10">
-        <h2>Static Tables</h2>
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-                <a asp-action="Index">Real Estate</a>
-            </li>
-            <li class="breadcrumb-item">
-                <a asp-action="Index">Index</a>
-            </li>
-            <li class="breadcrumb-item active">
-                <strong>Real Estate List</strong>
-            </li>
-        </ol>
-    </div>
-    <div class="col-lg-2">
 
+<div class="row">
+    <div class="col-6 mt-2 pb-3">
+        <input type="text" class="form-control" value="" id="search-for-anything" placeholder="Nhập từ tìm kiếm" />
     </div>
 </div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Địa chỉ</th>
+            <th>Loại phòng</th>
+            <th>Người đăng</th>
+            <th>Ngày đăng</th>
+            <th>Tình trạng</th>
+        </tr>
+    </thead>
 
-<div id="view-all">
-    @await Html.PartialAsync("_ViewAllRealEstates", Model)
-</div>
+    <tbody id="real-estate-list-data">
+    </tbody>
+</table>
+
+@Html.AntiForgeryToken()
+<div class="pb-1" id="pagination"></div>
+<input type="hidden" id="paging-current-index" />
+
+<script id="data-template" type="x-tmpl-mustache">
+    <tr>
+        <td>{{Index}}</td>
+        <td>{{Street}}</td>
+        <td>{{Type}}</td>
+        <td>{{Agent}}</td>
+        <td>{{PostDate}}</td>
+        <td>{{Status}}</td>
+        <td class="text-center">
+            <a href="@Url.Action("Details","RealEstate")?id={{Id}}" title="Chi tiết" class="btn btn-blue btn-circle">
+                <i class="fas fa-info" al></i>
+            </a>
+            @*<a href="@Url.Action("Edit","RealEstate")?id={{Id}}" title="Chỉnh sửa" class="btn btn-primary btn-circle">
+                <i class="fas fa-pencil-alt"></i>
+            </a>*@
+            <form onsubmit="return realEstateServices.disableRealEstate(this);" class="d-inline">
+                <input type="hidden" name="id" value="{{Id}}" />
+                <button class="btn btn-warning btn-circle" title="Khóa" type="submit">
+                    <i class="fas fa-store-alt-slash"></i>
+                </button>
+            </form>
+        </td>
+    </tr>
+</script>

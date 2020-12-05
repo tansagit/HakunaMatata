@@ -34,3 +34,142 @@ function CheckExistedPhoneNumber(phoneNumber) {
         console.log(e);
     }
 }
+
+function ConfirmRealEstate(form, flag, isRedirect) {
+    if (flag === 1 && confirm('Xác nhận bài viết này?')) {
+        try {
+            $.ajax({
+                type: 'POST',
+                url: form.action,
+                data: new FormData(form),
+                contentType: false,
+                processData: false,
+                success: function (res) {
+                    if (isRedirect) {
+                        window.location.href = "/danh-sach-cho";
+                    }
+                    else if (res.isSuccess) {
+                        $('#confirm-list-all-posts').html(res.html);
+                        setTimeout(function () {
+                            alert("Xác nhận thành công!");
+                        }, 200);
+                    }
+                    else {
+                        alert("Có lỗi xảy ra");
+                    }
+
+                },
+                error: function (err) {
+                    alert("Có lỗi xảy ra! Vui lòng thử lại!");
+                    console.log(err);
+                }
+            });
+        } catch (ex) {
+            console.log(ex);
+        }
+    }
+    else if (flag === 2 && confirm('Xác nhận từ chối bài viết này?')) {
+        try {
+            $.ajax({
+                type: 'POST',
+                url: form.action,
+                data: new FormData(form),
+                contentType: false,
+                processData: false,
+                success: function (res) {
+                    if (isRedirect) {
+                        window.location.href = "/danh-sach-cho";
+                    }
+                    else if (res.isSuccess) {
+                        $('#confirm-list-all-posts').html(res.html);
+                        setTimeout(function () {
+                            alert("Xác nhận thành công!");
+                        }, 200);
+                    }
+                    else {
+                        alert("Có lỗi xảy ra");
+                    }
+
+                },
+                error: function (err) {
+                    alert("Có lỗi xảy ra! Vui lòng thử lại!");
+                    console.log(err);
+                }
+            });
+        } catch (ex) {
+            console.log(ex);
+        }
+    }
+    //prevent default form submit event
+    return false;
+}
+
+function DisableRealEstate(form, isRedirect) {
+    if (confirm('Xác nhận khóa bài đăng này?')) {
+        try {
+            $.ajax({
+                type: 'POST',
+                url: form.action,
+                data: new FormData(form),
+                contentType: false,
+                processData: false,
+                success: function (res) {
+                    if (isRedirect) {
+                        window.location.href = "/danh-sach-ca-nhan";
+                    }
+                    else if (res.isSuccess) {
+                        $('#user-all-posts').html(res.html);
+                    }
+                    else {
+                        alert("Có lỗi xảy ra");
+                    }
+
+                },
+                error: function (err) {
+                    alert("Có lỗi xảy ra! Vui lòng thử lại!");
+                    console.log(err);
+                }
+            });
+        } catch (ex) {
+            console.log(ex);
+        }
+    }
+   
+    //prevent default form submit event
+    return false;
+}
+
+function BookRealEstate(form, isRedirect) {
+    if (confirm('Xác nhận phòng này đã được thuê?')) {
+        try {
+            $.ajax({
+                type: 'POST',
+                url: form.action,
+                data: new FormData(form),
+                contentType: false,
+                processData: false,
+                success: function (res) {
+                    if (isRedirect) {
+                        window.location.href = "/danh-sach-ca-nhan";
+                    }
+                    else if (res.isSuccess) {
+                        $('#user-all-posts').html(res.html);
+                    }
+                    else {
+                        alert("Có lỗi xảy ra");
+                    }
+
+                },
+                error: function (err) {
+                    alert("Có lỗi xảy ra! Vui lòng thử lại!");
+                    console.log(err);
+                }
+            });
+        } catch (ex) {
+            console.log(ex);
+        }
+    }
+
+    //prevent default form submit event
+    return false;
+}

@@ -9,21 +9,19 @@
 @{
     ViewData["Title"] = "Thông tin chi tiết";
 
-    var realEstateType = string.Empty;
-    switch (Model.RealEstateTypeId)
+    var realEstateType = Model.RealEstateTypeId switch
     {
-        case 1: realEstateType = "Phòng trọ"; break;
-        case 2: realEstateType = "Nhà nguyên căn"; break;
-        case 3: realEstateType = "Căn hộ"; break;
-        case 4: realEstateType = "Ở ghép"; break;
-        default: realEstateType = "Phòng trọ"; break;
-    }
+        1 => "PHÒNG TRỌ",
+        2 => "NHÀ NGUYÊN CĂN",
+        3 => "CĂN HỘ",
+        4 => "Ở GHÉP",
+        _ => "PHÒNG TRỌ"
+    };
 
     var statusCss = Model.Status.Equals("Còn phòng") ? "text-success" : "text-disable";
     var statusIcon = Model.Status.Equals("Còn phòng") ? "fa fa-check" : "fa fa-times";
 
-    var isExpired = Model.Status.Equals("Còn phòng") ? "d-none" : "d-block";
-
+    var isExpired = Convert.ToDateTime(Model.ExprireTime) > DateTime.Now ? "d-none" : "d-block";
 }
 
 <!-- breadcrumb area start -->
@@ -34,8 +32,8 @@
                 <div class="breadcrumb-inner">
                     <h1 class="page-title">Thông tin chi tiết</h1>
                     <ul class="page-list">
-                        <li><a href="index-2.html">Home</a></li>
-                        <li>Property</li>
+                        <li><a href="#">Trang chủ</a></li>
+                        <li>Thông tin chi tiết</li>
                     </ul>
                 </div>
             </div>
@@ -45,7 +43,6 @@
 <!-- breadcrumb area End -->
 <!-- property-details-area start -->
 <div class="property-details-area">
-
     <div class="container">
         <div class="row pd-top-40">
             <div class="col-lg-9">
@@ -93,8 +90,8 @@
                     <div class="row mt-2">
                         <div class="col-md-3 col-sm-6">
                             <div class="single-property-info">
-                                <div class="h5">Ngày đăng</div>
-                                <p><i class="fa fa-calendar"></i>@Model.PostTime</p>
+                                <div class="h5">Ngày bắt đầu</div>
+                                <p><i class="fa fa-calendar"></i>@Model.BeginTime</p>
                             </div>
                         </div>
                         <div class="col-md-3 col-sm-6">
@@ -263,21 +260,21 @@
                 <div class="widget mt-3 pl-3">
                     <div class="text-danger h6 pt-3">Xem theo loại phòng</div>
                     <ul class="ml-2">
-                        <li><a href="#">Phòng trọ, nhà trọ</a> </li>
-                        <li><a href="#">Thuê nhà nguyên căn</a> </li>
-                        <li><a href="#">Căn hộ chung cư</a> </li>
-                        <li><a href="#">Ở ghép</a> </li>
+                        <li><a asp-action="Index" asp-route-type="1">Phòng trọ, nhà trọ</a> </li>
+                        <li><a asp-action="Index" asp-route-type="2">Thuê nhà nguyên căn</a> </li>
+                        <li><a asp-action="Index" asp-route-type="3">Căn hộ chung cư</a> </li>
+                        <li><a asp-action="Index" asp-route-type="4">Ở ghép</a> </li>
 
                     </ul>
                 </div>
                 <div class="widget mt-3 pl-3">
                     <div class="text-danger h6 pt-3">Xem theo quận huyện</div>
                     <ul class="ml-2">
-                        <li><a href="#">Phòng trọ Hải Châu</a> </li>
-                        <li><a href="#">Phong trọ Cẩm Lệ</a> </li>
-                        <li><a href="#">Phong trọ Thanh Khê</a> </li>
-                        <li><a href="#">Phong trọ Ngũ Hành Sơn</a> </li>
-                        <li><a href="#">Phong trọ Sơn Trà</a> </li>
+                        <li><a asp-action="Index" asp-route-city="1" asp-route-district="1">Phòng trọ Hải Châu</a> </li>
+                        <li><a asp-action="Index" asp-route-city="1" asp-route-district="2">Phong trọ Cẩm Lệ</a> </li>
+                        <li><a asp-action="Index" asp-route-city="1" asp-route-district="3">Phong trọ Thanh Khê</a> </li>
+                        <li><a asp-action="Index" asp-route-city="1" asp-route-district="4">Phong trọ Ngũ Hành Sơn</a> </li>
+                        <li><a asp-action="Index" asp-route-city="1" asp-route-district="5">Phong trọ Sơn Trà</a> </li>
 
                     </ul>
                 </div>
@@ -290,12 +287,10 @@
 <div class="recommended-area pd-top-90 pd-bottom-70">
     <div class="container">
         <div class="section-title">
-            <div class="title h3">Khu vực lân cận</div>
-            <a class="btn-view-all" href="#">Xem tất cả</a>
+            <h3 class="title">Bài đăng liên quan</h3>
+            <a class="btn-view-all" asp-action="Index">Xem tất cả</a>
         </div>
-        <div class="row">
-
-        </div>
+        @await Html.PartialAsync("_recommendList", Model.RecommmendList)
     </div>
 </div>
 <!-- Recommended area end -->

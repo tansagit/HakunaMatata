@@ -21,8 +21,10 @@ var realEstateServices = {
                 var html = '';
                 var data = response.data;
                 var formData = $('#data-template').html();
+                var currentPageIndex = Number($('#paging-current-index').val());
                 $.each(data, function (i, item) {
                     html += Mustache.render(formData, {
+                        Index: (currentPageIndex -1)*20 + Number(i) + 1,
                         Id: item.id,
                         Street: item.street,
                         PostDate: item.postDate,
@@ -58,6 +60,7 @@ var realEstateServices = {
             //startPage: pagingOptions.pageIndex > totalPage ? totalPage : pagingOptions.pageIndex,
             visiblePages: 5,
             onPageClick: function (event, page) {
+                $('#paging-current-index').val(page);
                 pagingOptions.pageIndex = page;
                 setTimeout(callback, 200);
             }
