@@ -59,12 +59,12 @@
                                                     <i class="fa fa-info"></i>
                                                 </a>
                                                 <form asp-area="AdminArea" asp-controller="RealEstate" asp-action="Confirm" asp-route-id="@item.Id" asp-route-confirmtype="1" onsubmit="return ConfirmRealEstate(this,1);" class="d-inline">
-                                                    <button class="btn btn-primary btn-circle" type="submit">
+                                                    <button class="btn btn-primary btn-circle" type="submit" title="Xác nhận">
                                                         <i class="fas fa-check"></i>
                                                     </button>
                                                 </form>
                                                 <form asp-area="AdminArea" asp-controller="RealEstate" asp-action="Confirm" asp-route-id="@item.Id" asp-route-confirmtype="2" onsubmit="return ConfirmRealEstate(this,2);" class="d-inline">
-                                                    <button class="btn btn-danger btn-circle" type="submit">
+                                                    <button class="btn btn-danger btn-circle" type="submit" title="Từ chối">
                                                         <i class="fas fa-times"></i>
                                                     </button>
                                                 </form>

@@ -73,7 +73,7 @@ namespace HakunaMatata
                        SameSite = SameSiteMode.Lax,
                        SecurePolicy = CookieSecurePolicy.SameAsRequest
                    };
-                   options.LoginPath = new PathString("/AdminArea/Account/Login");
+                   options.LoginPath = new PathString("/dang-nhap");
                });
         }
 
@@ -109,9 +109,6 @@ namespace HakunaMatata
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-                //endpoints.MapControllerRoute(
-                //    name: "search",
-                //    pattern: "{controller=Home}/{action=search}/{cityId?}/{typeId?}/{area?}");
 
             });
         }

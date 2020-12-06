@@ -21,7 +21,7 @@
     var statusCss = Model.Status.Equals("Còn phòng") ? "text-success" : "text-disable";
     var statusIcon = Model.Status.Equals("Còn phòng") ? "fa fa-check" : "fa fa-times";
 
-    var isExpired = Convert.ToDateTime(Model.ExprireTime) > DateTime.Now ? "d-none" : "d-block";
+    var isExpired = Convert.ToDateTime(Model.ExprireTime) >= DateTime.Now.AddDays(1) ? "d-none" : "d-block";
 }
 
 <!-- breadcrumb area start -->

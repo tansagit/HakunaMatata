@@ -11,7 +11,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Back office homepage</title>
+    <title>Trang quản lý</title>
 
     <link href="~/admin/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="~/admin/css/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" type="text/css" />
@@ -21,8 +21,8 @@
     @*<link href="~/css/all.css" rel="stylesheet">*@
 
     <!--dropzone-->
-    <link href="~/admin/css/plugins/dropzone/basic.css" rel="stylesheet" type="text/css">
-    <link href="~/admin/css/plugins/dropzone/dropzone.css" rel="stylesheet" type="text/css">
+    @*<link href="~/admin/css/plugins/dropzone/basic.css" rel="stylesheet" type="text/css">
+    <link href="~/admin/css/plugins/dropzone/dropzone.css" rel="stylesheet" type="text/css">*@
 
     <!--data table-->
     <link href="~/admin/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
@@ -30,12 +30,10 @@
     <link href="~/admin/css/style.css" rel="stylesheet" type="text/css">
     <link href="~/admin/css/plugins/summernote/summernote-bs4.css" rel="stylesheet" type="text/css">
     <link href="~/admin/css/plugins/datapicker/datepicker3.css" rel="stylesheet" type="text/css">
+    <link href="~/admin/css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
     <link href="~/css/awesome-bootstrap-checkbox.css" rel="stylesheet" type="text/css" />
 
     <script src="~/lib/jquery/jquery-3.4.1.slim.min.js"></script>
-
-    <!-- DROPZONE -->
-    <script src="~/admin/js/plugins/dropzone/dropzone.js"></script>
 </head>
 
 <body style="">
@@ -44,8 +42,15 @@
             if (User.Identity.IsAuthenticated)
             {
                 userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == "UserId").Value);
-                userName = User.Claims.FirstOrDefault(c => c.Type == "UserName").Value;
-                userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
+                userName = User.Claims.FirstOrDefault(c => c.Type == "UserName").Value;              
+                userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value switch
+                {
+                    "Admin" => "Admin",
+                    "Manager" => "Quản lý",
+                    "Customer" => "Khách hàng",
+                    _ => "Khách hàng"
+                };
+
                 userRoleId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == "LevelId").Value);
             }
         }
@@ -68,9 +73,8 @@
                                 }
                             </a>
                             <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                                <li><a class="dropdown-item" href="profile.html">Profile</a></li>
-                                <li><a class="dropdown-item" href="/contacts.html">Contacts</a></li>
-                                <li><a class="dropdown-item" href="/mailbox.html">Mailbox</a></li>
+                                <li><a class="dropdown-item" asp-controller="Agent" asp-action="UpdateProfile">Thông tin cá nhân</a></li>
+                                <li><a class="dropdown-item" asp-controller="Agent" asp-action="UpdatePassword">Đổi mật khẩu</a></li>
                                 <li class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" asp-area="AdminArea" asp-controller="Account" asp-action="Logout">Đăng xuất</a></li>
                             </ul>
@@ -121,7 +125,7 @@
                             <a asp-area="AdminArea" asp-controller="RealEstate" asp-action="Create"><i class="fas fa-feather-alt"></i> <span class="nav-label">Đăng tin</span> </a>
                         </li>
                         <li class="">
-                            <a asp-area="AdminArea" asp-controller="Agent" asp-action="Details" asp-route-id="@userId"><i class="fas fa-user-edit"></i> <span class="nav-label">Thông tin cá nhân</span> </a>
+                            <a asp-area="AdminArea" asp-controller="Agent" asp-action="UpdateProfile"><i class="fas fa-user-edit"></i> <span class="nav-label">Thông tin cá nhân</span> </a>
                         </li>
                         <li class="">
                             <a asp-area="AdminArea" asp-controller="Account" asp-action="Logout"><i class="fas fa-user-edit"></i> <span class="nav-label">Đăng xuất</span> </a>
@@ -165,7 +169,7 @@
 
         </div>
 
-        <!--dung de hien thi modal, dung co xoa no, lam on di tg ngu-->
+        <!--modal-->
         <div class="modal inmodal fade" id="modal-form" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -206,9 +210,11 @@
     <!-- SUMMERNOTE -->
     <script src="~/admin/js/plugins/summernote/summernote-bs4.js"></script>
 
+    <!--Sweet alert-->
+    <script src="~/admin/js/plugins/sweetalert/sweetalert.min.js"></script>
+
     <!--font awsesome-->
     <script src="~/js/all.js"></script>
-
     <script src="~/js/formatHtml.js"></script>
     <script src="~/admin/js/services/hakunamata.js"></script>
     @RenderSection("scripts", required: false)

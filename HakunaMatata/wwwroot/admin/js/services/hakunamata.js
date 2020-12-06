@@ -35,6 +35,7 @@ function CheckExistedPhoneNumber(phoneNumber) {
     }
 }
 
+
 function ConfirmRealEstate(form, flag, isRedirect) {
     if (flag === 1 && confirm('Xác nhận bài viết này?')) {
         try {
@@ -115,7 +116,7 @@ function DisableRealEstate(form, isRedirect) {
                 processData: false,
                 success: function (res) {
                     if (isRedirect) {
-                        window.location.href = "/danh-sach-ca-nhan";
+                        window.location.href = "/danh-sach-bai-viet";
                     }
                     else if (res.isSuccess) {
                         $('#user-all-posts').html(res.html);
@@ -134,7 +135,7 @@ function DisableRealEstate(form, isRedirect) {
             console.log(ex);
         }
     }
-   
+
     //prevent default form submit event
     return false;
 }
@@ -150,7 +151,7 @@ function BookRealEstate(form, isRedirect) {
                 processData: false,
                 success: function (res) {
                     if (isRedirect) {
-                        window.location.href = "/danh-sach-ca-nhan";
+                        window.location.href = "/danh-sach-bai-viet";
                     }
                     else if (res.isSuccess) {
                         $('#user-all-posts').html(res.html);
@@ -168,6 +169,41 @@ function BookRealEstate(form, isRedirect) {
         } catch (ex) {
             console.log(ex);
         }
+    }
+
+    //prevent default form submit event
+    return false;
+}
+
+function UpdateUserInfo(form) {
+    try {
+        $.ajax({
+            type: 'POST',
+            url: '/thong-tin-ca-nhan',
+            data: new FormData(form),
+            contentType: false,
+            processData: false,
+            success: function (res) {
+                if (res.status) {
+                    swal({
+                        title: "Thành công!",
+                        text: "Cập nhật thông tin thành công!",
+                        type: "success"
+                    });
+                    return;
+                }
+                else {
+                    swal("Oops", "Có lỗi xảy ra, vui lòng thử lại", "error");
+                    return;
+                }
+            },
+            error: function (err) {
+                swal("Oops", "Có lỗi xảy ra, vui lòng thử lại", "error");
+                console.log(err);
+            }
+        });
+    } catch (ex) {
+        console.log(ex);
     }
 
     //prevent default form submit event

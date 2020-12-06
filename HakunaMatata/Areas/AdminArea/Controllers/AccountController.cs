@@ -24,6 +24,7 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
             return View();
         }
 
+        [Route("dang-nhap")]
         public IActionResult Login(string returnUrl = "")
         {
             var model = new VM_Login { ReturnUrl = returnUrl };
@@ -32,6 +33,7 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
 
         [HttpPost]
         [AllowAnonymous]
+        [Route("dang-nhap")]
         public async Task<IActionResult> Login(VM_Login account)
         {
             if (ModelState.IsValid)
@@ -70,7 +72,7 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
                     }
                     else
                     {
-                        ViewBag.Message = "Invalid user or password!";
+                        ViewBag.Message = "Sai tài khoản hoặc mật khẩu!";
                     }
                 }
                 catch (Exception)
@@ -81,6 +83,7 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
             return View(account);
         }
 
+        [Route("dang-ki")]
         public IActionResult Register(string returnUrl = "")
         {
             var model = new VM_Register { ReturnUrl = returnUrl };
@@ -90,6 +93,7 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
 
         [HttpPost]
         [AllowAnonymous]
+        [Route("dang-ki")]
         public async Task<IActionResult> Register(VM_Register newUser)
         {
             if (ModelState.IsValid)
@@ -99,7 +103,7 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
                     var isSuccess = await _services.RegisterUser(newUser);
                     if (isSuccess)
                     {
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Login", "Account");
                     }
                     else return View(newUser);
                 }

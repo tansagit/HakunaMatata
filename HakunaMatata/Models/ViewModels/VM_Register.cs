@@ -4,6 +4,8 @@ namespace HakunaMatata.Models.ViewModels
 {
     public class VM_Register
     {
+        public string LoginName { get; set; }
+
         [Required]
         [DataType(DataType.PhoneNumber)]
         public string PhoneNumber { get; set; }
@@ -12,13 +14,12 @@ namespace HakunaMatata.Models.ViewModels
         public string AgentName { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "Mật khẩu chứa tối thiểu 6 kí tự.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Compare("Password", ErrorMessage = "Mật khẩu xác nhận không khớp!")]
         public string ConfirmPassword { get; set; }
 
         public string ReturnUrl { get; set; }

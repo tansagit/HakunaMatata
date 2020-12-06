@@ -459,5 +459,7 @@ D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\staticwebassets\Ha
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\staticwebassets\HakunaMatata.StaticWebAssets.xml
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\HakunaMatata.dll
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\HakunaMatata.pdb
-D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\HakunaMatata.csprojAssemblyReference.cache
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\RealEstate\_recommendList.cshtml.g.cs
+D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Areas\AdminArea\Views\Agent\UpdateProfile.cshtml.g.cs
+D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Areas\AdminArea\Views\Agent\UpdatePassword.cshtml.g.cs
+D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\HakunaMatata.csprojAssemblyReference.cache

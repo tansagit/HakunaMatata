@@ -51,7 +51,7 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Route("danh-sach-ca-nhan")]
+        [Route("danh-sach-bai-viet")]
         public IActionResult ClientRealEstateList()
         {
             var userId = User.Claims.FirstOrDefault(c => c.Type == "UserId").Value ?? string.Empty;

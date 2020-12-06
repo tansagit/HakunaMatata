@@ -107,7 +107,7 @@ namespace HakunaMatata.Controllers
         {
             if (cityId == null)
             {
-                return Json(new { status = false, messsage = "Something wrong!" });
+                return Json(new { status = false, messsage = "Không tìm thấy thành phố!" });
             }
             else
             {
