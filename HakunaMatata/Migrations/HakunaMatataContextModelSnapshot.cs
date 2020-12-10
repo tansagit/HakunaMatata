@@ -233,6 +233,12 @@ namespace HakunaMatata.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<int>("NativeHeight")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NativeWidth")
+                        .HasColumnType("int");
+
                     b.Property<string>("PictureName")
                         .HasColumnType("varchar(100)")
                         .HasMaxLength(100)
@@ -493,7 +499,8 @@ namespace HakunaMatata.Migrations
                     b.HasOne("HakunaMatata.Models.DataModels.RealEstate", "RealEstate")
                         .WithOne("Map")
                         .HasForeignKey("HakunaMatata.Models.DataModels.Map", "RealEstateId")
-                        .HasConstraintName("FK__MAP__RealEstateI__49C3F6B7");
+                        .HasConstraintName("FK__MAP__RealEstateI__49C3F6B7")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("HakunaMatata.Models.DataModels.Ward", "Ward")
                         .WithMany("Map")
@@ -506,7 +513,8 @@ namespace HakunaMatata.Migrations
                     b.HasOne("HakunaMatata.Models.DataModels.RealEstate", "RealEstate")
                         .WithMany("Picture")
                         .HasForeignKey("RealEstateId")
-                        .HasConstraintName("FK__PICTURE__RealEst__4CA06362");
+                        .HasConstraintName("FK__PICTURE__RealEst__4CA06362")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("HakunaMatata.Models.DataModels.Rating", b =>
@@ -523,12 +531,14 @@ namespace HakunaMatata.Migrations
                     b.HasOne("HakunaMatata.Models.DataModels.Agent", "Agent")
                         .WithMany("RealEstate")
                         .HasForeignKey("AgentId")
-                        .HasConstraintName("FK__REAL_ESTA__Agent__3F466844");
+                        .HasConstraintName("FK__REAL_ESTA__Agent__3F466844")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("HakunaMatata.Models.DataModels.RealEstateType", "ReaEstateType")
                         .WithMany("RealEstate")
                         .HasForeignKey("RealEstateTypeId")
-                        .HasConstraintName("FK__REAL_ESTA__ReaEs__3E52440B");
+                        .HasConstraintName("FK__REAL_ESTA__ReaEs__3E52440B")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("HakunaMatata.Models.DataModels.RealEstateDetail", b =>
@@ -536,7 +546,8 @@ namespace HakunaMatata.Migrations
                     b.HasOne("HakunaMatata.Models.DataModels.RealEstate", "RealEstate")
                         .WithOne("RealEstateDetail")
                         .HasForeignKey("HakunaMatata.Models.DataModels.RealEstateDetail", "RealEstateId")
-                        .HasConstraintName("FK__REAL_ESTA__RealE__5629CD9C");
+                        .HasConstraintName("FK__REAL_ESTA__RealE__5629CD9C")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("HakunaMatata.Models.DataModels.SocialLogin", b =>

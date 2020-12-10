@@ -25,8 +25,9 @@
 
     <div class="middle-box text-center loginscreen animated fadeInDown">
         <div>
-            <div>
-                <h1 class="logo-name">AN+</h1>
+            <div class="pb-2">
+                @*<h1 class="logo-name">AN+</h1>*@
+                <img width="200" height="200" src="~/assets/img/icon.png"/>
             </div>
 
             <h3>Đăng nhập để tiếp tục</h3>
@@ -40,7 +41,7 @@
                     <input type="password" class="form-control" asp-for="Password" placeholder="Mật khẩu" required="">
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
-                <button type="submit" class="btn btn-primary block full-width m-b">Đăng nhập</button>
+                <button type="submit" class="btn btn-yellow block full-width m-b">Đăng nhập</button>
                 <div class="checkbox checkbox-info d-flex align-items-center">
                     <input id="is-remember-me" asp-for="IsRememberMe" class="styled"
                            type="checkbox">

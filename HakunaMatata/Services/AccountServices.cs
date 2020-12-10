@@ -9,8 +9,8 @@ namespace HakunaMatata.Services
     public interface IAccountServices
     {
         Agent GetUser(VM_Login login);
-        Task<bool> RegisterUser(VM_Register user);
-        bool CheckExist(string phoneNumber);
+        Task<bool> RegisterUser(VM_Register registerUser);
+        bool CheckExist(string loginName);
     }
 
     public class AccountServices : IAccountServices
@@ -22,9 +22,9 @@ namespace HakunaMatata.Services
             _dbContext = dbContext;
         }
 
-        public bool CheckExist(string phoneNumber)
+        public bool CheckExist(string loginName)
         {
-            return _dbContext.Agent.Any(x => x.PhoneNumber.Equals(phoneNumber));
+            return _dbContext.Agent.Any(x => x.LoginName.Equals(loginName));
         }
 
         public Agent GetUser(VM_Login login)
@@ -41,7 +41,7 @@ namespace HakunaMatata.Services
                 {
                     var user = new Agent()
                     {
-                        LoginName = registerUser.PhoneNumber,
+                        LoginName = registerUser.LoginName,
                         Password = registerUser.Password,
                         AgentName = registerUser.AgentName,
                         LevelId = 3,

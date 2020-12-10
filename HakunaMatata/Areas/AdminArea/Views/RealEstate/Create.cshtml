@@ -3,6 +3,7 @@
 @{
     var beginTimeValue = DateTime.Now.ToString("dd/MM/yyyy");
     var expireTimeValue = DateTime.Now.ToString("dd/MM/yyyy");
+    string userPhoneNumber = User.Identity.IsAuthenticated ? User.Claims.FirstOrDefault(c => c.Type == "Phone").Value : string.Empty;
     @if (Model != null)
     {
         if (!string.IsNullOrEmpty(Model.BackupBeginTime))
@@ -28,7 +29,7 @@
                     <form asp-action="Create" enctype="multipart/form-data">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group row">
-                            <label asp-for="RealEstateTypeId" class="col-sm-2 col-form-label">Loại hình</label>
+                            <label asp-for="RealEstateTypeId" class="col-sm-2 col-form-label">Loại hình BĐS</label>
                             <div class="col-sm-10 col-lg-4">
                                 <select asp-for="RealEstateTypeId" class="form-control form-control-lg m-b" asp-items="ViewBag.RealEstateTypeId">
                                 </select>
@@ -65,13 +66,13 @@
                                             <span class="input-group-addon">
                                                 <i class="fas fa-house-user"></i>
                                             </span>
-                                            <input asp-for="Acreage" type="text" placeholder="" class="form-control">
+                                            <input asp-for="Acreage" type="text" placeholder="" class="form-control" required>
                                         </div>
                                         <span asp-validation-for="Acreage" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label asp-for="Price" class="col-sm-2 col-md-4 col-form-label">Giá/tháng</label>
+                                    <label asp-for="Price" class="col-sm-2 col-md-4 col-form-label">Giá phòng</label>
                                     <div class="col-sm-10 col-md-6">
                                         <div class="input-group m-b">
                                             <span class="input-group-addon">
@@ -80,7 +81,7 @@
                                             <input asp-for="Price"
                                                    type="text" id="currency-field"
                                                    data-type="currency"
-                                                   placeholder="1,000,000" class="form-control" />
+                                                   placeholder="" class="form-control" required />
                                         </div>
                                         <span asp-validation-for="Price" class="text-danger"></span>
                                     </div>
@@ -97,12 +98,15 @@
                                                     <span class="input-group-addon">
                                                         <i class="fas fa-bolt"></i>
                                                     </span>
-                                                    <input asp-for="ElectronicPrice"
-                                                           type="text" id="tien-dien"
-                                                           data-type="" placeholder="3,500/KW"
+                                                    <input type="text"
+                                                           id="tien-dien"
+                                                           asp-for="ElectronicPrice"
+                                                           data-type="currency"
+                                                           placeholder=""
+                                                           value="0"
                                                            class="form-control">
                                                     <div class="input-group-append">
-                                                        <span class="input-group-addon">VND/KW</span>
+                                                        <span class="input-group-addon">VNĐ/KW</span>
                                                     </div>
                                                 </div>
                                                 <span asp-validation-for="ElectronicPrice" class="text-danger"></span>
@@ -137,7 +141,7 @@
                                                            value="0"
                                                            class="form-control">
                                                     <div class="input-group-append">
-                                                        <span class="input-group-addon">VND/m3</span>
+                                                        <span class="input-group-addon">VNĐ/m<sub style="vertical-align:super">3</sub></span>
                                                     </div>
                                                 </div>
                                                 <span asp-validation-for="WaterPrice" class="text-danger"></span>
@@ -219,6 +223,18 @@
                                 <span asp-validation-for="ExprireTime" class="text-danger"></span>
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <label asp-for="ContactNumber" class="col-sm-2 col-form-label">Số điện thoại liên lạc</label>
+                            <div class="col-sm-10 col-md-6 col-lg-3">
+                                <div class="input-group m-b">
+                                    <span class="input-group-addon">
+                                        <i class="fas fa-mobile-alt"></i>
+                                    </span>
+                                    <input asp-for="ContactNumber" type="text" placeholder="" class="form-control" value="@userPhoneNumber" required>
+                                </div>
+                                <span asp-validation-for="ContactNumber" class="text-danger"></span>
+                            </div>
+                        </div>
 
                         <div class="hr-line-dashed"></div>
 
@@ -269,7 +285,7 @@
                                     <div class="ibox-title">
                                         <h5>Mô tả chi tiết</h5>
                                     </div>
-                                    <div class="ibox-content no-padding">
+                                    <div class="ibox-content no-padding no-top-border">
                                         <textarea type="text" asp-for="Description" class="form-control summernote"></textarea>
                                     </div>
                                 </div>
@@ -298,7 +314,6 @@
                             </div>
                         </div>
 
-                        <div class="hr-line-dashed"></div>
                         <div class="form-group row">
                             <div class="col-lg-12">
                                 <div class="ibox">
@@ -327,7 +342,7 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-4 col-sm-offset-2">
-                                <button class="btn btn-white" asp-action="Index">Hủy bỏ</button>
+                                <a class="btn btn-white" asp-action="ClientRealEstateList" asp-controller="RealEstate">Hủy bỏ</a>
                                 <button class="btn btn-yellow" id="submitButton" type="submit">Đăng bài</button>
                             </div>
                         </div>
@@ -339,70 +354,93 @@
 </div>
 
 <script>
-    $(function () {
-        // Multiple images preview in browser
-        var imagesPreview = function (input, placeToInsertImagePreview) {
-            if (input.files) {
-                var filesAmount = input.files.length;
+    $(document).ready(function () {
+        //set up datetime
+        $('#begin-day .input-group.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            calendarWeeks: true,
+            autoclose: true,
+            format: "dd/mm/yyyy"
+        });
 
-                for (i = 0; i < filesAmount; i++) {
-                    var reader = new FileReader();
+        $('#expire-day .input-group.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            calendarWeeks: true,
+            autoclose: true,
+            format: "dd/mm/yyyy"
+        });
 
-                    reader.onload = function (event) {
-                        var img = new Image();
-                        var reviewWidth, renderWidth;
-                        img.src = event.target.result;
+        $('.summernote').summernote({
+            height: 400
+        });
 
-                        img.onload = function () {
-                            reviewWidth = Number((this.width * 200) / this.height);
-                            console.log("1: " + reviewWidth);
-                        };
-
-                        renderWidth = isNaN(reviewWidth) ? 200 : reviewWidth;
-                        console.log("2: " + renderWidth);
-
-                        $($.parseHTML('<img>')).attr({
-                            'src': event.target.result,
-                            'class': 'img-fluid',
-                            //'style': 'width: 200px; height: 200px; border-radius: 7px',
-                            'style': 'width:' + reviewWidth + 'px; height: 200px; border-radius: 7px',
-                            'alt': 'preview'
-                        }).appendTo(placeToInsertImagePreview);
-                    }
-
-                    reader.readAsDataURL(input.files[i]);
-                }
-            }
+        document.getElementById('free-tien-dien').onchange = function () {
+            document.getElementById('tien-dien').disabled = this.checked;
+        };
+        document.getElementById('free-tien-nuoc').onchange = function () {
+            document.getElementById('tien-nuoc').disabled = this.checked;
         };
 
+        document.getElementById('free-tien-wifi').onchange = function () {
+            document.getElementById('tien-wifi').disabled = this.checked;
+        };
+
+        $("input[data-type='currency']").on({
+            keyup: function () {
+                formatCurrency($(this));
+            },
+            blur: function () {
+                formatCurrency($(this), "blur");
+            }
+        });
+
+        $("input:text").focus(function() { $(this).select(); } );
+
+        //add image preview
         $('#Files').on('change', function () {
             $("div.lightBoxGallery").html("");
             imagesPreview(this, 'div.lightBoxGallery');
         });
     });
 
-</script>
+    // Multiple images preview in browser
+    var imagesPreview = function (input, placeToInsertImagePreview) {
+        if (input.files) {
+            var filesAmount = input.files.length;
 
-<script>
-    document.getElementById('free-tien-dien').onchange = function () {
-        document.getElementById('tien-dien').disabled = this.checked;
-    };
-    document.getElementById('free-tien-nuoc').onchange = function () {
-        document.getElementById('tien-nuoc').disabled = this.checked;
-    };
+            for (i = 0; i < filesAmount; i++) {
+                var reader = new FileReader();
 
-    document.getElementById('free-tien-wifi').onchange = function () {
-        document.getElementById('tien-wifi').disabled = this.checked;
-    };
+                reader.onload = function (event) {
+                    var img = new Image();
+                    var reviewWidth, renderWidth;
+                    img.src = event.target.result;
 
-    $("input[data-type='currency']").on({
-        keyup: function () {
-            formatCurrency($(this));
-        },
-        blur: function () {
-            formatCurrency($(this), "blur");
+                    img.onload = function () {
+                        reviewWidth = Number((this.width * 200) / this.height);
+                        console.log("1: " + reviewWidth);
+                    };
+
+                    renderWidth = isNaN(reviewWidth) ? 200 : reviewWidth;
+                    console.log("2: " + renderWidth);
+
+                    $($.parseHTML('<img>')).attr({
+                        'src': event.target.result,
+                        'class': 'img-fluid',
+                        //'style': 'width: 200px; height: 200px; border-radius: 7px',
+                        'style': 'width:' + reviewWidth + 'px; height: 200px; border-radius: 7px',
+                        'alt': 'preview'
+                    }).appendTo(placeToInsertImagePreview);
+                }
+
+                reader.readAsDataURL(input.files[i]);
+            }
         }
-    });
+    };
 
     function formatNumber(n) {
         // format number 1000000 to 1,234,567
@@ -477,37 +515,10 @@
     }
 </script>
 
-
-<script>
-    $(document).ready(function () {
-        $('#begin-day .input-group.date').datepicker({
-            todayBtn: "linked",
-            keyboardNavigation: false,
-            forceParse: false,
-            calendarWeeks: true,
-            autoclose: true,
-            format: "dd/mm/yyyy"
-        });
-
-        $('#expire-day .input-group.date').datepicker({
-            todayBtn: "linked",
-            keyboardNavigation: false,
-            forceParse: false,
-            calendarWeeks: true,
-            autoclose: true,
-            format: "dd/mm/yyyy"
-        });
-
-        $('.summernote').summernote({
-            height: 400
-        });
-    });
-</script>
-
 <script>
     // Initialize and add the map
     function initialize() {
-        var loca = { lat: 16.453326, lng: 107.574839 };
+        var loca = { lat: 16.0738064, lng: 108.1477255 };
         // The map, centered at Uluru
         var map = new google.maps.Map(
             document.getElementById('map'), { zoom: 16, center: loca });

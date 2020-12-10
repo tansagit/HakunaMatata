@@ -26,6 +26,7 @@ namespace HakunaMatata.Models.ViewModels
         [Range(1, int.MaxValue, ErrorMessage = "Vui lòng nhập số lớn hơn {1}")]
         public int Acreage { get; set; }
 
+        [Required(ErrorMessage ="Số điện thoại liên lạc không được để trống")]
         public string ContactNumber { get; set; }
 
         public string PostTime { get; set; }
@@ -77,7 +78,7 @@ namespace HakunaMatata.Models.ViewModels
             isValid = DateTime.TryParse(BeginTime, out beginDate);
             if (!isValid)
             {
-                yield return new ValidationResult(errorMessage: "Format không hợp lệ!", memberNames: new[] { "BeginTime" });
+                yield return new ValidationResult(errorMessage: "Giá trị không hợp lệ!", memberNames: new[] { "BeginTime" });
             }
             else
             {
@@ -91,14 +92,14 @@ namespace HakunaMatata.Models.ViewModels
             isValid = DateTime.TryParse(ExprireTime, out expireDate);
             if (!isValid)
             {
-                yield return new ValidationResult(errorMessage: "Format không hợp lệ!", memberNames: new[] { "ExprireTime" });
+                yield return new ValidationResult(errorMessage: "Giá trị không hợp lệ!", memberNames: new[] { "ExprireTime" });
             }
             else
             {
                 TimeSpan d2 = expireDate.Subtract(DateTime.Now);
                 if (d2.TotalDays < -1 || d2.TotalDays > 365)     //end time < current day || > 1 year from current day => invalid
                 {
-                    yield return new ValidationResult(errorMessage: "Giá trị không hợp lệ không hợp lệ!", memberNames: new[] { "ExprireTime" });
+                    yield return new ValidationResult(errorMessage: "Giá trị không hợp lệ!", memberNames: new[] { "ExprireTime" });
                 }
             }
 

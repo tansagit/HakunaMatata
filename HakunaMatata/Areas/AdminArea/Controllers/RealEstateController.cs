@@ -120,7 +120,7 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
         [HttpPost]
         [Route("bai-dang-moi")]
         public IActionResult Create(
-            [Bind("Title,Address,Price,Acreage,BeginTime,BackupBeginTime,ExprireTime,BackupExpireTime,RoomNumber,Description,HasPrivateWc,HasMezzanine,AllowCook,FreeTime,SecurityCamera,WaterPrice,ElectronicPrice,WifiPrice,RealEstateTypeId,Latitude,Longtitude,IsFreeWater,IsFreeElectronic,IsFreeWifi,Files")]
+            [Bind("Title,Address,Price,ContactNumber,Acreage,BeginTime,BackupBeginTime,ExprireTime,BackupExpireTime,RoomNumber,Description,HasPrivateWc,HasMezzanine,AllowCook,FreeTime,SecurityCamera,WaterPrice,ElectronicPrice,WifiPrice,RealEstateTypeId,Latitude,Longtitude,IsFreeWater,IsFreeElectronic,IsFreeWifi,Files")]
             VM_RealEstateDetails details)
         {
             int uploadedFilesCount = 0;
@@ -187,7 +187,7 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id,
-                                  [Bind("Id,Title,Address,Price,Acreage,ExprireTime,RoomNumber,Description,HasPrivateWc,HasMezzanine,AllowCook,FreeTime,SecurityCamera,WaterPrice,ElectronicPrice,WifiPrice,RealEstateTypeId,Files")] VM_RealEstateDetails details)
+                                  [Bind("Id,Title,Address,Price,Acreage,BeginTime,ExprireTime,RoomNumber,Description,HasPrivateWc,HasMezzanine,AllowCook,FreeTime,SecurityCamera,WaterPrice,ElectronicPrice,WifiPrice,RealEstateTypeId,ContactNumber,Files")] VM_RealEstateDetails details)
         {
             int uploadedFilesCount = 0;
 
@@ -200,13 +200,17 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
             {
                 try
                 {
-                    if (details.Files != null && details.Files.Count > 0)
-                    {
-                        uploadedFilesCount = _fileServices.AddPicture(details.Id, details.Files);
-                        TempData["Message"] = string.Format("Uploaded {0} hình ảnh", uploadedFilesCount);
-                    }
                     var isUpdateSuccess = _realEstateServices.UpdateRealEstate(details);
-                    if (isUpdateSuccess) return RedirectToAction(nameof(Index));
+                    if (isUpdateSuccess)
+                    {
+                        if (details.Files != null && details.Files.Count > 0)
+                        {
+                            uploadedFilesCount = _fileServices.AddPicture(details.Id, details.Files);
+                            TempData["Message"] = string.Format("Uploaded {0} hình ảnh", uploadedFilesCount);
+                            TempData["MesageType"] = 1;
+                        }
+                        return RedirectToAction(nameof(ClientRealEstateList));
+                    }
                     else return View(details);
                 }
                 catch (DbUpdateConcurrencyException)
@@ -271,6 +275,25 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
             {
                 return Json(new { isSuccess, html = Helper.RenderRazorViewToString(this, "_viewUserAllPosts", _realEstateServices.GetUserAllPosts(userId)) });
             }
+        }
+
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteRealEsate(int id, int userId)
+        {
+            var returnCode = _realEstateServices.DeleteRealEstate(id, userId);
+
+            if (returnCode < 1)
+            {
+                return Json(new { isSuccess = false, message = "Xảy ra lỗi hệ thống!" });
+            }
+            else if (returnCode == 2)
+            {
+                return Json(new { isSuccess = false, message = "User không hợp lệ!" });
+            }
+
+            else return Json(new { isSuccess = true, html = Helper.RenderRazorViewToString(this, "_viewUserAllPosts", _realEstateServices.GetUserAllPosts(userId)) });
 
         }
     }

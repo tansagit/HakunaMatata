@@ -237,27 +237,35 @@ namespace HakunaMatata.Helpers
 
         public static string GetStatus(RealEstate realEstate)
         {
-            if (!realEstate.IsConfirm) return "Đang chờ xác nhận";
-
             //neu rt chua di disable => kiem tra het han hay chua
             if (realEstate.IsActive)
             {
-                if (!realEstate.IsAvaiable) return "Hết phòng";
-                //neu expire time null, thi mac dinh het han sau 1 thang ke tu ngay dang bai
-                if (realEstate.ExprireTime == null)
+                if (!realEstate.IsConfirm)
                 {
-                    return realEstate.PostTime.AddDays(30) < DateTime.Now ? "Hết hạn" : "Còn phòng";
+                    return "Chờ xác nhận";
+                }
+                else if (realEstate.ConfirmStatus > 1)
+                {
+                    return "Bị từ chối";
                 }
 
-                //truong hop co ngay het han
-                else
+                if (realEstate.IsAvaiable)
                 {
-                    //neu ngay het han < ngay hien tai thi het han
-                    return realEstate.ExprireTime < DateTime.Now ? "Hết hạn" : "Còn phòng";
+                    if (realEstate.ExprireTime == null)
+                    {
+                        return realEstate.PostTime.AddDays(30) < DateTime.Now ? "Hết hạn" : "Còn phòng";
+                    }
+
+                    //truong hop co ngay het han
+                    else
+                    {
+                        //neu ngay het han < ngay hien tai thi het han
+                        return realEstate.ExprireTime < DateTime.Now ? "Hết hạn" : "Còn phòng";
+                    }
                 }
+                else return "Hết phòng";              
             }
             else return "Đã khóa";
-
         }
 
         public static List<VM_Search_Result> MapperToVMSearchResult(List<RealEstateDetail> searchResult)

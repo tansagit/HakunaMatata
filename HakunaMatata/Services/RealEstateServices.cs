@@ -47,7 +47,13 @@ namespace HakunaMatata.Services
         bool AddMapForRealEstate(Map map);
         int AddCompleteRealEstate(VM_RealEstateDetails details, int agentId);
         bool UpdateRealEstate(VM_RealEstateDetails details);
-        void DeleteRealEstate(int id);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userId"></param>
+        /// <returns> < 1 - loi, 1 - thanh cong, 2 - user khong hop le </returns>
+        int DeleteRealEstate(int id, int userId);
         bool DisableRealEstate(int id);
         bool BookedRealEstate(int id);
         /// <summary>
@@ -153,7 +159,7 @@ namespace HakunaMatata.Services
         public List<RealEstateViewModel> GetUserAllPosts(int? userId)
         {
             var results = new List<RealEstateViewModel>();
-            var source =  _context.RealEstate
+            var source = _context.RealEstate
                            .Include(r => r.RealEstateDetail)
                            .Include(r => r.ReaEstateType)
                            .Include(r => r.Agent)
@@ -365,8 +371,10 @@ namespace HakunaMatata.Services
                 ExprireTime = Convert.ToDateTime(details.ExprireTime),
                 RealEstateTypeId = details.RealEstateTypeId,
                 AgentId = agentId,
+                ContactNumber = details.ContactNumber,
                 IsActive = false,
                 IsConfirm = agentId == 1,
+                IsAvaiable = true,
                 ConfirmStatus = agentId == 1 ? 1 : 0
             };
             var realEstateId = AddNewRealEstate(realEstate);
@@ -431,9 +439,9 @@ namespace HakunaMatata.Services
                 {
                     //it's update time
                     rt.LastUpdate = DateTime.Now;
+                    rt.BeginTime = DateTime.Parse(details.BeginTime);
                     rt.ExprireTime = DateTime.Parse(details.ExprireTime);
-                    rt.RealEstateTypeId = details.RealEstateTypeId;
-
+                    rt.ContactNumber = details.ContactNumber;
                     rt_detail.Title = details.Title;
                     rt_detail.Price = details.Price;
                     rt_detail.Acreage = details.Acreage;
@@ -460,9 +468,30 @@ namespace HakunaMatata.Services
             else return false;
         }
 
-        public void DeleteRealEstate(int id)
+        public int DeleteRealEstate(int id, int userId)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                var realEstate = _context.RealEstate.Find(id);
+                var user = _context.Agent.Find(userId);
+
+                if (realEstate != null && user != null)
+                {
+                    if (Convert.ToInt32(realEstate.AgentId) == user.Id || user.LevelId == 1)
+                    {
+                        _context.RealEstate.Remove(realEstate);
+                        _context.SaveChanges();
+                        return 1;   //thanh cong
+                    }
+                    else return 2;  //user khong hop le
+                }
+                return 0;   //not found
+            }
+            catch (Exception)
+            {
+                return -1;  //loi he thong
+            }
+
         }
 
         public bool DisableRealEstate(int id)
@@ -575,30 +604,6 @@ namespace HakunaMatata.Services
         /*
          ------------Client services-------------------------------
          */
-        private static string GetLinkImage(Picture image)
-        {
-            string imageUrl;
-            if (image == null)
-            {
-                imageUrl = "404";
-            }
-            else
-            {
-                //lay phan tu dau tien trong list picture
-                //kiem tra picture name no ton tai ko, 
-                // neu co nghia la moi them vao, ko phải crawl tu web
-                if (!string.IsNullOrEmpty(image.PictureName))
-                {
-                    //tao url = cach + chuoi ~/images/ + PictureName
-                    imageUrl = "local" + image.PictureName;
-                }
-                else
-                {
-                    imageUrl = image.Url;
-                }
-            }
-            return imageUrl;
-        }
 
         public IQueryable<Result> Filter(Condition condition)
         {

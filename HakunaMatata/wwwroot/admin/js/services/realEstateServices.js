@@ -24,7 +24,7 @@ var realEstateServices = {
                 var currentPageIndex = Number($('#paging-current-index').val());
                 $.each(data, function (i, item) {
                     html += Mustache.render(formData, {
-                        Index: (currentPageIndex -1)*20 + Number(i) + 1,
+                        Index: (currentPageIndex - 1) * 20 + Number(i) + 1,
                         Id: item.id,
                         Street: item.street,
                         PostDate: item.postDate,
@@ -66,47 +66,121 @@ var realEstateServices = {
             }
         });
     },
+
     disableRealEstate: function (form) {
-        try {
-            if (confirm('Xác nhận khóa phòng trọ này ?')) {
-                try {
-                    $.ajax({
-                        url: '/AdminArea/RealEstate/DisableRealEsate',
-                        type: 'POST',
-                        headers: {
-                            RequestVerificationToken:
-                                $('input:hidden[name="__RequestVerificationToken"]').val()
-                        },  
-                        dataType: 'json',
-                        data: new FormData(form),
-                        contentType: false,
-                        processData: false,
-                        success: function (response) {
-                            if (response.status) {
-                                realEstateServices.loadData(true);
-                                setTimeout(function () {
-                                    alert("Thành công!");
-                                }, 200);
+        swal({
+            title: "Xác nhận",
+            text: "Xác nhận khóa bài đăng này?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Xác nhận",
+            cancelButtonText: "Hủy bỏ",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+            function (isConfirm) {
+                if (isConfirm) {
+                    try {
+                        $.ajax({
+                            url: '/AdminArea/RealEstate/Disable',
+                            type: 'POST',
+                            headers: {
+                                RequestVerificationToken:
+                                    $('input:hidden[name="__RequestVerificationToken"]').val()
+                            },
+                            dataType: 'json',
+                            data: new FormData(form),
+                            contentType: false,
+                            processData: false,
+                            success: function (response) {
+                                if (response.isSuccess) {
+                                    realEstateServices.loadData(true);
+                                    setTimeout(function () {
+                                        swal({
+                                            title: "Thành công!",
+                                            text: "Khóa thành công!",
+                                            type: "success"
+                                        });
+                                    }, 200);
+                                }
+                                else {
+                                    swal("Có lỗi!", "", "error");
+                                }
+                            },
+                            error: function (err) {
+                                alert(err);
                             }
-                            else {
-                                alert("Vô hiệu hóa thất bại!");
-                            }
-                        },
-                        error: function (err) {
-                            alert(err);
-                        }
-                    });
-                } catch (ex) {
-                    console.log(ex);
+                        });
+                    } catch (ex) {
+                        console.log(ex);
+                    }
+                } else {
+                    swal("Hủy bỏ", "", "error");
                 }
-            }
-            //prevent default form submit event
-            return false;
-        }
-        catch (ex) {
-            console.log(ex);
-        }
+            });
+
+        //prevent default form submit event
+        return false;
     },
+
+    deleteRealEstate: function (form) {
+        swal({
+            title: "Xác nhận",
+            text: "Xác nhận xóa bài đăng này?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Xác nhận",
+            cancelButtonText: "Hủy bỏ",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+            function (isConfirm) {
+                if (isConfirm) {
+                    try {
+                        $.ajax({
+                            url: '/AdminArea/RealEstate/Delete',
+                            type: 'POST',
+                            headers: {
+                                RequestVerificationToken:
+                                    $('input:hidden[name="__RequestVerificationToken"]').val()
+                            },
+                            dataType: 'json',
+                            data: new FormData(form),
+                            contentType: false,
+                            processData: false,
+                            success: function (response) {
+                                if (response.isSuccess) {
+                                    realEstateServices.loadData(true);
+                                    setTimeout(function () {
+                                        swal({
+                                            title: "Thành công!",
+                                            text: "Xóa thành công!",
+                                            type: "success"
+                                        });
+                                    }, 200);
+                                }
+                                else {
+                                    swal("Có lỗi!", res.message, "error");
+                                }
+                            },
+                            error: function (err) {
+                                alert(err);
+                            }
+                        });
+                    } catch (ex) {
+                        console.log(ex);
+                    }
+                } else {
+                    swal("Hủy bỏ", "", "error");
+                }
+            });
+
+        //prevent default form submit event
+        return false;
+    },
+
     gotoIndex: function () {
 
     },

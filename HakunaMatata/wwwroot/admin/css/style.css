@@ -11637,9 +11637,6 @@ body.md-skin {
         color: gray;
     }
 
-       
-
-
 .btn-blue {
     color: #fff;
     background: #089eef;
@@ -11658,3 +11655,8 @@ body.md-skin {
         border-color: #f1891b;
         color: #fff;
     }
+
+div#pagination ul li.active a.page-link {
+    background-color: #FDA94F;
+    border-color: #FDA94F;
+}

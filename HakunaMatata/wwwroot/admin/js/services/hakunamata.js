@@ -1,28 +1,30 @@
 ﻿$(document).ready(function () {
-    $('#PhoneNumber').on('focusout', function () {
-        var phoneNumber = $(this).val().trim();
-        CheckExistedPhoneNumber(phoneNumber);
+    $('#LoginName').on('focusout', function () {
+        var loginName = $(this).val().trim();
+        if (loginName) {
+            CheckExistedUser(loginName);
+        }
     });
 });
 
-function CheckExistedPhoneNumber(phoneNumber) {
+function CheckExistedUser(loginName) {
     try {
-        if (phoneNumber) {
+        if (loginName) {
             $.ajax({
                 url: '/AdminArea/Account/CheckExist',
                 type: 'POST',
                 dataType: 'json',
-                data: { phoneNumber: phoneNumber },
+                data: { loginName: loginName },
                 success: function (response) {
                     if (response.isExisted) {
                         $('#check-existed').removeClass('text-navy');
                         $('#check-existed').addClass('text-danger');
-                        $('#check-existed').text("Số điện thoại này đã được đăng kí!!!");
+                        $('#check-existed').text("Tài khoản này đã được sử dụng!!!");
                     }
                     else {
                         $('#check-existed').removeClass('text-danger');
                         $('#check-existed').addClass('text-navy');
-                        $('#check-existed').text("Bạn có thể sử dụng số điện thoại này!!!");
+                        $('#check-existed').text("Bạn có thể sử dụng tên đăng nhập này!!!");
                     }
                 },
                 error: function (err) {
@@ -175,6 +177,60 @@ function BookRealEstate(form, isRedirect) {
     return false;
 }
 
+function DeleteRealEstate(form) {
+    swal({
+        title: "Xác nhận",
+        text: "Xác nhận xóa bài đăng này?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Xác nhận",
+        cancelButtonText: "Hủy bỏ",
+        closeOnConfirm: false,
+        closeOnCancel: false
+    },
+        function (isConfirm) {
+            if (isConfirm) {
+                try {
+                    $.ajax({
+                        type: 'POST',
+                        url: form.action,
+                        data: new FormData(form),
+                        contentType: false,
+                        processData: false,
+                        success: function (res) {
+                            if (res.isSuccess) {
+                                swal({
+                                    title: "Thành công!",
+                                    text: "Xóa thành công!",
+                                    type: "success"
+                                });
+
+                                $('#user-all-posts').html(res.html);
+                            }
+                            else {
+                                swal("Có lỗi!", res.message, "error");
+                            }
+
+                        },
+                        error: function (err) {
+                            alert("Có lỗi xảy ra! Vui lòng thử lại!");
+                            console.log(err);
+                        }
+                    });
+                } catch (ex) {
+                    alert("errror roi bạn ơi");
+                    console.log(ex);
+                }
+            } else {
+                swal("Hủy bỏ", "Bài viết của bạn an toàn!", "error");
+            }
+        });
+
+    //prevent default form submit event
+    return false;
+}
+
 function UpdateUserInfo(form) {
     try {
         $.ajax({
@@ -205,6 +261,114 @@ function UpdateUserInfo(form) {
     } catch (ex) {
         console.log(ex);
     }
+
+    //prevent default form submit event
+    return false;
+}
+
+function DisableAgent(form) {
+    swal({
+        title: "Xác nhận",
+        text: "Xác nhận khóa tài khoản này?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Xác nhận",
+        cancelButtonText: "Hủy bỏ",
+        closeOnConfirm: false,
+        closeOnCancel: false
+    },
+        function (isConfirm) {
+            if (isConfirm) {
+                try {
+                    $.ajax({
+                        type: 'POST',
+                        url: form.action,
+                        data: new FormData(form),
+                        contentType: false,
+                        processData: false,
+                        success: function (res) {
+                            if (res.isSuccess) {
+                                swal({
+                                    title: "Thành công!",
+                                    text: "Khóa thành công!",
+                                    type: "success"
+                                });
+
+                                $('#view-all-agents').html(res.html);
+                            }
+                            else {
+                                swal("Có lỗi!", res.message, "error");
+                            }
+
+                        },
+                        error: function (err) {
+                            alert("Có lỗi xảy ra! Vui lòng thử lại!");
+                            console.log(err);
+                        }
+                    });
+                } catch (ex) {
+                    alert("errror roi bạn ơi");
+                    console.log(ex);
+                }
+            } else {
+                swal("Hủy bỏ", "", "error");
+            }
+        });
+
+    //prevent default form submit event
+    return false;
+}
+
+function DeleteAgent(form) {
+    swal({
+        title: "Xác nhận",
+        text: "Xác nhận xóa tài khoản này?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Xác nhận",
+        cancelButtonText: "Hủy bỏ",
+        closeOnConfirm: false,
+        closeOnCancel: false
+    },
+        function (isConfirm) {
+            if (isConfirm) {
+                try {
+                    $.ajax({
+                        type: 'POST',
+                        url: form.action,
+                        data: new FormData(form),
+                        contentType: false,
+                        processData: false,
+                        success: function (res) {
+                            if (res.isSuccess) {
+                                swal({
+                                    title: "Thành công!",
+                                    text: "Xóa thành công!",
+                                    type: "success"
+                                });
+
+                                $('#view-all-agents').html(res.html);
+                            }
+                            else {
+                                swal("Có lỗi!", res.message, "error");
+                            }
+
+                        },
+                        error: function (err) {
+                            alert("Có lỗi xảy ra! Vui lòng thử lại!");
+                            console.log(err);
+                        }
+                    });
+                } catch (ex) {
+                    alert("errror roi bạn ơi");
+                    console.log(ex);
+                }
+            } else {
+                swal("Hủy bỏ", "", "error");
+            }
+        });
 
     //prevent default form submit event
     return false;

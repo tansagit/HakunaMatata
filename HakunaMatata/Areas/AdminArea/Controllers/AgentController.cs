@@ -19,6 +19,8 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
         {
             _services = services;
         }
+
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var agents = await _services.GetListAgent();
@@ -101,7 +103,7 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
                 else if (resultCode == 0)
                 {
                     ViewBag.Message = "Mật khẩu cũ không chính xác!";
-                    ViewBag.MesasageCode = 0;                   
+                    ViewBag.MesasageCode = 0;
                 }
                 else
                 {
@@ -119,7 +121,16 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DisableConfirm(int id)
         {
-            var isSuccess = _services.Disable(id);
+            var isSuccess = await _services.Disable(id);
+            return Json(new { isSuccess, html = Helper.RenderRazorViewToString(this, "_ViewAllAgents", await _services.GetListAgent()) });
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirm(int id)
+        {
+            var isSuccess = await _services.Delete(id);
             return Json(new { isSuccess, html = Helper.RenderRazorViewToString(this, "_ViewAllAgents", await _services.GetListAgent()) });
         }
     }

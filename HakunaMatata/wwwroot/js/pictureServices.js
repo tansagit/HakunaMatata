@@ -15,8 +15,9 @@
                 console.log("Status la: " + response.status);
                 if (response.status) {
                     if (response.count === 0) {
-                        var emptyMessage = '<div class="text-info my-3">Hiện chưa có hình ảnh nào</div>';
-                        $('#view-pictures').html(emptyMessage);
+                        var emptyMessage = '&nbsp Hiện chưa có hình ảnh nào';
+                        $('#no-image').html(emptyMessage);
+                        $("#view-pictures").html("");
                     }
                     else {
                         var data = response.data;

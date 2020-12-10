@@ -11,10 +11,7 @@
             <div class="ibox ">
                 <div class="ibox-title">
                     <h5>
-                        Edit real eastate information <small>
-                            With custom checbox and radion
-                            elements.
-                        </small>
+                        Chỉnh sửa thông tin bài đăng
                     </h5>
                 </div>
                 <div class="ibox-content">
@@ -22,7 +19,7 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <input type="hidden" asp-for="Id" />
                         <div class="form-group row">
-                            <label asp-for="Title" class="col-sm-2 col-form-label">Title</label>
+                            <label asp-for="Title" class="col-sm-2 col-form-label">Tiêu đề</label>
                             <div class="col-sm-10">
                                 <textarea type="text" asp-for="Title" class="form-control" required></textarea>
                                 <span asp-validation-for="Title" class="text-danger"></span>
@@ -30,20 +27,21 @@
                         </div>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group row">
-                            <label asp-for="RealEstateTypeId" class="col-sm-2 col-form-label">Loai hinh</label>
+                            <label asp-for="RealEstateTypeId" class="col-sm-2 col-form-label">Loại hình BĐS</label>
 
                             <div class="col-sm-10 col-lg-4">
-                                <select asp-for="RealEstateTypeId" class="form-control form-control-lg m-b" asp-items="ViewBag.RealEstateTypeId">
+                                <select asp-for="RealEstateTypeId" class="form-control form-control-lg m-b" asp-items="ViewBag.RealEstateTypeId" disabled>
                                 </select>
+                                <input type="hidden" asp-for="RealEstateTypeId" />
                                 <span asp-validation-for="RealEstateTypeId" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label asp-for="RoomNumber" class="col-sm-2 col-form-label">So luong phong</label>
+                            <label asp-for="RoomNumber" class="col-sm-2 col-form-label">Số lượng phòng</label>
                             <div class="col-sm-5 col-lg-2">
                                 <div class="input-group m-b">
                                     <span class="input-group-addon">
-                                        <i class="fa fa-sort-numeric-desc"></i>
+                                        <i class="fas fa-check"></i>
                                     </span>
                                     <input asp-for="RoomNumber" type="number" class="form-control">
                                 </div>
@@ -54,8 +52,8 @@
                             <label asp-for="Acreage" class="col-sm-2 col-form-label">Diện tích</label>
                             <div class="col-sm-10 col-lg-4">
                                 <div class="input-group m-b">
-                                    <span class="input-group-addon"><i class="fa fa-arrows-alt"></i></span>
-                                    <input asp-for="Acreage" type="text" placeholder="dien tich" class="form-control">
+                                    <span class="input-group-addon"><i class="fas fa-arrows-alt"></i></span>
+                                    <input asp-for="Acreage" type="text" placeholder="" class="form-control">
                                     <div class="input-group-append">
                                         <span class="input-group-addon">m2</span>
                                     </div>
@@ -64,44 +62,46 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label asp-for="Price" class="col-sm-2 col-form-label">Gia tien</label>
+                            <label asp-for="Price" class="col-sm-2 col-form-label">Giá phòng</label>
                             <div class="col-sm-10 col-lg-4">
                                 <div class="input-group m-b">
-                                    <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
+                                    <span class="input-group-addon"><i class="fas fa-dollar-sign"></i></span>
                                     <input asp-for="Price"
                                            type="text" id="currency-field"
                                            data-type="currency"
-                                           placeholder="1,000,000" class="form-control">
+                                           placeholder="" class="form-control" required>
                                     <div class="input-group-append">
-                                        <span class="input-group-addon">VND</span>
+                                        <span class="input-group-addon">VNĐ</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label asp-for="ElectronicPrice" class="col-sm-2 col-form-label">Gia dien</label>
+                            <label asp-for="ElectronicPrice" class="col-sm-2 col-form-label">Giá điện</label>
                             <div class="col-sm-10">
                                 <div class="row">
                                     <div class="col-sm-10 col-lg-4">
                                         <div class="input-group m-b">
                                             <span class="input-group-addon">
-                                                <i class="fa fa-dollar"></i>
+                                                <i class="fas fa-dollar-sign"></i>
                                             </span>
-                                            <input asp-for="ElectronicPrice"
-                                                   type="text" id="tien-dien"
-                                                   data-type="currency" placeholder="3,500/KW"
+                                            <input type="text"
+                                                   id="tien-wifi"
+                                                   asp-for="ElectronicPrice"
+                                                   data-type="currency"
+                                                   placeholder=""
                                                    class="form-control">
                                             <div class="input-group-append">
-                                                <span class="input-group-addon">VND/KW</span>
+                                                <span class="input-group-addon">VNĐ/KW</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-2 col-lg-2 pt-1">
-                                        <div class="checkbox checkbox-info">
+                                    <div class="col-sm-2 col-lg-2 pt-2">
+                                        <div class="checkbox checkbox-warning d-flex align-items-center">
                                             <input id="free-tien-dien" class="styled" type="checkbox">
                                             <label for="free-tien-dien">
-                                                Free
+                                                Miễn phí
                                             </label>
                                         </div>
                                     </div>
@@ -110,13 +110,13 @@
                         </div>
 
                         <div class="form-group row">
-                            <label asp-for="WaterPrice" class="col-sm-2 col-form-label">Gia nuoc</label>
+                            <label asp-for="WaterPrice" class="col-sm-2 col-form-label">Giá nước</label>
                             <div class="col-sm-10">
                                 <div class="row">
                                     <div class="col-sm-10 col-lg-4">
                                         <div class="input-group m-b">
                                             <span class="input-group-addon">
-                                                <i class="fa fa-dollar"></i>
+                                                <i class="fas fa-dollar-sign"></i>
                                             </span>
                                             <input type="text"
                                                    id="tien-nuoc"
@@ -126,15 +126,15 @@
                                                    class="form-control">
 
                                             <div class="input-group-append">
-                                                <span class="input-group-addon">VND/m3</span>
+                                                <span class="input-group-addon">VMĐ/m<sub style="vertical-align:super">3</sub></span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-2 col-lg-2 pt-1">
-                                        <div class="checkbox checkbox-info">
+                                    <div class="col-sm-2 col-lg-2 pt-2">
+                                        <div class="checkbox checkbox-warning d-flex align-items-center">
                                             <input id="free-tien-nuoc" class="styled" type="checkbox">
                                             <label for="free-tien-nuoc">
-                                                Free
+                                                Miễn phí
                                             </label>
                                         </div>
                                     </div>
@@ -142,13 +142,13 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label asp-for="WifiPrice" class="col-sm-2 col-form-label">Gia wifi</label>
+                            <label asp-for="WifiPrice" class="col-sm-2 col-form-label">Giá wifi</label>
                             <div class="col-sm-10">
                                 <div class="row">
                                     <div class="col-sm-10 col-lg-4">
                                         <div class="input-group m-b">
                                             <span class="input-group-addon">
-                                                <i class="fa fa-dollar"></i>
+                                                <i class="fas fa-dollar-sign"></i>
                                             </span>
                                             <input type="text"
                                                    id="tien-wifi"
@@ -158,15 +158,15 @@
                                                    class="form-control">
 
                                             <div class="input-group-append">
-                                                <span class="input-group-addon">VND/tháng</span>
+                                                <span class="input-group-addon">VNĐ/tháng</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-2 col-lg-2 pt-1">
-                                        <div class="checkbox checkbox-info">
+                                    <div class="col-sm-2 col-lg-2 pt-2">
+                                        <div class="checkbox checkbox-warning d-flex align-items-center">
                                             <input id="free-tien-wifi" class="styled" type="checkbox">
                                             <label for="free-tien-wifi">
-                                                Free
+                                                Miễn phí
                                             </label>
                                         </div>
                                     </div>
@@ -178,10 +178,23 @@
                             <label asp-for="Address" class="col-sm-2 col-form-label">Địa chỉ</label>
                             <div class="col-sm-10">
                                 <div class="input-group m-b">
-                                    <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
+                                    <span class="input-group-addon"><i class="fas fa-map-marker-alt"></i></span>
                                     <input asp-for="Address" type="text" class="form-control" readonly />
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="form-group row" id="expire-day">
+                            <label asp-for="BeginTime" class="col-sm-2 col-form-label">Ngày bắt đầu</label>
+                            <div class="col-sm-10 col-lg-4">
+                                <div class="input-group date">
+                                    <span class="input-group-addon">
+                                        <i class="fas fa-calendar-minus"></i>
+                                    </span>
+                                    <input asp-for="BeginTime" type="text" class="form-control">
+                                </div>
+                            </div>
+                            <span asp-validation-for="BeginTime" class="text-danger col-sm-12 col-lg-4 mt-2"></span>
                         </div>
 
                         <div class="form-group row" id="expire-day">
@@ -189,34 +202,44 @@
                             <div class="col-sm-10 col-lg-4">
                                 <div class="input-group date">
                                     <span class="input-group-addon">
-                                        <i class="fa fa-calendar"></i>
+                                        <i class="fas fa-calendar-plus"></i>
                                     </span>
-
                                     <input asp-for="ExprireTime" type="text" class="form-control">
                                 </div>
                             </div>
+                            <span asp-validation-for="ExprireTime" class="text-danger col-sm-12 col-lg-4 mt-2"></span>
                         </div>
 
+                        <div class="form-group row">
+                            <label asp-for="ContactNumber" class="col-sm-2 col-form-label">Số điện thoại liên lạc</label>
+                            <div class="col-sm-10 col-lg-4">
+                                <div class="input-group m-b">
+                                    <span class="input-group-addon"><i class="fas fa-mobile-alt"></i></span>
+                                    <input asp-for="ContactNumber" type="text" placeholder="" class="form-control">
 
+                                </div>
+                            </div>
+                            <span asp-validation-for="ContactNumber" class="text-danger col-sm-12 col-lg-4 mt-2"></span>
+                        </div>
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Tien ich</label>
+                            <label class="col-sm-2 col-form-label">Tiện ích</label>
 
                             <div class="col-sm-5">
-                                <div class="checkbox checkbox-info">
+                                <div class="checkbox checkbox-warning">
                                     <input asp-for="HasPrivateWc" id="checkbox1" class="styled" type="checkbox">
                                     <label for="checkbox1">
                                         Vệ sinh riêng
                                     </label>
                                 </div>
-                                <div class="checkbox checkbox-info">
+                                <div class="checkbox checkbox-warning">
                                     <input asp-for="HasMezzanine" id="checkbox2" class="styled" type="checkbox">
                                     <label for="checkbox2">
                                         Có gác lửng
                                     </label>
                                 </div>
-                                <div class="checkbox checkbox-info">
+                                <div class="checkbox checkbox-warning">
                                     <input asp-for="AllowCook" id="checkbox3" class="styled" type="checkbox">
                                     <label for="checkbox3">
                                         Cho phép nấu ăn
@@ -224,13 +247,13 @@
                                 </div>
                             </div>
                             <div class="col-sm-5">
-                                <div class="checkbox checkbox-info">
+                                <div class="checkbox checkbox-warning">
                                     <input asp-for="FreeTime" id="checkbox4" class="styled" type="checkbox">
                                     <label for="checkbox4">
                                         Giờ giấc tự do
                                     </label>
                                 </div>
-                                <div class="checkbox checkbox-info">
+                                <div class="checkbox checkbox-warning">
                                     <input asp-for="SecurityCamera" id="checkbox5" class="styled" type="checkbox">
                                     <label for="checkbox5">
                                         Camera an ninh
@@ -245,27 +268,29 @@
                             <div class="col-lg-12">
                                 <div class="ibox ">
                                     <div class="ibox-title">
-                                        <h5>Hình ảnh</h5>
+                                        <h5>Hình ảnh</h5><span id="no-image" class="text-info"></span>
                                     </div>
-                                    <div class="ibox-content no-padding">
+                                    <div class="ibox-content no-padding no-top-border">
                                         <div class="row">
                                             <div class="col-12">
                                                 <div id="view-pictures">
-                                                    @*@await Html.PartialAsync("_ViewPictures", Model.Pictures)*@
+
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="row">
-                                            <div class="col-lg-3 col-sm-12">
+                                            <div class="col-lg-3 col-sm-12 pb-2">
                                                 <div class="custom-file">
                                                     <input asp-for="Files" class="custom-file-input" type="file" multiple />
-                                                    <label class="custom-file-label" asp-for="Files">Choose more files</label>
+                                                    <label class="custom-file-label" asp-for="Files">Chọn hình ảnh</label>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-9 col-sm-12">
+                                            <div class="col-lg-12 col-sm-12">
                                                 <div class="lightBoxGallery"></div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -276,27 +301,9 @@
                                 <div class="ibox ">
                                     <div class="ibox-title">
                                         <h5>Mô tả</h5>
-                                        <div class="ibox-tools">
-                                            <a class="collapse-link">
-                                                <i class="fa fa-chevron-up"></i>
-                                            </a>
-                                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                                <i class="fa fa-wrench"></i>
-                                            </a>
-                                            <ul class="dropdown-menu dropdown-user">
-                                                <li>
-                                                    <a href="#" class="dropdown-item">Config option 1</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" class="dropdown-item">Config option 2</a>
-                                                </li>
-                                            </ul>
-                                            <a class="close-link">
-                                                <i class="fa fa-times"></i>
-                                            </a>
-                                        </div>
+
                                     </div>
-                                    <div class="ibox-content no-padding">
+                                    <div class="ibox-content no-padding no-top-border">
                                         <textarea style="min-height:300px" type="text" asp-for="Description" class="form-control summernote" required></textarea>
                                     </div>
                                 </div>
@@ -305,8 +312,8 @@
 
                         <div class="form-group row">
                             <div class="col-sm-4 col-sm-offset-2">
-                                <a class="btn btn-white btn-sm" asp-action="Index">Cancel</a>
-                                <input class="btn btn-primary btn-sm" type="submit" value="Save changes" />
+                                <a class="btn btn-white btn-sm" asp-action="ClientRealEstateList">Hủy bỏ</a>
+                                <input class="btn btn-yellow btn-sm" type="submit" value="Cập nhật thông tin" />
                             </div>
                         </div>
                     </form>
@@ -444,7 +451,7 @@
 
 <script id="picture-template" type="x-tmpl-mustache">
     <div class="artist-collection-photo">
-        <img width="200" height="200" src="{{PictureUrl}}" class="img-fluid">
+        <img width="200" height="200" style="object-fit:cover;" src="{{PictureUrl}}" class="img-fluid">
         <button onclick="pictureServices.removePicture({{PictureId}})" id="picture-remove-btn" class="close" type="button">×</button>
     </div>
 </script>
@@ -461,19 +468,29 @@
                     var reader = new FileReader();
 
                     reader.onload = function (event) {
+                        var img = new Image();
+                        var reviewWidth, renderWidth;
+                        img.src = event.target.result;
+
+                        img.onload = function () {
+                            reviewWidth = Number((this.width * 200) / this.height);
+                            //console.log("1: " + reviewWidth);
+                        };
+
+                        renderWidth = isNaN(reviewWidth) ? 200 : reviewWidth;
+                        //console.log("2: " + renderWidth);
+
                         $($.parseHTML('<img>')).attr({
                             'src': event.target.result,
                             'class': 'img-fluid',
-                            'style': 'width: 200px; height: 200px; border-radius: 7px',
+                            'style': 'width:' + reviewWidth + 'px; height: 200px; border-radius: 7px',
                             'alt': 'preview'
                         }).appendTo(placeToInsertImagePreview);
 
                     }
-
                     reader.readAsDataURL(input.files[i]);
                 }
             }
-
         };
 
         $('#Files').on('change', function () {

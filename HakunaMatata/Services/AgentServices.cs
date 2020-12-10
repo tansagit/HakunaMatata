@@ -13,6 +13,7 @@ namespace HakunaMatata.Services
         Task<IEnumerable<Agent>> GetListAgent();
         Task<VM_Agent> GetDetails(int id);
         Task<bool> Disable(int id);
+        Task<bool> Delete(int id);
         VM_Agent GetUserInfo(int id);
         bool UpdateProfile(VM_Agent updateProfile);
         int UpdatePassword(VM_ChangePassword data);
@@ -33,6 +34,18 @@ namespace HakunaMatata.Services
             {
                 if (!agent.IsActive) return false;
                 agent.IsActive = false;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            else return false;
+        }
+
+        public async Task<bool> Delete(int id)
+        {
+            var agent = await _context.Agent.FindAsync(id);
+            if (agent != null)
+            {
+                _context.Remove(agent);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -72,6 +85,7 @@ namespace HakunaMatata.Services
         {
             return await _context.Agent
                 .Include(a => a.Level)
+                .Where(a => a.LevelId > 1)
                 .ToListAsync();
         }
 

@@ -4,6 +4,9 @@
     <script src="~/admin/js/services/realEstateServices.js"></script>
 }
 
+@{
+    int userId = User.Identity.IsAuthenticated ? Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == "UserId").Value) : 0;
+}
 
 <div class="row">
     <div class="col-6 mt-2 pb-3">
@@ -43,14 +46,31 @@
                 <i class="fas fa-info" al></i>
             </a>
             @*<a href="@Url.Action("Edit","RealEstate")?id={{Id}}" title="Chỉnh sửa" class="btn btn-primary btn-circle">
-                <i class="fas fa-pencil-alt"></i>
-            </a>*@
+                    <i class="fas fa-pencil-alt"></i>
+                </a>*@
             <form onsubmit="return realEstateServices.disableRealEstate(this);" class="d-inline">
                 <input type="hidden" name="id" value="{{Id}}" />
                 <button class="btn btn-warning btn-circle" title="Khóa" type="submit">
                     <i class="fas fa-store-alt-slash"></i>
                 </button>
             </form>
+            <form onsubmit="return realEstateServices.deleteRealEstate(this);" class="d-inline">
+                <input type="hidden" name="id" value="{{Id}}" />
+                <input type="hidden" name="userId" value="@userId" />
+                <button class="btn btn-danger btn-circle" title="Xóa" type="submit">
+                    <i class="fas fa-times"></i>
+                </button>
+            </form>
+            @*<form asp-area="AdminArea" asp-controller="RealEstate" asp-action="Disable" asp-route-id="{Ư" asp-route-userId="@item.AgentId" onsubmit="return DisableRealEstate(this);" class="d-inline">
+                    <button class="btn btn-default btn-circle" title="Khóa bài viết" type="submit">
+                        <i class="fas fa-lock"></i>
+                    </button>
+                </form>
+                <form asp-area="AdminArea" asp-controller="RealEstate" asp-action="Delete" asp-route-id="@item.Id" asp-route-userId="@item.AgentId" onsubmit="return DeleteRealEstate(this);" class="d-inline">
+                    <button class="btn btn-danger btn-circle" title="Xóa bài viết" type="submit">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </form>*@
         </td>
     </tr>
 </script>

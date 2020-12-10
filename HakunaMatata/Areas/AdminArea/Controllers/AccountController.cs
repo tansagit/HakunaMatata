@@ -122,9 +122,9 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
         }
 
         [HttpPost]
-        public IActionResult CheckExist(string phoneNumber)
+        public IActionResult CheckExist(string loginName)
         {
-            bool isExisted = _services.CheckExist(phoneNumber);
+            bool isExisted = _services.CheckExist(loginName);
             return Json(new { isExisted });
         }
 
