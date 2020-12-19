@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Twilio;
 using Twilio.Exceptions;
@@ -18,12 +16,9 @@ namespace HakunaMatata.Services
     public class Verification : IVerification
     {
 
-        //private readonly Configuration.Twilio _config;
-
         public Verification()
         {
-            //_config = configuration;
-            TwilioClient.Init("AC64dd69e65a86e131c6a47011ad0bc1c1", "fd75e7ac92655627c81e9d71c7ff2012");
+            TwilioClient.Init("XXX", "XXX");
         }
 
         public async Task<VerificationResult> StartVerificationAsync(string phoneNumber)
@@ -33,7 +28,7 @@ namespace HakunaMatata.Services
                 var verificationResource = await VerificationResource.CreateAsync(
                     to: phoneNumber,
                     channel: "sms",
-                    pathServiceSid: "VA546d60e5b7699af699102ba7c570a806"
+                    pathServiceSid: "XXX"
                 );
                 return new VerificationResult(verificationResource.Sid);
             }
@@ -50,7 +45,7 @@ namespace HakunaMatata.Services
                 var verificationCheckResource = await VerificationCheckResource.CreateAsync(
                     to: phoneNumber,
                     code: code,
-                    pathServiceSid: "VA546d60e5b7699af699102ba7c570a806"
+                    pathServiceSid: "XXX"
                 );
                 return verificationCheckResource.Status.Equals("approved") ?
                     new VerificationResult(verificationCheckResource.Sid) :
