@@ -133,8 +133,11 @@ namespace HakunaMatata.Services
             {
                 source = source.Where(s => s.Map.Address.Contains(searchKey)
                                          || s.Agent.AgentName.Contains(searchKey)
-                                         || s.ReaEstateType.RealEstateTypeName.Contains(searchKey))
-                                .OrderByDescending(s => s.PostTime);
+                                         || s.ReaEstateType.RealEstateTypeName.Contains(searchKey)
+                                         || s.PostTime.ToString().Contains(searchKey)
+                                         || s.ExprireTime.ToString().Contains(searchKey)
+                                         || s.RealEstateDetail.Price.ToString().Contains(searchKey)
+                                      ).OrderByDescending(s => s.PostTime);
             }
 
             IQueryable<RealEstateViewModel> results = (from item in source
@@ -614,41 +617,44 @@ namespace HakunaMatata.Services
                                 .Include(r => r.Agent)
                                 .Include(r => r.Map)
                                 .Include(r => r.Picture)
-                                .OrderByDescending(r => r.PostTime)
+                                .OrderByDescending(r => r.IsAvaiable)
+                                .ThenByDescending(r => r.PostTime)
                                 .AsQueryable();
 
-                if (source != null)
+                if (source != null && condition != null)
                 {
-                    //neu dau vao co dieu kien thi moi loc tin
-                    //truong hop go URL truc tiep den .../realestate/index thi condition == null
-                    if (condition != null)
+                    if (condition.Type > 0)
+                        source = source.Where(s => s.RealEstateTypeId == condition.Type);
+                    if (condition.City > 0)
+                        source = source.Where(x => x.Map.CityId == condition.City);
+                    if (condition.District > 0)
+                        source = source.Where(x => x.Map.DistrictId == condition.District);
+
+                    var priceRange = Helper.GetPriceRange(condition.PriceRange);
+                    var minPrice = priceRange[0];
+                    var maxPrice = priceRange[1];
+                    source = source.Where(x =>
+                        x.RealEstateDetail.Price >= minPrice && x.RealEstateDetail.Price <= maxPrice);
+
+                    var acreageRange = Helper.GetAcreageRange(condition.AcreageRange);
+                    var minAcreage = acreageRange[0];
+                    var maxAcreage = acreageRange[1];
+                    source = source.Where(x =>
+                       x.RealEstateDetail.Acreage >= minAcreage && x.RealEstateDetail.Acreage <= maxAcreage);
+
+                    if (!string.IsNullOrEmpty(condition.SearchString.Trim()))
                     {
-                        if (condition.Type > 0)
-                            source = source.Where(s => s.RealEstateTypeId == condition.Type);
-                        if (condition.City > 0)
-                            source = source.Where(x => x.Map.CityId == condition.City);
-                        if (condition.District > 0)
-                            source = source.Where(x => x.Map.DistrictId == condition.District);
-
-                        var priceRange = Helper.GetPriceRange(condition.PriceRange);
-                        var minPrice = priceRange[0];
-                        var maxPrice = priceRange[1];
-                        source = source.Where(x =>
-                            x.RealEstateDetail.Price >= minPrice && x.RealEstateDetail.Price <= maxPrice);
-
-                        var acreageRange = Helper.GetAcreageRange(condition.AcreageRange);
-                        var minAcreage = acreageRange[0];
-                        var maxAcreage = acreageRange[1];
-                        source = source.Where(x =>
-                           x.RealEstateDetail.Acreage >= minAcreage && x.RealEstateDetail.Acreage <= maxAcreage);
-
-
-                        if (!string.IsNullOrEmpty(condition.SearchString))
-                            source = source.Where(
-                                x => x.Map.Address.Contains(condition.SearchString));
+                        if (DateTime.TryParse(condition.SearchString, out DateTime searchDate))
+                        {
+                            source = source.Where(x => x.PostTime < searchDate && x.ExprireTime > searchDate);
+                        }
+                        else
+                        {
+                            source = source.Where(x => x.Map.Address.Contains(condition.SearchString)
+                                                     || x.RealEstateDetail.Price.ToString().Contains(condition.SearchString));
+                        }
                     }
                 }
-
 
                 IQueryable<Result> results = (from item in source
                                               select new Result

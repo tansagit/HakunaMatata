@@ -13,6 +13,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 
 namespace HakunaMatata.Helpers
 {
@@ -389,10 +390,30 @@ namespace HakunaMatata.Helpers
             return result;
         }
 
+        /// <summary>
+        /// convert to vietnamese currency
+        /// </summary>
+        /// <param name="money"></param>
+        /// <returns></returns>
         public static string VNCurrencyFormat(string money)
         {
             CultureInfo cul = CultureInfo.GetCultureInfo("vi-VN");
             return double.Parse(money).ToString("#,###", cul.NumberFormat);
+        }
+
+        /// <summary>
+        /// remove unicode characters
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static string RemoveDiacritics(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return text;
+
+            text = text.ToLower().Normalize(NormalizationForm.FormD);
+            var chars = text.Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark).ToArray();
+            return new string(chars).Normalize(NormalizationForm.FormC);
         }
     }
 }
@@ -406,7 +427,7 @@ public class NoDirectAccessAttribute : ActionFilterAttribute
             filterContext.HttpContext.Request.GetTypedHeaders().Host.Host.ToString() != filterContext.HttpContext.Request.GetTypedHeaders().Referer.Host.ToString())
         {
             filterContext.Result = new RedirectToRouteResult(new
-                   RouteValueDictionary(new { area = "AdminArea", controller = "Home", action = "Index" }));
+                   RouteValueDictionary(new { area = "AdminArea", controller = "RealEstate", action = "ClientRealEstateList" }));
         }
     }
 }

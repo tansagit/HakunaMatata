@@ -21,7 +21,7 @@
     var statusCss = Model.Status.Equals("Còn phòng") ? "text-success" : "text-disable";
     var statusIcon = Model.Status.Equals("Còn phòng") ? "fa fa-check" : "fa fa-times";
 
-    var isExpired = Convert.ToDateTime(Model.ExprireTime) >= DateTime.Now.AddDays(1) ? "d-none" : "d-block";
+    var isExpired = Convert.ToDateTime(Model.ExprireTime) >= DateTime.Now ? "d-none" : "d-block";
 }
 
 <!-- breadcrumb area start -->
@@ -268,14 +268,14 @@
                     </ul>
                 </div>
                 <div class="widget mt-3 pl-3">
-                    <div class="text-danger h6 pt-3">Xem theo quận huyện</div>
+                    <div class="text-danger h6 pt-3">Xem theo quận/huyện</div>
                     <ul class="ml-2">
                         <li><a asp-action="Index" asp-route-city="1" asp-route-district="1">Phòng trọ Hải Châu</a> </li>
-                        <li><a asp-action="Index" asp-route-city="1" asp-route-district="2">Phong trọ Cẩm Lệ</a> </li>
-                        <li><a asp-action="Index" asp-route-city="1" asp-route-district="3">Phong trọ Thanh Khê</a> </li>
-                        <li><a asp-action="Index" asp-route-city="1" asp-route-district="4">Phong trọ Ngũ Hành Sơn</a> </li>
-                        <li><a asp-action="Index" asp-route-city="1" asp-route-district="5">Phong trọ Sơn Trà</a> </li>
-
+                        <li><a asp-action="Index" asp-route-city="1" asp-route-district="2">Phòng trọ Cẩm Lệ</a> </li>
+                        <li><a asp-action="Index" asp-route-city="1" asp-route-district="3">Phòng trọ Thanh Khê</a> </li>
+                        <li><a asp-action="Index" asp-route-city="1" asp-route-district="4">Phòng trọ Ngũ Hành Sơn</a> </li>
+                        <li><a asp-action="Index" asp-route-city="1" asp-route-district="5">Phòng trọ Sơn Trà</a> </li>
+                        <li><a asp-action="Index" asp-route-city="1" asp-route-district="13">Phòng trọ Liên Chiểu</a> </li>
                     </ul>
                 </div>
             </div>
@@ -298,14 +298,14 @@
 <script>
     // Initialize and add the map
     function initMap() {
-        // The location of Uluru
+        // The location of real esate
         var latitude = document.getElementById('lat').value;
         var longtitude = document.getElementById('longt').value;
         var loca = { lat: Number(latitude), lng: Number(longtitude) };
-        // The map, centered at Uluru
+        // The map, centered at real estate
         var map = new google.maps.Map(
-            document.getElementById('map'), { zoom: 15, center: loca });
-        // The marker, positioned at Uluru
+            document.getElementById('map'), { zoom: 17, center: loca });
+        // The marker
         var marker = new google.maps.Marker({ position: loca, map: map });
     }
 </script>

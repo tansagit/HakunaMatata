@@ -315,6 +315,7 @@ D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\Microsoft.VisualSt
 D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\Microsoft.VisualStudio.Web.CodeGeneration.Templating.dll
 D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\Microsoft.VisualStudio.Web.CodeGeneration.Utils.dll
 D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\Microsoft.VisualStudio.Web.CodeGenerators.Mvc.dll
+D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\Microsoft.Win32.SystemEvents.dll
 D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
 D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\Newtonsoft.Json.Bson.dll
 D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\NuGet.Frameworks.dll
@@ -324,6 +325,7 @@ D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\System.Composition
 D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\System.Composition.Runtime.dll
 D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\System.Composition.TypedParts.dll
 D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\System.Configuration.ConfigurationManager.dll
+D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\System.Drawing.Common.dll
 D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\System.IdentityModel.Tokens.Jwt.dll
 D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\System.Runtime.Caching.dll
 D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\System.Security.Cryptography.ProtectedData.dll
@@ -387,12 +389,17 @@ D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\zh-Hans\Microsoft.
 D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
 D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.1\Microsoft.Data.SqlClient.dll
 D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.1\Microsoft.Data.SqlClient.dll
+D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
 D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\runtimes\win-arm64\native\sni.dll
 D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\runtimes\win-x64\native\sni.dll
 D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\sni.dll
+D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
+D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
 D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.0\System.Runtime.Caching.dll
 D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.0\System.Runtime.Caching.dll
 D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\HakunaMatata.MvcApplicationPartsAssemblyInfo.cs
+D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\HakunaMatata.MvcApplicationPartsAssemblyInfo.cache
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\HakunaMatata.RazorAssemblyInfo.cache
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\HakunaMatata.RazorAssemblyInfo.cs
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\HakunaMatata.AssemblyInfoInputs.cache
@@ -408,6 +415,8 @@ D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Areas\AdminA
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Areas\AdminArea\Views\Account\Register.cshtml.g.cs
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Areas\AdminArea\Views\Agent\Details.cshtml.g.cs
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Areas\AdminArea\Views\Agent\Index.cshtml.g.cs
+D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Areas\AdminArea\Views\Agent\UpdatePassword.cshtml.g.cs
+D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Areas\AdminArea\Views\Agent\UpdateProfile.cshtml.g.cs
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Areas\AdminArea\Views\Agent\_ViewAllAgents.cshtml.g.cs
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Areas\AdminArea\Views\FAQ\CreateOrEdit.cshtml.g.cs
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Areas\AdminArea\Views\FAQ\Index.cshtml.g.cs
@@ -443,6 +452,7 @@ D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\Home\I
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\Home\Privacy.cshtml.g.cs
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\RealEstate\Details.cshtml.g.cs
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\RealEstate\Index.cshtml.g.cs
+D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\RealEstate\_recommendList.cshtml.g.cs
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\Shared\Error.cshtml.g.cs
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_Layout.cshtml.g.cs
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_LoginPartial.cshtml.g.cs
@@ -457,14 +467,4 @@ D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\staticwebassets\Ha
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\staticwebassets\HakunaMatata.StaticWebAssets.xml
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\HakunaMatata.dll
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\HakunaMatata.pdb
-D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Views\RealEstate\_recommendList.cshtml.g.cs
-D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Areas\AdminArea\Views\Agent\UpdateProfile.cshtml.g.cs
-D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\Razor\Areas\AdminArea\Views\Agent\UpdatePassword.cshtml.g.cs
 D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\HakunaMatata.csprojAssemblyReference.cache
-D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\Microsoft.Win32.SystemEvents.dll
-D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\System.Drawing.Common.dll
-D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
-D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
-D:\DUT\DATN\HakunaMatata\HakunaMatata\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
-D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\HakunaMatata.MvcApplicationPartsAssemblyInfo.cs
-D:\DUT\DATN\HakunaMatata\HakunaMatata\obj\Debug\netcoreapp3.1\HakunaMatata.MvcApplicationPartsAssemblyInfo.cache
