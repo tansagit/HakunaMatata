@@ -14,6 +14,7 @@ namespace HakunaMatata.Services
     public interface IRealEstateServices
     {
         List<VM_RealEstate> GetList();
+        List<VM_Location> GetAllActiveLocation();
 
         /// <summary>
         /// use for paging, search in admin page
@@ -32,6 +33,7 @@ namespace HakunaMatata.Services
         /// </summary>
         /// <returns></returns>
         List<RealEstateViewModel> GetCustomerConFirmList();
+        List<RealEstateViewModel> CustomerExpireList();
 
         /// <summary>
         /// use for client, filter
@@ -39,8 +41,6 @@ namespace HakunaMatata.Services
         /// <param name="id"></param>
         /// <returns></returns>
         IQueryable<Result> Filter(Condition condition);
-
-        //VM_RealEstateDetails GetById(int? id);
         Task<VM_RealEstateDetails> GetRealEstateDetails(int? id);
         int AddNewRealEstate(RealEstate realEstate);
         bool AddRealEstateDetails(RealEstateDetail details);
@@ -126,26 +126,35 @@ namespace HakunaMatata.Services
                             .Include(r => r.RealEstateDetail)
                             .Include(r => r.Agent)
                             .Include(r => r.Map)
-                            .OrderByDescending(r => r.PostTime)
+                            .Where(r => r.Map.Address.Contains(searchKey)
+                                     || r.Agent.AgentName.Contains(searchKey)
+                                     || r.ReaEstateType.RealEstateTypeName.Contains(searchKey)
+                                     || r.RealEstateDetail.Price.ToString().Contains(searchKey)
+                                  )
+                            .OrderByDescending(r => r.IsActive)
+                            .ThenByDescending(r => r.IsAvaiable)
+                            .ThenByDescending(r => r.ExprireTime)
                             .AsQueryable();
 
-            if (!string.IsNullOrEmpty(searchKey))
-            {
-                source = source.Where(s => s.Map.Address.Contains(searchKey)
-                                         || s.Agent.AgentName.Contains(searchKey)
-                                         || s.ReaEstateType.RealEstateTypeName.Contains(searchKey)
-                                         || s.PostTime.ToString().Contains(searchKey)
-                                         || s.ExprireTime.ToString().Contains(searchKey)
-                                         || s.RealEstateDetail.Price.ToString().Contains(searchKey)
-                                      ).OrderByDescending(s => s.PostTime);
-            }
+            //if (!string.IsNullOrEmpty(searchKey))
+            //{
+            //    source = source.Where(s => s.Map.Address.Contains(searchKey)
+            //                             || s.Agent.AgentName.Contains(searchKey)
+            //                             || s.ReaEstateType.RealEstateTypeName.Contains(searchKey)
+            //                             || EF.Functions.Contains(s.PostTime.ToString("dd/MM/yyyy"), searchKey)
+            //                             || EF.Functions.Contains(s.ExprireTime.Value.ToString("dd/MM/yyyy"), searchKey)
+            //                             || EF.Functions.Contains(s.RealEstateDetail.Price.ToString(), searchKey)
+            //                          );
+            //}
 
             IQueryable<RealEstateViewModel> results = (from item in source
                                                        select new RealEstateViewModel
                                                        {
                                                            Id = item.Id,
                                                            Street = item.Map.Address,
+                                                           Price = Helper.VNCurrencyFormat(item.RealEstateDetail.Price.ToString()),
                                                            PostDate = item.PostTime.ToString("dd/MM/yyyy"),
+                                                           ExpireTime = item.ExprireTime == null ? string.Empty : item.ExprireTime.Value.ToString("dd/MM/yyyy"),
                                                            Agent = item.Agent.AgentName,
                                                            Type = item.ReaEstateType.RealEstateTypeName,
                                                            Status = Helper.GetStatus(item)
@@ -201,6 +210,37 @@ namespace HakunaMatata.Services
                            .Include(r => r.Agent)
                            .Include(r => r.Map)
                            .Where(r => !r.IsConfirm)
+                           .OrderByDescending(r => r.PostTime)
+                           .ToList();
+
+            foreach (var item in source)
+            {
+                var viewModelItem = new RealEstateViewModel
+                {
+                    Id = item.Id,
+                    Street = item.Map.Address,
+                    Price = Helper.VNCurrencyFormat(item.RealEstateDetail.Price.ToString()),
+                    Agent = item.Agent.AgentName,
+                    PostDate = item.PostTime.ToString("dd/MM/yyyy"),
+                    BeginTime = item.BeginTime.ToString("dd/MM/yyyy"),
+                    ExpireTime = item.ExprireTime == null ? string.Empty : item.ExprireTime.Value.ToString("dd/MM/yyyy"),
+                    Type = item.ReaEstateType.RealEstateTypeName,
+                    Status = Helper.GetStatus(item)
+                };
+                results.Add(viewModelItem);
+            }
+
+            return results;
+        }
+        public List<RealEstateViewModel> CustomerExpireList()
+        {
+            var results = new List<RealEstateViewModel>();
+            var source = _context.RealEstate
+                           .Include(r => r.RealEstateDetail)
+                           .Include(r => r.ReaEstateType)
+                           .Include(r => r.Agent)
+                           .Include(r => r.Map)
+                           .Where(r => r.IsActive && r.ExprireTime < DateTime.Now)
                            .OrderByDescending(r => r.PostTime)
                            .ToList();
 
@@ -619,6 +659,7 @@ namespace HakunaMatata.Services
                                 .Include(r => r.Picture)
                                 .OrderByDescending(r => r.IsAvaiable)
                                 .ThenByDescending(r => r.PostTime)
+                                .ThenByDescending(r => r.ExprireTime)
                                 .AsQueryable();
 
                 if (source != null && condition != null)
@@ -727,7 +768,7 @@ namespace HakunaMatata.Services
                                                 .Include(r => r.ReaEstateType)
                                                 .Where(r => r.Id != realEstate.Id
                                                 && r.RealEstateTypeId == realEstate.RealEstateTypeId
-                                                && r.IsActive && r.ConfirmStatus == 1 && r.ExprireTime > DateTime.Now
+                                                && r.IsActive && r.ConfirmStatus == 1 && r.ExprireTime > DateTime.Now && r.IsAvaiable
                                                 && (r.Map.WardId == realEstate.Map.WardId
                                                 || r.Map.DistrictId == realEstate.Map.DistrictId))
                                                 .OrderByDescending(r => r.PostTime)
@@ -748,6 +789,24 @@ namespace HakunaMatata.Services
                               }).ToList();
                 return result;
             }
+        }
+
+        public List<VM_Location> GetAllActiveLocation()
+        {
+            var source = _context.RealEstate.Where(r => r.IsActive && r.IsAvaiable && r.ExprireTime > DateTime.Now)
+                .Include(r => r.RealEstateDetail).Include(r => r.Map).ToList();
+
+            var result = (from item in source
+                          select new VM_Location
+                          {
+                              Id = item.Id,
+                              Address = Helper.GetStreet(item.Map.Address),
+                              Price = item.RealEstateDetail.Price,
+                              Latitude = item.Map.Latitude,
+                              Longtitude = item.Map.Longtitude
+                          }).ToList();
+
+            return result;
         }
     }
 

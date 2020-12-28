@@ -34,7 +34,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @if (Model.Count() == 0)
+                                @if (Model == null || Model.Count() == 0)
                                 {
                                     <tr>
                                         <td class="no-post-td">Tất cả đã được xác nhận. Bấm <a asp-controller="RealEstate" asp-action="Index">vào đây</a>  để xem tất cả bài đăng</td>

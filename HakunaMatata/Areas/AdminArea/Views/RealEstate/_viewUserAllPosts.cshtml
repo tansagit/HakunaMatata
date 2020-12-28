@@ -1,8 +1,9 @@
 ﻿@model IEnumerable<HakunaMatata.Models.ViewModels.RealEstateViewModel>
 
 @{
-    var alertType = @ViewBag.MessageType == 1 ? "alert-success" : "alert-danger";
+    var alertType = ViewBag.MessageType == 1 ? "alert-success" : "alert-danger";
     int i = 1;
+    var statusLabel = string.Empty;
 }
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -45,16 +46,26 @@
                                 {
                                     @foreach (var item in Model)
                                     {
+                                        statusLabel = item.Status switch
+                                        {
+                                            "Bị từ chối" => "",
+                                            "Chờ xác nhận" => "label-success",
+                                            "Còn phòng" => "label-primary",
+                                            "Hết hạn" => "label-warning",
+                                            "Đã khóa" => "label-danger",
+                                            _ => ""
+                                        };
+
                                         <tr>
                                             <td class="text-center">@(i++)</td>
                                             <td>
-                                                <a asp-action="Details" asp-route-id="@item.Id" class="text-left">@item.Street</a>
+                                                <a asp-area="AdminArea" asp-action="Details" asp-route-id="@item.Id" class="text-left">@item.Street</a>
                                             </td>
                                             <td class="text-center">@item.Type</td>
                                             <td class="text-center">@item.Price</td>
                                             <td class="text-center">@item.BeginTime</td>
                                             <td class="text-center">@item.ExpireTime</td>
-                                            <td>@item.Status</td>
+                                            <td class="text-center"><span class="label @statusLabel">@item.Status</span></td>
 
                                             <td class="text-center">
                                                 <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-circle" title="Cập nhật" type="button">

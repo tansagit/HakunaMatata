@@ -4,6 +4,7 @@ using HakunaMatata.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Linq;
 
@@ -32,9 +33,10 @@ namespace HakunaMatata.Controllers
 
             ViewData["Cities"] = new SelectList(cityList, "Id", "CityName");
             ViewData["Types"] = new SelectList(typeList, "Id", "RealEstateTypeName");
+
             return View();
         }
-    
+
         public IActionResult Privacy()
         {
             return View();

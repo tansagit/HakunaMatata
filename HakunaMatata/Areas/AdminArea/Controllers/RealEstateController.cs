@@ -11,17 +11,19 @@ using System.Threading.Tasks;
 
 namespace HakunaMatata.Areas.AdminArea.Controllers
 {
-    [Area("AdminArea")]
     [Authorize]
+    [Area("AdminArea")]
     public class RealEstateController : Controller
     {
         private readonly IRealEstateServices _realEstateServices;
         private readonly IFileServices _fileServices;
+        //private readonly IAccountServices _accountServices;
 
         public RealEstateController(IRealEstateServices realEstateServices, IFileServices fileServices)
         {
             _realEstateServices = realEstateServices;
             _fileServices = fileServices;
+            //_accountServices = accountServices;
         }
 
         [HttpGet]
@@ -37,8 +39,11 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
         /// </summary>
         /// <param name="pageIndex">Pagination index</param>
         /// <returns></returns>
-        public async Task<IActionResult> LoadData(int pageIndex, string searchKey)
+        [HttpPost]
+        public async Task<IActionResult> LoadData(VM_FilterInfo info)
         {
+            var pageIndex = info.pageIndex;
+            var searchKey = info.searchKey ?? string.Empty;
             var source = _realEstateServices.GetRealEstates(searchKey);
             var count = await source.CountAsync();
             var items = await source.Skip((pageIndex - 1) * 20).Take(20).ToListAsync();
@@ -81,11 +86,25 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
         public IActionResult CustomerConfirmList()
         {
             var confirmList = _realEstateServices.GetCustomerConFirmList();
-            if (confirmList == null || !confirmList.Any()) return RedirectToAction("Index");
             return View(confirmList);
         }
 
+
+        /// <summary>
+        /// Client's waiting for confirm post
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
+        [Authorize(Roles = "Admin,Manager")]
+        [Route("danh-sach-qua-han")]
+        public IActionResult CustomerExpireList()
+        {
+            var expireList = _realEstateServices.CustomerExpireList();
+            return View(expireList);
+        }
+
+        [HttpGet]
+        [Route("chi-tiet")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -166,11 +185,18 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
             }
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id, [FromServices] IAccountServices _accountServices)
         {
             if (id == null)
             {
                 return NotFound();
+            }
+
+            var currentUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == "UserId").Value);
+
+            if (!_accountServices.IsValidUser(currentUserId, Convert.ToInt32(id)))
+            {
+                return RedirectToAction("Denied", "Account");
             }
 
             var details = await _realEstateServices.GetRealEstateDetails(id);
@@ -293,7 +319,14 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
                 return Json(new { isSuccess = false, message = "User không hợp lệ!" });
             }
 
-            else return Json(new { isSuccess = true, html = Helper.RenderRazorViewToString(this, "_viewUserAllPosts", _realEstateServices.GetUserAllPosts(userId)) });
+            else if (userId != 1)
+            {
+                return Json(new { isSuccess = true, html = Helper.RenderRazorViewToString(this, "_viewUserAllPosts", _realEstateServices.GetUserAllPosts(userId)) });
+            }
+            else
+            {
+                return Json(new { isSuccess = true, isAdmin = true, html = Helper.RenderRazorViewToString(this, "_viewExpireList", _realEstateServices.CustomerExpireList()) });
+            }
 
         }
     }

@@ -18,8 +18,8 @@
     <link rel="stylesheet" href="~/assets/css/style.css">
     <!-- responsive Stylesheet -->
     <link rel="stylesheet" href="~/assets/css/responsive.css">
-
     <link rel="stylesheet" href="~/css/awesome-bootstrap-checkbox.css" />
+    <script src="~/admin/js/jquery-3.1.1.min.js"></script>
 </head>
 
 <body>
@@ -48,13 +48,24 @@
                     </button>
                 </div>
                 <div class="logo">
-                    <a href="#"><img src="~/assets/img/icon.png" style="width: 50px;" alt="logo"></a>
+                    <a asp-controller="Home" asp-action="Index" ><img src="~/assets/img/final-logo.png" style="width: 200px;" alt="logo"></a>
                 </div>
 
                 <div class="collapse navbar-collapse" id="realdeal_main_menu">
+                    <ul class="navbar-nav menu-open">                      
+                        <li class="menu-item-has-children">
+                            <a href="#">Menu</a>
+                            <ul class="sub-menu">
+                                <li><a asp-controller="RealEstate" asp-area="AdminArea" asp-action="ClientRealEstateList" target="_blank">Trang quản lý</a></li>
+                                <li><a asp-controller="Account" asp-area="AdminArea" asp-action="Login" target="_blank">Đăng nhập</a></li>
+                                <li><a asp-controller="Account" asp-area="AdminArea" asp-action="Register" target="_blank">Đăng kí</a></li>
+                                <li><a href="#map">Bản đồ</a></li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
                 <div class="nav-right-part nav-right-part-desktop">
-                    <a class="btn btn-yellow" asp-controller="RealEstate" asp-area="AdminArea" asp-action="Create"  target="_blank">
+                    <a class="btn btn-yellow" asp-controller="RealEstate" asp-area="AdminArea" asp-action="Create" target="_blank">
                         ĐĂNG TIN<span class="right">
                             <i class="la la-plus"></i>
                         </span>
@@ -84,25 +95,25 @@
         <div class="container">
             <div class="footer-top">
                 <div class="row">
-                    <div class="col-sm-4">
-                        <a class="footer-logo" href="#"><img src="~/assets/img/footer-logo.png" alt="logo"></a>
+                    <div class="col-sm-6">
+                        <a class="footer-logo" asp-controller="Home" asp-action="Index"><img src="~/assets/img/final-logo.png" style="width: 250px;" alt="logo"></a>
                     </div>
-                    <div class="col-sm-8">
+                    <div class="col-sm-6">
                         <div class="footer-social text-sm-right">
                             <span>FOLLOW US</span>
                             <ul class="social-icon">
                                 <li>
-                                    <a href="https://www.facebook.com/codingeek.net/" target="_blank">
+                                    <a href="#" target="_blank">
                                         <i class="fa fa-facebook  "></i>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="https://twitter.com/codingeeknet" target="_blank">
+                                    <a href="#" target="_blank">
                                         <i class="fa fa-twitter  "></i>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="https://www.linkedin.com/company/codingeek/about/" target="_blank">
+                                    <a href="#" target="_blank">
                                         <i class="fa fa-linkedin"></i>
                                     </a>
                                 </li>
@@ -115,53 +126,53 @@
                 <div class="row">
                     <div class="col-lg-3 col-sm-6">
                         <div class="widget widget_nav_menu">
-                            <h4 class="widget-title">Popular Searches</h4>
+                            <h4 class="widget-title">Danh mục</h4>
                             <ul>
-                                <li><a href="index-2.html">Apartment for Rent</a></li>
-                                <li><a href="about.html">Apartment Low to hide</a></li>
-                                <li><a href="#">Offices for Buy</a></li>
-                                <li><a href="#">Offices for Rent</a></li>
+                                <li><a asp-controller="RealEstate" asp-action="Index" asp-route-type="1">Phòng trọ, nhà trọ</a></li>
+                                <li><a asp-controller="RealEstate" asp-action="Index" asp-route-type="2">Nhà nguyên căn</a></li>
+                                <li><a asp-controller="RealEstate" asp-action="Index" asp-route-type="3">Căn hộ</a></li>
+                                <li><a asp-controller="RealEstate" asp-action="Index" asp-route-type="4">Ở ghép</a></li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-3 col-sm-6">
                         <div class="widget widget_nav_menu">
-                            <h4 class="widget-title">Homepress Markets</h4>
+                            <h4 class="widget-title">Về website</h4>
                             <ul>
-                                <li><a href="index-2.html">Los Angeles Offices</a></li>
-                                <li><a href="about.html">Las Vegas Apartment</a></li>
-                                <li><a href="#">Sacramento Townhome</a></li>
-                                <li><a href="#">San Francisco Offices</a></li>
+                                <li><a href="#">Quy định</a></li>
+                                <li><a href="#">Chính sách</a></li>
+                                <li><a href="#">Câu hỏi thường gặp</a></li>
+                                <li><a href="#">Đăng kí thành viên</a></li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-3 col-sm-6">
                         <div class="widget widget_nav_menu">
-                            <h4 class="widget-title">Quick Links</h4>
+                            <h4 class="widget-title">Danh mục</h4>
                             <ul>
-                                <li><a href="index-2.html">Pricing Plans</a></li>
-                                <li><a href="about.html">Our Services</a></li>
-                                <li><a href="#">About Us</a></li>
-                                <li><a href="#">Contact Us</a></li>
+                                <li><a href="#">Trang chủ</a></li>
+                                <li><a href="#">Đăng kí</a></li>
+                                <li><a href="#">Đăng nhập</a></li>
+                                <li><a href="#">Trang quản lý</a></li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-3 col-sm-6">
                         <form class="widget widget-subscribe">
                             <div class="rld-single-input">
-                                <input type="text" placeholder="Full Name">
+                                <input type="text" placeholder="Họ tên">
                             </div>
                             <div class="rld-single-input">
-                                <input type="text" placeholder="Your@email.com">
+                                <input type="text" placeholder="Email@email.com">
                             </div>
-                            <button class="btn btn-yellow w-100">Subscribe</button>
+                            <button class="btn btn-yellow w-100">Đăng kí</button>
                         </form>
                     </div>
                 </div>
             </div>
             <div class="copy-right text-center">
-                © Copyright Nexus Property Made with by <a href="https://codingeek.net/" target="_blank">
-                    <i class="fa fa-heart"></i><span>Codingeek.</span>
+                © Hakuna Matata made with by <a href="#" target="_blank">
+                    <i class="fa fa-heart"></i><span>An Tran.</span>
                 </a>
             </div>
         </div>
@@ -172,8 +183,8 @@
         <span class="back-top"><i class="fa fa-angle-up"></i></span>
     </div>
     <!-- back to top area end -->
-    <!--font awsesome-->
-    @*<script src="~/js/all.js"></script>*@
+
+    
     <!-- all plugins here -->
     <script src="~/assets/js/vendor.js"></script>
     <!-- main js  -->

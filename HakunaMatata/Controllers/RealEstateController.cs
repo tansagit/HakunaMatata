@@ -75,6 +75,7 @@ namespace HakunaMatata.Controllers
         }
 
         [AllowAnonymous]
+        [Route("thong-tin-chi-tiet")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -117,6 +118,14 @@ namespace HakunaMatata.Controllers
 
                 return Json(new { status = true, data = districts, current = currentDistrictId ?? 0, message = string.Format("Get district list by city id {0}", cityId) });
             }
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public JsonResult GetAllActiveLocation()
+        {
+            var data = _realEstateServices.GetAllActiveLocation();
+            return Json(new { data });
         }
     }
 }

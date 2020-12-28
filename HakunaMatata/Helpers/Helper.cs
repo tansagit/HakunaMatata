@@ -264,7 +264,7 @@ namespace HakunaMatata.Helpers
                         return realEstate.ExprireTime < DateTime.Now ? "Hết hạn" : "Còn phòng";
                     }
                 }
-                else return "Hết phòng";              
+                else return "Hết phòng";
             }
             else return "Đã khóa";
         }
@@ -414,6 +414,26 @@ namespace HakunaMatata.Helpers
             text = text.ToLower().Normalize(NormalizationForm.FormD);
             var chars = text.Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark).ToArray();
             return new string(chars).Normalize(NormalizationForm.FormC);
+        }
+
+        public static string IsActiveLink(this IHtmlHelper htmlHelper, string controller, string action = "")
+        {
+            bool returnActive;
+            var routeData = htmlHelper.ViewContext.RouteData;
+            
+            var routeController = routeData.Values["controller"].ToString();
+
+            if (string.IsNullOrEmpty(action))
+            {
+                returnActive = (controller == routeController);
+            }
+            else
+            {
+                var routeAction = routeData.Values["action"].ToString();
+                returnActive = (controller == routeController && action == routeAction);
+            }
+
+            return returnActive ? "active" : "";
         }
     }
 }

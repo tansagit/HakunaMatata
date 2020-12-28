@@ -12,7 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Đăng nhập</title>
-
+    <link rel=icon href=~/assets/img/icon.png sizes="20x20" type="image/png">
     <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="~/admin/font-awesome/css/font-awesome.css" rel="stylesheet">
     <link href="~/css/awesome-bootstrap-checkbox.css" rel="stylesheet" />
@@ -27,7 +27,7 @@
         <div>
             <div class="pb-2">
                 @*<h1 class="logo-name">AN+</h1>*@
-                <img width="200" height="200" src="~/assets/img/icon.png"/>
+                <img width="200" height="200" src="~/assets/img/final-logo-backup.png" />
             </div>
 
             <h3>Đăng nhập để tiếp tục</h3>
@@ -54,12 +54,17 @@
                 <a class="btn btn-sm btn-white btn-block" asp-area="AdminArea" asp-controller="Account" asp-action="Register">Tạo tài khoản</a>
             </form>
         </div>
+        @if (ViewBag.RegisterMessage != null)
+        {
+            <div id="register-message" class="register-success-message text-center">@ViewBag.RegisterMessage</div>
+        }
     </div>
 
     <!-- Mainly scripts -->
     <script src="~/admin/js/jquery-3.1.1.min.js"></script>
     <script src="~/admin/js/popper.min.js"></script>
     <script src="~/admin/js/bootstrap.js"></script>
+    <script src="~/admin/js/services/hakunamata.js"></script>
 </body>
 
 </html>

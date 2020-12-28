@@ -1,7 +1,7 @@
 ﻿@model CustomPagination;
 
 @{
-    ViewData["Title"] = "Danh sach phong tro";
+    ViewData["Title"] = "Danh sách phòng trọ";
 }
 
 
@@ -29,14 +29,14 @@
 <!-- property-area start -->
 <div class="property-area pd-top-20">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-12 mb-2">
-                <div class="rld-single-input left-icon">
-                    <input asp-for="SearchString" type="text" placeholder="Nhập khu vực cần tìm kiếm">
+        <form asp-controller="RealEstate" asp-action="Index" method="get">
+            <div class="row">
+                <div class="col-lg-12 mb-2">
+                    <div class="rld-single-input left-icon">
+                        <input asp-for="SearchString" type="text" placeholder="Nhập khu vực cần tìm kiếm">
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-12 mb-5">
-                <form asp-controller="RealEstate" asp-action="Index" method="get">
+                <div class="col-lg-12 mb-5">
                     <div class="text-center row">
                         <div class="col-xl-2 col-lg-6 col-md-6">
                             <div class="rld-single-select">
@@ -79,12 +79,10 @@
                                 Lọc tin
                             </button>
                         </div>
-
                     </div>
-                </form>
+                </div>
             </div>
-
-        </div>
+        </form>
         @if (Model.Results == null || Model.Results.ToList().Count == 0)
         {
             <div class="row mb-5 ml-0">

@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Đăng kí tài khoản</title>
-
+    <link rel=icon href=~/assets/img/icon.png sizes="20x20" type="image/png">
     <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="~/admin/font-awesome/css/font-awesome.css" rel="stylesheet">
     <link href="~/admin/css/animate.css" rel="stylesheet">
@@ -21,30 +21,30 @@
     <div class="middle-box text-center loginscreen animated fadeInDown">
         <div>
             <div>
-                <img width="200" height="200" src="~/assets/img/icon.png" />
+                <img width="200" height="200" src="~/assets/img/final-logo-backup.png" />
             </div>
             <h3>Đăng kí thành viên</h3>
             <div class="text-warning">@ViewBag.Message</div>
             <form asp-area="AdminArea" class="m-t" asp-action="Register" method="post" asp-route-returnurl="@Model.ReturnUrl">
                 <div class="form-group">
-                    <input asp-for="LoginName" class="form-control" placeholder="Tài khoản đăng nhập">
+                    <input asp-for="LoginName" class="form-control" placeholder="Tài khoản đăng nhập" required>
                     <span asp-validation-for="LoginName" class="text-danger"></span>
                     <div class="text-left pl-1" id="check-existed"></div>
                 </div>
                 <div class="form-group">
-                    <input asp-for="AgentName" type="text" class="form-control" placeholder="Họ và tên">
+                    <input asp-for="AgentName" type="text" class="form-control" placeholder="Họ và tên" required>
                     <span asp-validation-for="AgentName" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <input asp-for="PhoneNumber" type="text" class="form-control" placeholder="Số điện thoại">
+                    <input asp-for="PhoneNumber" type="text" class="form-control" placeholder="Số điện thoại" required>
                     <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <input asp-for="Password" type="password" class="form-control" placeholder="Mật khẩu">
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Mật khẩu" required>
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Xác nhận mật khẩu">
+                    <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Xác nhận mật khẩu" required>
                     <span asp-validation-for="ConfirmPassword" class=" text-danger"></span>
                 </div>
                 <button type="submit" class="btn btn-yellow block full-width m-b">Đăng kí</button>

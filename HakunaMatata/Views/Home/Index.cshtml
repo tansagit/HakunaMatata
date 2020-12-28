@@ -1,9 +1,15 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Trang chủ";
 }
 
 @model HakunaMatata.Models.ViewModels.Condition;
 
+@section scripts{
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBY8PE_X6qdTWkZwdBENNpGJTYr1cTjG9I&callback=LoadMarker">
+    </script>
+    <script type="text/javascript" src="~/assets/js/maplace-active.js"></script>
+}
 <!-- banner area start -->
 <div class="banner-area jarallax" style="background-image: url(../assets/img/banner/1.jpg);">
     <div class="container">
@@ -52,3 +58,11 @@
     </div>
 </div>
 <!-- banner area end -->
+<div class="section-title text-center">
+    <h2 class="title">Tìm kiếm trên bản đồ</h2>
+</div>
+
+<div class="banner-area banner-search">
+    <div id="map" style="height: 88vh"></div>
+</div>
+

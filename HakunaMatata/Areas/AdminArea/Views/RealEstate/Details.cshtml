@@ -3,6 +3,16 @@
 @{
     var userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == "UserId").Value);
     var userLevelId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == "LevelId").Value);
+
+    string statusLabel = Model.Status switch
+    {
+        "Bị từ chối" => "",
+        "Chờ xác nhận" => "label-success",
+        "Còn phòng" => "label-primary",
+        "Hết hạn" => "label-warning",
+        "Đã khóa" => "label-danger",
+        _ => ""
+    };
 }
 <div class="wrapper wrapper-content animated fadeInUp">
     <div class="row">
@@ -28,7 +38,7 @@
                                     <dt>Trạng thái:</dt>
                                 </div>
                                 <div class="col-sm-8 text-sm-left">
-                                    <dd class="mb-1"><span class="label label-success">@Model.Status</span></dd>
+                                    <dd class="mb-1"><span class="label @statusLabel">@Model.Status</span></dd>
                                 </div>
                             </dl>
                             <dl class="row mb-0">
@@ -38,19 +48,19 @@
                                 <div class="col-sm-8 text-sm-left">
                                     @if (Model.RealEstateTypeId == 1)
                                     {
-                                        <dd class="mb-1"><span class="label label-info">Phòng trọ</span></dd>
+                                        <dd class="mb-1"><span class="label label-success">Phòng trọ</span></dd>
                                     }
                                     else if (Model.RealEstateTypeId == 2)
                                     {
-                                        <dd class="mb-1"><span class="label label-info">Nhà nguyên căn</span></dd>
+                                        <dd class="mb-1"><span class="label label-success">Nhà nguyên căn</span></dd>
                                     }
                                     else if (Model.RealEstateTypeId == 3)
                                     {
-                                        <dd class="mb-1"><span class="label label-info">Căn hộ</span></dd>
+                                        <dd class="mb-1"><span class="label label-success">Căn hộ</span></dd>
                                     }
                                     else
                                     {
-                                        <dd class="mb-1"><span class="label label-info">Ở ghép</span></dd>
+                                        <dd class="mb-1"><span class="label label-success">Ở ghép</span></dd>
                                     }
                                 </div>
                             </dl>
@@ -60,7 +70,7 @@
                                     <dt>Giá: </dt>
                                 </div>
                                 <div class="col-sm-8 text-sm-left">
-                                    <dd class="mb-1"> @Model.Price VND</dd>
+                                    <dd class="mb-1"> @Helper.VNCurrencyFormat(Model.Price.ToString()) VNĐ</dd>
                                 </div>
                             </dl>
                             <dl class="row mb-0">
@@ -93,7 +103,7 @@
                                     else
                                     {
                                         <dd class="mb-1">
-                                            @Model.ElectronicPrice VNĐ/KW
+                                            @Helper.VNCurrencyFormat(Model.ElectronicPrice.ToString()) VNĐ/KW
                                         </dd>
                                     }
                                 </div>
@@ -115,13 +125,13 @@
                                         if (Model.WaterPrice > 100000)
                                         {
                                             <dd class="mb-1">
-                                                @Model.WaterPrice VNĐ/người/tháng
+                                                @Helper.VNCurrencyFormat(Model.WaterPrice.ToString()) VNĐ/người/tháng
                                             </dd>
                                         }
                                         else
                                         {
                                             <dd class="mb-1">
-                                                @Model.WaterPrice VNĐ/m3
+                                                @Helper.VNCurrencyFormat(Model.WaterPrice.ToString()) VNĐ/m3
                                             </dd>
                                         }
 
@@ -149,7 +159,7 @@
                                     else
                                     {
                                         <dd class="mb-1">
-                                            @Model.WifiPrice VNĐ/tháng
+                                            @Helper.VNCurrencyFormat(Model.WifiPrice.ToString()) VNĐ/tháng
                                         </dd>
                                     }
                                 </div>
@@ -191,7 +201,14 @@
                                     <dd class="mb-1"><a href="#" class="text-navy">@Model.AgentName</a> </dd>
                                 </div>
                             </dl>
-
+                            <dl class="row mb-0">
+                                <div class="col-sm-4 text-sm-right">
+                                    <dt>SĐT liên lạc:</dt>
+                                </div>
+                                <div class="col-sm-8 text-sm-left">
+                                    <dd class="mb-1">@Model.ContactNumber</dd>
+                                </div>
+                            </dl>
                         </div>
                     </div>
                     <div class="row">
@@ -232,37 +249,37 @@
                     <div class="mb-2">
                         @if (Model.SecurityCamera)
                         {
-                            <i class="fa fa-check text-info mr-1"> </i> <strong>Camera an ninh</strong>
+                            <i class="fa fa-check text-warning mr-1"> </i> <strong>Camera an ninh</strong>
                         }
                     </div>
                     <div class="mb-2">
                         @if (Model.HasPrivateWc)
                         {
-                            <i class="fa fa-check text-info mr-1"> </i> <strong>Vệ sinh riêng</strong>
+                            <i class="fa fa-check text-warning mr-1"> </i> <strong>Vệ sinh riêng</strong>
                         }
                     </div>
                     <div class="mb-2">
                         @if (Model.HasMezzanine)
                         {
-                            <i class="fa fa-check text-info mr-1"> </i> <strong>Có gác lửng</strong>
+                            <i class="fa fa-check text-warning mr-1"> </i> <strong>Có gác lửng</strong>
                         }
                     </div>
                     <div class="mb-2">
                         @if (Model.AllowCook)
                         {
-                            <i class="fa fa-check text-info mr-1"> </i> <strong>Cho phép nấu ăn</strong>
+                            <i class="fa fa-check text-warning mr-1"> </i> <strong>Cho phép nấu ăn</strong>
                         }
                     </div>
                     <div class="mb-2">
                         @if (Model.FreeTime)
                         {
-                            <i class="fa fa-check text-info mr-1"> </i> <strong>Giờ giấc tự do</strong>
+                            <i class="fa fa-check text-warning mr-1"> </i> <strong>Giờ giấc tự do</strong>
                         }
                     </div>
                     <div class="mb-2">
                         @if (Model.WifiPrice == 0)
                         {
-                            <i class="fa fa-check text-info mr-1"> </i> <strong>Free wifi</strong>
+                            <i class="fa fa-check text-warning mr-1"> </i> <strong>Free wifi</strong>
                         }
                     </div>
 
@@ -395,5 +412,5 @@
 
 
     <script async defer
-            src="https://maps.googleapis.com/maps/api/js?key=HAKUNA_MATATA_KEY&callback=initMap">
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBY8PE_X6qdTWkZwdBENNpGJTYr1cTjG9I&callback=initMap">
     </script>

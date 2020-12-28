@@ -28,6 +28,7 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
         public IActionResult Login(string returnUrl = "")
         {
             var model = new VM_Login { ReturnUrl = returnUrl };
+            ViewBag.RegisterMessage = TempData["RegisterMessage"];
             return View(model);
         }
 
@@ -103,6 +104,7 @@ namespace HakunaMatata.Areas.AdminArea.Controllers
                     var isSuccess = await _services.RegisterUser(newUser);
                     if (isSuccess)
                     {
+                        TempData["RegisterMessage"] = "Đăng kí thành công, đăng nhập để tiếp tục.";
                         return RedirectToAction("Login", "Account");
                     }
                     else return View(newUser);
