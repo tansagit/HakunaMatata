@@ -88,7 +88,7 @@ namespace HakunaMatata.Controllers
                         var verification = await VerificationResource.CreateAsync(
                             to: registerAccount.PhoneNumber,
                             channel: "sms",
-                            pathServiceSid: "VA546d60e5b7699af699102ba7c570a806"
+                            pathServiceSid: "XXX"
                         );
                         if (verification.Status == "pending")
                         {
@@ -122,7 +122,7 @@ namespace HakunaMatata.Controllers
                 var verification = await VerificationCheckResource.CreateAsync(
                   to: "+84396987327",
                   code: "439294",
-                  pathServiceSid: "VA546d60e5b7699af699102ba7c570a806"
+                  pathServiceSid: "XXX"
               );
 
                 if (verification.Status == "approved")

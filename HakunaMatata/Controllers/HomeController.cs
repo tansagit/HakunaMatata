@@ -4,7 +4,6 @@ using HakunaMatata.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Linq;
 
